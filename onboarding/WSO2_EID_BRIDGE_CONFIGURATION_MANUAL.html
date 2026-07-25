@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WSO2 & eID Integration Bridge Playbook</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #070b19;
+      --panel-bg: #0e1635;
+      --panel-hover: #17224f;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --code-bg: #040815;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 60px;
+    }
+
+    /* Flag Accent Band */
+    .flag-band {
+      background: linear-gradient(to right, #ef4444 33%, #ffffff 33%, #ffffff 66%, #2563eb 66%);
+      height: 6px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Header Banner */
+    .top-header {
+      background-color: #0c122c;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-size: 20px;
+    }
+
+    .brand-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--accent-blue);
+      color: var(--accent-blue);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Container Grid */
+    .main-layout {
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media (min-width: 1024px) {
+      .main-layout {
+        grid-template-columns: 280px 1fr;
+      }
+    }
+
+    /* Floating Index Sidebar */
+    .sidebar-index {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 30px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .index-title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-blue);
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .index-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .index-item a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .index-item a:hover {
+      background-color: var(--panel-hover);
+      color: #ffffff;
+      transform: translateX(4px);
+    }
+
+    .index-item.active a {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    /* Content Area */
+    .content-area {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .chapter-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
+      scroll-margin-top: 40px;
+    }
+
+    .chapter-header {
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .chapter-tag {
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .chapter-title {
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+    }
+
+    .paragraph {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    .paragraph strong {
+      color: #ffffff;
+    }
+
+    /* Console Badges */
+    .console-badge-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 25px 0;
+    }
+
+    .console-step {
+      display: flex;
+      gap: 16px;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .console-step:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .step-number-circle {
+      width: 28px;
+      height: 28px;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .step-content {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .step-content h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .step-content p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .step-content code {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      color: var(--accent-gold);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* Bullet and Mappings */
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .bullet-list li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+      top: 1px;
+      font-size: 11px;
+      color: var(--accent-gold);
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin: 25px 0;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+    }
+
+    .claims-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .claims-table th {
+      background-color: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-blue);
+    }
+
+    .claims-table td {
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 16px;
+      color: var(--text-muted);
+    }
+
+    .claims-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .claims-table code {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      color: var(--accent-emerald);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Code Panel Wrapper */
+    .code-wrapper {
+      position: relative;
+      margin: 25px 0;
+    }
+
+    .code-header {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      padding: 12px 20px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .copy-btn {
+      background-color: #1e293b;
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background-color: var(--accent-blue);
+    }
+
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .code-comment { color: #64748b; }
+    .code-keyword { color: #f43f5e; }
+    .code-string { color: #10b981; }
+
+    /* Alert Boxes */
+    .alert-info {
+      background-color: rgba(59, 130, 246, 0.05);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 0 12px 12px 0;
+      padding: 20px;
+      margin: 25px 0;
+    }
+
+    .alert-info h5 {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .alert-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flag Strip -->
+  <div class="flag-band"></div>
+
+  <!-- Header Banner -->
+  <header class="top-header">
+    <div class="brand-meta">
+      <span class="brand-logo">🇸🇽</span>
+      <span class="brand-title">Land Sint Maarten • eID Hub Portal</span>
+    </div>
+    <span class="badge">WSO2 & eID Integration Bridge Manual</span>
+  </header>
+
+  <!-- Layout Container -->
+  <div class="main-layout">
+
+    <!-- Floating Chapter Sidebar -->
+    <aside class="sidebar-index">
+      <div class="index-title">Onboarding Chapters</div>
+      <ul class="index-list">
+        <li class="index-item active"><a href="#ch1">1. Trust Loop</a></li>
+        <li class="index-item"><a href="#ch2">2. Register WSO2 in eID</a></li>
+        <li class="index-item"><a href="#ch3">3. Config IdP in WSO2</a></li>
+        <li class="index-item"><a href="#ch4">4. Attribute Maps</a></li>
+        <li class="index-item"><a href="#ch5">5. JIT Registry</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content Sections -->
+    <main class="content-area">
+
+      <!-- CHAPTER 1: Trust Loop -->
+      <section id="ch1" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 01</span>
+          <h2 class="chapter-title">The Federation Trust Loop</h2>
+        </div>
+        <p class="paragraph">
+          Sint Maarten's national identity ecosystem binds WSO2 Identity Server (Broker) and the eID Platform (OpenID Connect Provider) through a bidirectional security trust loop:
+        </p>
+        <ul class="bullet-list">
+          <li><strong>Outbound Challenge:</strong> When a user logs in, WSO2 delegates the request to the eID platform via a signed OpenID Connect authorization code flow.</li>
+          <li><strong>Biometric Assertions:</strong> The eID platform performs secure FIDO2 biometric checks and issues signed JWT identity tokens.</li>
+          <li><strong>Inbound Callback:</strong> WSO2 IS accepts, validates, decrypts, and maps these tokens, initiating local SSO session controls.</li>
+        </ul>
+      </section>
+
+      <!-- CHAPTER 2: Register WSO2 in eID -->
+      <section id="ch2" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 02</span>
+          <h2 class="chapter-title">Step 1: Register WSO2 inside eID</h2>
+        </div>
+        <p class="paragraph">
+          Before WSO2 IS can request user credentials from the national eID core, it must be whitelisted in the eID Administration dashboard:
+        </p>
+
+        <div class="console-badge-list">
+          
+          <div class="console-step">
+            <div class="step-number-circle">1</div>
+            <div class="step-content">
+              <h4>Create Trusted OAuth Client</h4>
+              <p>Log in to the eID Control Panel, go to <strong>SSO Clients</strong>, and click <strong>Create Client</strong>.</p>
+            </div>
+          </div>
+
+          <div class="console-step">
+            <div class="step-number-circle">2</div>
+            <div class="step-content">
+              <h4>Configure Client Identifiers</h4>
+              <p>Set the parameters exactly as follows:</p>
+              <ul class="bullet-list" style="margin-top: 8px;">
+                <li><strong>Client ID:</strong> <code>eid-wso2-broker-client-id</code></li>
+                <li><strong>Client Secret:</strong> <code>eid-wso2-broker-client-secret-key-2026</code></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="console-step">
+            <div class="step-number-circle">3</div>
+            <div class="step-content">
+              <h4>Configure Central Inbound Redirection URI</h4>
+              <p>Set the callback URL of WSO2 IS to handle authorization checks:</p>
+              <p style="margin-top: 6px;"><code>Redirect URI: https://localhost:9443/commonauth</code></p>
+            </div>
+          </div>
+
+          <div class="console-step">
+            <div class="step-number-circle">4</div>
+            <div class="step-content">
+              <h4>Define Allowed Scopes</h4>
+              <p>Check the required attribute releases: <code>openid</code>, <code>profile</code>, <code>email</code>, <code>uin</code>, <code>bsn_number</code>, and <code>municipality</code>. Save the client application profile.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CHAPTER 3: Register eID inside WSO2 -->
+      <section id="ch3" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 03</span>
+          <h2 class="chapter-title">Step 2: Register eID inside WSO2</h2>
+        </div>
+        <p class="paragraph">
+          Next, WSO2 must be configured to trust incoming assertions from the Sint Maarten eID Platform as a federated Identity Provider (IdP):
+        </p>
+
+        <div class="console-badge-list">
+          
+          <div class="console-step">
+            <div class="step-number-circle">1</div>
+            <div class="step-content">
+              <h4>Create Identity Provider</h4>
+              <p>Open WSO2 Carbon Management Console. In the left panel, navigate to <strong>Identity Providers</strong> -> click <strong>Add</strong>. Define the name as <code>eID-Provider</code>.</p>
+            </div>
+          </div>
+
+          <div class="console-step">
+            <div class="step-number-circle">2</div>
+            <div class="step-content">
+              <h4>Configure OAuth2/OpenID Connect Federated Authenticator</h4>
+              <p>Expand <strong>Federated Authenticators</strong> -> <strong>OAuth2/OpenID Connect Configuration</strong>. Check the <strong>Enable OAuth2/OpenID Connect</strong> and <strong>Default</strong> checkboxes.</p>
+            </div>
+          </div>
+
+          <div class="console-step">
+            <div class="step-number-circle">3</div>
+            <div class="step-content">
+              <h4>Configure Identity Provider Endpoint URLs</h4>
+              <p>Set the parameters exactly as follows:</p>
+              <ul class="bullet-list" style="margin-top: 8px;">
+                <li><strong>Client ID:</strong> <code>eid-wso2-broker-client-id</code></li>
+                <li><strong>Client Secret:</strong> <code>eid-wso2-broker-client-secret-key-2026</code></li>
+                <li><strong>Authorization Endpoint:</strong> <code>http://localhost:8082/api/v1/oauth/authorize</code></li>
+                <li><strong>Token Endpoint:</strong> <code>http://host.docker.internal:8082/api/v1/oauth/token</code> *(Use docker proxy route if containerized)*</li>
+                <li><strong>UserInfo Endpoint:</strong> <code>http://host.docker.internal:8082/api/v1/oauth/userinfo</code></li>
+                <li><strong>Additional Query Parameters:</strong> <code>scope=openid profile email uin bsn_number municipality</code></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CHAPTER 4: Attribute Maps -->
+      <section id="ch4" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 04</span>
+          <h2 class="chapter-title">Chapter 4: Dialect Attribute Mapping</h2>
+        </div>
+        <p class="paragraph">
+          WSO2 IS must map incoming claims from Sint Maarten eID to local WSO2 claim dialects. Under your <strong>eID-Provider</strong> settings, expand **Claim Configuration** -> **Basic Claim Configuration**:
+        </p>
+
+        <ul class="bullet-list">
+          <li>Select the <strong>Define Custom Claim Dialect</strong> option.</li>
+          <li>Click the <strong>Add Claim Mapping</strong> button to establish these bindings:</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="claims-table">
+            <thead>
+              <tr>
+                <th>eID Claim (Identity Assertion)</th>
+                <th>WSO2 Dialect Claim Target</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>given_name</code></td>
+                <td><code>http://wso2.org/claims/givenname</code></td>
+              </tr>
+              <tr>
+                <td><code>family_name</code></td>
+                <td><code>http://wso2.org/claims/lastname</code></td>
+              </tr>
+              <tr>
+                <td><code>email</code></td>
+                <td><code>http://wso2.org/claims/emailaddress</code></td>
+              </tr>
+              <tr>
+                <td><code>uin</code></td>
+                <td><code>http://wso2.org/claims/nationalid</code></td>
+              </tr>
+              <tr>
+                <td><code>bsn_number</code></td>
+                <td><code>http://wso2.org/claims/electronicid</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="paragraph">
+          Ensure that the **User ID Claim URI** dropdown is set to <code>http://wso2.org/claims/emailaddress</code> so that WSO2 establishes user session mapping using the verified email address.
+        </p>
+      </section>
+
+      <!-- CHAPTER 5: JIT Registry -->
+      <section id="ch5" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 05</span>
+          <h2 class="chapter-title">Just-In-Time (JIT) Provisioning</h2>
+        </div>
+        <p class="paragraph">
+          To prevent identity registrars from having to pre-create shadow accounts inside WSO2's local user directory (LDAP/JDBC User Store), configure silent **Just-In-Time (JIT) Provisioning**:
+        </p>
+        <ul class="bullet-list">
+          <li>Open the **eID-Provider** configuration page.</li>
+          <li>Expand the **Just-in-Time Provisioning** section.</li>
+          <li>Select the **Provision Silently** radio button.</li>
+          <li>Set the **Provisioning User Store Domain** to `PRIMARY`.</li>
+          <li>Click **Register** or **Update** at the bottom of the page.</li>
+        </ul>
+        <div class="alert-info">
+          <h5>Result</h5>
+          <p>Upon successful biometric login in eID, WSO2 IS automatically intercepts the mapped attributes, creates a matching local user entry silently behind the scenes, and issues local authentication cookies to the browser.</p>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Scroll active indicator listener
+    window.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const id = entry.target.getAttribute('id');
+          if (entry.intersectionRatio > 0.5) {
+            document.querySelectorAll('.index-item').forEach(el => el.classList.remove('active'));
+            const activeItem = document.querySelector(`.index-item a[href="#${id}"]`);
+            if (activeItem) activeItem.parentElement.classList.add('active');
+          }
+        });
+      }, { threshold: [0.1, 0.5, 0.8] });
+
+      document.querySelectorAll('section[id]').forEach((section) => {
+        observer.observe(section);
+      });
+    });
+  </script>
+
+</body>
+</html>
