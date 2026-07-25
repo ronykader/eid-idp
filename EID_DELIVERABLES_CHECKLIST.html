@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Deliverables & Compliance Checklist</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #060919;
+      --panel-bg: #0c1330;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f28;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header-box h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header-box p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Progress Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    @media (min-width: 640px) {
+      .stats-grid {
+        grid-template-cols: 1fr 1fr 1fr;
+      }
+    }
+
+    .stat-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .progress-bar-bg {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      height: 12px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-emerald));
+      height: 100%;
+      width: 95%;
+      border-radius: 5px;
+      transition: width 0.6s ease-in-out;
+    }
+
+    /* Interactive Filters */
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background-color: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    /* Task List Cards */
+    .task-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+    .task-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 15px;
+    }
+
+    .task-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .badge-completed {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+    }
+
+    .badge-pending {
+      background-color: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: var(--accent-gold);
+    }
+
+    .task-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    /* User Story Block styling */
+    .user-story {
+      background-color: rgba(255, 255, 255, 0.015);
+      border-left: 3px solid var(--accent-blue);
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-style: italic;
+      color: var(--text-main);
+      margin-top: 10px;
+      margin-bottom: 12px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .user-story strong {
+      color: var(--accent-blue);
+      font-style: normal;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .task-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .task-meta strong {
+      color: #ffffff;
+    }
+
+    .category-title {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 15px;
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1.5px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Gov top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • eID Platform Deliverables</div>
+    <div class="doc-type">Milestone & Compliance Dashboard</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header-box">
+      <h1>eID Platform Checklist</h1>
+      <p>Verification tracking and User Stories for stream integration targets</p>
+      <div style="font-size: 11px; margin-top: 10px; font-weight: normal; letter-spacing: normal;">
+        <span style="color: var(--accent-emerald);">📑 Traceability Matrix:</span> <a href="EID_DEVELOPER_CHECKLIST.html" style="color: #60a5fa; text-decoration: underline; font-weight: bold;">Open Developer SRS Traceability Matrix (311 items)</a>
+      </div>
+    </div>
+
+    <!-- Analytics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">19 / 20</div>
+        <div class="stat-label">Tasks Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--accent-gold);">1 / 20</div>
+        <div class="stat-label">Tasks Pending/Ongoing</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--accent-emerald);">95%</div>
+        <div class="stat-label">Overall Progress</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-header">
+        <span class="stat-label">MVP Implementation status</span>
+        <span class="stat-value" style="font-size: 12px;">95% Completed</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Interactive Filters -->
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterTasks('all')">All Tasks</button>
+      <button class="filter-btn" onclick="filterTasks('completed')">Completed (19)</button>
+      <button class="filter-btn" onclick="filterTasks('pending')">Pending / Ongoing (1)</button>
+    </div>
+
+    <!-- Category 1 -->
+    <div class="category-title" data-cat="cat1">📋 Stream A: Mobilization, Governance & ICD Foundation</div>
+
+    <!-- Card 1 -->
+    <div class="task-card" data-status="completed" data-cat="cat1">
+      <div class="task-header">
+        <div class="task-title">Delivery Mobilisation & Scope Baselines</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Publishing of mobilisation baselines, architecture alignment, resource plans, and project structure files for the DEV environment setup.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Registry Architect, I want the mobilization baselines and environment configurations published, so that our developers can configure the integration environments consistently.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 1 (M1)</span>
+        <span><strong>Verification:</strong> Environment provisioned, Git repository active</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="task-card" data-status="completed" data-cat="cat1">
+      <div class="task-header">
+        <div class="task-title">Interface Control Document (ICD v0.1)</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Drafting and publishing the initial Interface Control Document (ICD v0.1) describing API payload schemas, query parameters, and endpoints for external consumers.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Relying Party Developer, I want to read the initial ICD v0.1 specification draft, so that I can build skeleton mocks of client integrations before the backend is deployed.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 1 (M1)</span>
+        <span><strong>Verification:</strong> Swagger OpenAPI endpoints and JSON mock endpoints compiled</span>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="task-card" data-status="completed" data-cat="cat1">
+      <div class="task-header">
+        <div class="task-title">Interface Control Document (ICD v1.0)</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Finalizing the production-hardened Interface Control Document (ICD v1.0) describing security handshakes, rate-limiting rules, and cryptographic evidence structures.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Security Auditor, I want a complete v1.0 ICD specification mapping API payload schemas and cryptographic bounds, so that we verify eID compliance targets.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Completed master specification sheets released in system repositories</span>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="task-card" data-status="completed" data-cat="cat1">
+      <div class="task-header">
+        <div class="task-title">Initial Governance Pack & CAB Setup</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Defining user roles (Citizens, Moderators, Administrators) and establishing change control governance policies for the Change Advisory Board (CAB).
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a CAB Chairman, I want to establish governance roles and approval packs, so that any system changes or approvals undergo security advisory reviews.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> User manual HTML documents compiled and verified</span>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="task-card" data-status="completed" data-cat="cat1">
+      <div class="task-header">
+        <div class="task-title">Environment Access & Security Plan</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Security controls framework mapping system boundaries, CORS origins, and port mapping guidelines to restrict exposure during sandboxed execution.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Network Security Engineer, I want an access and firewall configuration plan, so that DEV/TEST sandbox endpoints remain protected from external sweeps.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 1 (M1)</span>
+        <span><strong>Verification:</strong> Production hardening configurations integrated</span>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="task-card" data-status="completed" data-cat="cat1">
+      <div class="task-header">
+        <div class="task-title">Acceptance Evidence-Pack Planning (Annex E)</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Structure mapping for non-repudiation audit evidence logging to comply with Annex E digital signature audit log trails.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Legal Compliance Officer, I want non-repudiation logging maps planned under Annex E guidelines, so that all citizen identity access events are auditable.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Audit evidence DB schema and endpoints verified</span>
+      </div>
+    </div>
+
+
+    <!-- Category 2 -->
+    <div class="category-title" data-cat="cat2">🔑 Stream B: Citizen IdP & OIDC Federation (SSO) MVP</div>
+
+    <!-- Card 7 -->
+    <div class="task-card" data-status="completed" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">Authorization Code + PKCE SSO Capability</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Developing PKCE (Proof Key for Code Exchange) flows inside the central OAuth/OIDC authorization controllers to guarantee secure handshakes for public client apps.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Portal Developer, I want to authenticate my SPA application using Authorization Code + PKCE, so that access tokens are never exposed in user history or URLs.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> OAuth controllers test suites pass</span>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="task-card" data-status="completed" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">FIDO2 Passkeys (WebAuthn) & Step-Up MFA</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Implementing secure WebAuthn credentials challenge and verification APIs. Integrated Touch ID, Face ID, and hardware tokens as a step-up MFA mechanism.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Citizen, I want to log in using Touch ID or Face ID without typing my password, so that my account is fully protected from phishing and password theft.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Cryptographic challenge-response verified via Node test-suites</span>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="task-card" data-status="completed" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">eIDAS High Assurance Last Factor Guard</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Enforcing strict lockout guards inside the Citizen Security Vault. The system blocks citizens from revoking their last remaining MFA factor to prevent account downgrades.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Security Administrator, I want to block citizens from removing their last remaining active MFA factor, so that they always remain compliant with eIDAS Level High.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Enforced in frontend vault component state check</span>
+      </div>
+    </div>
+
+    <!-- Card 10 -->
+    <div class="task-card" data-status="completed" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">SMS Mobile OTP with Resend Timers</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Integrating verified BulkSMSBD gateway configurations alongside interactive 60-second countdown timers, resend options, and strict 6-digit numeric input validations.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Citizen, I want to receive a 6-digit OTP code on my mobile phone, and see a countdown timer before requesting a resend, so that I can easily verify my logins.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Real SMS dispatches integrated into MfaController.cs</span>
+      </div>
+    </div>
+
+    <!-- Card 11 -->
+    <div class="task-card" data-status="completed" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">OIDC Single Logout (SLO) Integration</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Daisy-chain logout integration routing session destruction from Relying Parties, through WSO2 and Next.js LocalStorage clearing, to the .NET revocation endpoint.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Citizen, I want to sign out from the MyGov Portal and have all my sessions across the eID and WSO2 brokers destroyed instantly, so that my details are secure on shared devices.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Laravel Wso2Controller handles state token callbacks</span>
+      </div>
+    </div>
+
+    <!-- Card 12 -->
+    <div class="task-card" data-status="completed" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">Early OIDC Skeleton & Sandbox Endpoints</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Provisioning the DEV/TEST sandbox endpoints to allow early third-party application developers to configure OIDC handshakes.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As an Integration Partner, I want early access to the skeleton OIDC discovery endpoints, so that I can test OIDC redirect flows in our staging environments.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 1 (M1)</span>
+        <span><strong>Verification:</strong> eID API serves OpenID configuration discoverability</span>
+      </div>
+    </div>
+
+    <!-- Card 13 (Pending) -->
+    <div class="task-card" data-status="pending" data-cat="cat2">
+      <div class="task-header">
+        <div class="task-title">Production Hosting Migration & CAB Sign-Off</div>
+        <span class="badge badge-pending">⚡ In Progress</span>
+      </div>
+      <div class="task-desc">
+        Deploying compiled binary solutions to physical production nodes and acquiring official Go-Live validation approval from the national Change Advisory Board.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Registry Director, I want the system deployed on official government hosting and signed off by the CAB, so that we can transition from testing to pilot operations.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2) - Ongoing</span>
+        <span><strong>Verification:</strong> Pending deployment server access configuration and CAB sign-off</span>
+      </div>
+    </div>
+
+
+    <!-- Category 3 -->
+    <div class="category-title" data-cat="cat3">
+      🇸🇽 Stream C: Civil Registry Connector & UIN Orchestration
+      <div style="font-size: 11px; text-transform: none; font-weight: normal; margin-top: 6px; letter-spacing: normal;">
+        <span style="color: var(--accent-emerald);">🎮 Interactive Sandbox:</span> <a href="CIVIL_REGISTRY_SANDBOX.html" style="color: #60a5fa; text-decoration: underline;">Open Sandbox Playground</a>
+        &nbsp;&bull;&nbsp;
+        <span style="color: var(--accent-emerald);">📄 Specification:</span> <a href="EID_CIVIL_REGISTRY_INTEGRATION_SPEC.html" style="color: #60a5fa; text-decoration: underline;">Open Integration Spec</a>
+      </div>
+    </div>
+
+    <!-- Card 14 -->
+    <div class="task-card" data-status="completed" data-cat="cat3">
+      <div class="task-header">
+        <div class="task-title">Civil Registry Lookup & Verification</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Synchronous connection to the Civil Registry database to run real-time personal information validation checks during the citizen registration wizard.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a PSC Operator, I want the registry to verify applicant UINs and demographics against the Civil Registry records, so that we prevent duplicate or fake identities.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> API routes map validation queries to the core database</span>
+      </div>
+    </div>
+
+    <!-- Card 15 -->
+    <div class="task-card" data-status="completed" data-cat="cat3">
+      <div class="task-header">
+        <div class="task-title">Identity Lifecycle Orchestration (Births & Deaths)</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Automated endpoints to process national lifecycle events, enabling birth-event pre-provisioning and suspending credentials upon receiving death notifications.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Civil Registrar, I want the eID system to receive automated death notifications and suspend matching accounts, so that deceased profiles cannot be exploited.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Citizen lifecycle mock triggers successfully toggle registry active flags</span>
+      </div>
+    </div>
+
+    <!-- Card 16 -->
+    <div class="task-card" data-status="completed" data-cat="cat3">
+      <div class="task-header">
+        <div class="task-title">SLA Monitoring & Database Reconciliation Logging</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Diagnostic metrics logging and transaction performance audits, validating database consistency checks and tracking service response times.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a System Administrator, I want connection latency metrics and consistency reports, so that we monitor SLA compliance and reconcile data discrepancies.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Performance metrics written to system diagnostic audit tables</span>
+      </div>
+    </div>
+
+    <!-- Card 17 -->
+    <div class="task-card" data-status="completed" data-cat="cat3">
+      <div class="task-header">
+        <div class="task-title">UIN Issuance & Write-Back Mappings</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Implementing UIN mapping configurations enabling approved citizen registrations to synchronize identifier mappings back to the database.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Registry Administrator, I want issued UIN mappings written back to the Civil Registry database, so that citizen profile records remain fully synchronized.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Approvals trigger database write-backs</span>
+      </div>
+    </div>
+
+
+    <!-- Category 4 -->
+    <div class="category-title" data-cat="cat4">
+      🔌 Stream D: RP Onboarding Toolkit & Conformance Harness
+      <div style="font-size: 11px; text-transform: none; font-weight: normal; margin-top: 6px; letter-spacing: normal;">
+        <span style="color: var(--accent-emerald);">🛡️ Developer Portal:</span> <a href="EID_RP_DEVELOPER_PORTAL.html" style="color: #60a5fa; text-decoration: underline;">Open Sandbox Developer Portal & SSO Playbook</a>
+      </div>
+    </div>
+
+    <!-- Card 18 -->
+    <div class="task-card" data-status="completed" data-cat="cat4">
+      <div class="task-header">
+        <div class="task-title">Relying Party Integration Guide & Toolkits</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Drafting and releasing full-scope developer handbooks, federation checklists, and onboarding guides to enable agencies to link their portals to the eID IdP.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As an External Portal Developer, I want a step-by-step onboarding guide and configuration checklists, so that I can integrate eID SSO into our agency system within hours.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> HTML integration playbooks and guides verified in project root</span>
+      </div>
+    </div>
+
+    <!-- Card 19 -->
+    <div class="task-card" data-status="completed" data-cat="cat4">
+      <div class="task-header">
+        <div class="task-title">OIDC Conformance Test Harness</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Development of the interactive eID Broker test panel to simulate client redirect handshakes, token retrievals, and claims verification tasks.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As an Integration Tester, I want to run tests via an OIDC conformance harness, so that I can verify that client applications parse scope parameters correctly.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Verification tests execute successfully from the Testing Dashboard</span>
+      </div>
+    </div>
+
+    <!-- Card 20 -->
+    <div class="task-card" data-status="completed" data-cat="cat4">
+      <div class="task-header">
+        <div class="task-title">Go-Live Checklist & Sandbox Environments</div>
+        <span class="badge badge-completed">✓ Completed</span>
+      </div>
+      <div class="task-desc">
+        Go-live conformance requirements list and verified sandbox credentials configuration enabling pilot service integrations.
+      </div>
+      <div class="user-story">
+        <strong>👤 User Story</strong>
+        As a Project Manager, I want a sandbox environment and a Go-Live checklist, so that we verify each portal is fully certified before moving to production.
+      </div>
+      <div class="task-meta">
+        <span><strong>Target:</strong> Month 2 (M2)</span>
+        <span><strong>Verification:</strong> Sandbox user profiles and step checklists ready</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function filterTasks(status) {
+      // Manage active filter button state
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const cards = document.querySelectorAll('.task-card');
+      cards.forEach(card => {
+        const cardStatus = card.getAttribute('data-status');
+        if (status === 'all') {
+          card.style.display = 'block';
+        } else if (status === 'completed' && cardStatus === 'completed') {
+          card.style.display = 'block';
+        } else if (status === 'pending' && cardStatus === 'pending') {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

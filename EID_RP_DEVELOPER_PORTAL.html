@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Relying Party Sandbox Developer Portal</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #060919;
+      --panel-bg: #0c1330;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f28;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .header-box h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header-box p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Portal Layout Grid */
+    .portal-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 30px;
+    }
+    @media (min-width: 950px) {
+      .portal-grid {
+        grid-template-cols: 280px 1fr;
+      }
+    }
+
+    /* Application Sidebar */
+    .app-sidebar {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      height: fit-content;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .app-sidebar h3 {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+    }
+
+    .app-link {
+      display: block;
+      width: 100%;
+      background: none;
+      border: 1px solid transparent;
+      text-align: left;
+      color: var(--text-main);
+      padding: 12px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+    .app-link:hover, .app-link.active {
+      background-color: rgba(59, 130, 246, 0.08);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    .main-workspace {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .panel {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .panel h2 {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 13.5px;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .creds-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .rotate-btn {
+      background-color: var(--accent-gold);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+    .rotate-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Claims Checkbox Grid */
+    .scopes-grid {
+      display: grid;
+      grid-template-cols: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .scope-label {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .scope-label:hover {
+      border-color: var(--accent-blue);
+    }
+    .scope-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--accent-blue);
+    }
+
+    /* Split column for credentials + token preview */
+    .sandbox-split {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 25px;
+    }
+    @media (min-width: 1000px) {
+      .sandbox-split {
+        grid-template-cols: 1fr 1fr;
+      }
+    }
+
+    .token-preview {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      height: fit-content;
+      position: relative;
+    }
+    .token-preview-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+    pre.jwt-body {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    /* Standard Button */
+    .save-btn {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .save-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Notification box */
+    .notif-box {
+      border-left: 4px solid transparent;
+      border-radius: 0 8px 8px 0;
+      padding: 15px;
+      font-size: 13px;
+      margin-top: 15px;
+      display: none;
+    }
+    .notif-success {
+      background-color: rgba(16, 185, 129, 0.04);
+      border-left-color: var(--accent-emerald);
+      color: #ffffff;
+    }
+    .notif-error {
+      background-color: rgba(239, 68, 68, 0.04);
+      border-left-color: var(--accent-red);
+      color: #ffffff;
+    }
+
+    /* Integration Playbook styles */
+    .playbook-steps {
+      border-left: 2px solid var(--border-color);
+      padding-left: 20px;
+      margin-left: 10px;
+      position: relative;
+    }
+    .playbook-step {
+      position: relative;
+      margin-bottom: 25px;
+    }
+    .playbook-step::before {
+      content: "";
+      position: absolute;
+      left: -27px;
+      top: 4px;
+      background-color: var(--bg-color);
+      border: 2px solid var(--accent-blue);
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+    }
+    .playbook-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .playbook-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    pre.code-block {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+
+    /* Tabs for Code language */
+    .code-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 5px;
+    }
+    .code-tab {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .code-tab.active {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-ribbon"></div>
+
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • Developer Hub</div>
+    <div class="doc-type">Relying Party Integration Sandbox</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header-box">
+      <h1>Relying Party Sandbox Console</h1>
+      <p>Configure client OAuth scopes, rotate secrets, and access standard OIDC WSO2 implementation guidelines</p>
+    </div>
+
+    <div class="portal-grid">
+      
+      <!-- Left: App list -->
+      <div class="app-sidebar">
+        <h3>Connected Applications</h3>
+        <button class="app-link active" onclick="switchApp('mygov')">MyGov SM Portal</button>
+        <button class="app-link" onclick="switchApp('upsheba')">UpSheba Services</button>
+        <button class="app-link" onclick="switchApp('fintech')">National Wallet</button>
+      </div>
+
+      <!-- Right: Main workspace -->
+      <div class="main-workspace">
+        
+        <!-- Interactive Sandbox Panel -->
+        <div class="panel">
+          <h2>⚙️ OAuth Application Settings</h2>
+          
+          <div class="sandbox-split">
+            
+            <!-- Config form -->
+            <div>
+              <div class="form-group">
+                <label>Client ID</label>
+                <input type="text" id="clientId" readonly class="mono" style="background-color: rgba(255,255,255,0.01); color: var(--accent-blue);" />
+              </div>
+
+              <div class="form-group">
+                <label>Client Secret</label>
+                <div class="creds-container">
+                  <input type="text" id="clientSecret" readonly class="mono" />
+                  <button class="rotate-btn" onclick="rotateSecret()">Rotate Secret</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="redirectUris">Allowed Callback Redirect URIs (One per line)</label>
+                <textarea id="redirectUris" rows="3" placeholder="https://app.sintmaarten.gov/auth/wso2/callback" oninput="clearAlerts()"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>GDPR Scopes & Claims Release (Data Minimization Policy)</label>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+                  EU eIDAS requires minimal disclosure. Only check attributes strictly required for processing.
+                </p>
+                <div class="scopes-grid">
+                  <label class="scope-label"><input type="checkbox" id="scope-openid" checked disabled /> openid</label>
+                  <label class="scope-label"><input type="checkbox" id="scope-profile" onchange="updateJwtPreview()" /> profile</label>
+                  <label class="scope-label"><input type="checkbox" id="scope-email" onchange="updateJwtPreview()" /> email</label>
+                  <label class="scope-label"><input type="checkbox" id="scope-uin" onchange="updateJwtPreview()" /> uin</label>
+                  <label class="scope-label"><input type="checkbox" id="scope-bsn" onchange="updateJwtPreview()" /> bsn_number</label>
+                  <label class="scope-label"><input type="checkbox" id="scope-municipality" onchange="updateJwtPreview()" /> municipality</label>
+                </div>
+              </div>
+
+              <button class="save-btn" onclick="saveConfiguration()">Save Changes</button>
+              
+              <!-- Validation Alert boxes -->
+              <div class="notif-box notif-success" id="alertSuccess">
+                <strong>✔ Configuration Verified & Saved!</strong>
+                <p style="margin-top: 4px; font-size:11.5px; color:var(--text-muted);">
+                  The redirect mapping and rotated secret are synchronized locally.
+                </p>
+                <div id="sqlQueryBlock" style="margin-top: 10px; font-family:'JetBrains Mono', monospace; font-size:10px; background-color:#030612; padding:8px; border-radius:6px; color:var(--accent-gold);">
+                  -- Simulated SQL write-back executing...
+                </div>
+              </div>
+
+              <div class="notif-box notif-error" id="alertError">
+                <strong>❌ eIDAS Security Policy Violation!</strong>
+                <span id="alertErrorMessage" style="font-size: 12px; display: block; margin-top: 4px;"></span>
+              </div>
+            </div>
+
+            <!-- Token Preview -->
+            <div>
+              <div class="token-preview">
+                <div class="token-preview-title">OIDC ID Token Emulator Payload</div>
+                <pre class="jwt-body"><code id="jwtCode">{}</code></pre>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Integration Playbook -->
+        <div class="panel">
+          <h2>📚 OpenID Connect & WSO2 Integration Playbook</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+            Follow this implementation loop to integrate your Relying Party application with the WSO2 Identity Server broker utilizing standard OID/PKCE authorization protocols.
+          </p>
+
+          <div class="playbook-steps">
+            
+            <!-- Step 1 -->
+            <div class="playbook-step">
+              <div class="playbook-title">1. Generate PKCE & Redirect to Authorize</div>
+              <div class="playbook-desc">
+                Generate a cryptographically secure <code>code_verifier</code> and compute its SHA-256 hash to create the <code>code_challenge</code>. Redirect the citizen's browser to the authorize endpoint:
+              </div>
+              <pre class="code-block">
+https://identity.sintmaarten.gov/oauth2/authorize?
+  response_type=code
+  &client_id=<span class="code-client-id">mygov-client-id-2026</span>
+  &redirect_uri=https://mygov.sintmaarten.gov/auth/wso2/callback
+  &scope=openid+profile+uin+bsn_number
+  &code_challenge=E9Melhoa2OwvFrGMTJguCH5yOFzDHYU913Vfzzc
+  &code_challenge_method=S256
+  &state=xyzSecretState
+  &nonce=randomSessionNonce
+              </pre>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="playbook-step">
+              <div class="playbook-title">2. Backchannel Code Exchange</div>
+              <div class="playbook-desc">
+                Upon callback validation, make a secure server-to-server POST request to WSO2's token endpoint, authenticating with your rotated Client Secret:
+              </div>
+              <pre class="code-block">
+POST https://identity.sintmaarten.gov/oauth2/token
+Headers:
+  Content-Type: application/x-www-form-urlencoded
+  Authorization: Basic &lt;Base64(ClientID:RotatedSecret)&gt;
+
+Payload:
+  grant_type=authorization_code
+  &code=auth_code_from_callback
+  &redirect_uri=https://mygov.sintmaarten.gov/auth/wso2/callback
+  &code_verifier=myOriginalCodeVerifierString
+              </pre>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="playbook-step">
+              <div class="playbook-title">3. Validate RS256 Assertion Signature</div>
+              <div class="playbook-desc">
+                Retrieve the ID token from WSO2's response, query eID's JSON Web Key Set (JWKS) to fetch public parameters, and verify the token signature using RS256 algorithm:
+              </div>
+              <pre class="code-block">
+// Sample Node.js JWT verify validation loop
+const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa');
+
+const client = jwksClient({
+  jwksUri: 'https://eid.sintmaarten.gov/.well-known/jwks.json'
+});
+
+function getKey(header, callback){
+  client.getSigningKey(header.kid, function(err, key) {
+    callback(null, key.getPublicKey());
+  });
+}
+
+jwt.verify(idToken, getKey, { 
+  audience: '<span class="code-client-id">mygov-client-id-2026</span>',
+  issuer: 'https://identity.sintmaarten.gov'
+}, function(err, decoded) {
+  // Access validated claims securely
+});
+              </pre>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // App specifications mock db
+    const appDb = {
+      mygov: {
+        id: "eid-mygov-portal-client-id",
+        name: "MyGov SM Portal",
+        secret: "sm_secret_4a9f8b1c7d2e0f3b",
+        redirects: "https://mygov.sintmaarten.gov/auth/wso2/callback\nhttp://localhost:8000/auth/wso2/callback",
+        scopes: ["profile", "email", "uin", "bsn_number", "municipality"]
+      },
+      upsheba: {
+        id: "eid-upsheba-services-client-id",
+        name: "UpSheba Services",
+        secret: "sm_secret_9e8d7c6b5a4f3e2d",
+        redirects: "https://upsheba.sintmaarten.gov/login/callback",
+        scopes: ["profile", "email", "uin", "municipality"]
+      },
+      fintech: {
+        id: "eid-fintech-wallet-client-id",
+        name: "National Wallet",
+        secret: "sm_secret_1a2b3c4d5e6f7a8b",
+        redirects: "https://wallet.sintmaarten.gov/pay/callback",
+        scopes: ["profile", "uin", "bsn_number"]
+      }
+    };
+
+    let activeApp = 'mygov';
+
+    function switchApp(appKey) {
+      activeApp = appKey;
+      document.querySelectorAll('.app-link').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      loadAppDetails();
+      clearAlerts();
+    }
+
+    function loadAppDetails() {
+      const app = appDb[activeApp];
+      document.getElementById('clientId').value = app.id;
+      document.getElementById('clientSecret').value = app.secret;
+      document.getElementById('redirectUris').value = app.redirects;
+
+      // Update checkboxes
+      document.getElementById('scope-profile').checked = app.scopes.includes('profile');
+      document.getElementById('scope-email').checked = app.scopes.includes('email');
+      document.getElementById('scope-uin').checked = app.scopes.includes('uin');
+      document.getElementById('scope-bsn').checked = app.scopes.includes('bsn_number');
+      document.getElementById('scope-municipality').checked = app.scopes.includes('municipality');
+
+      // Update playbook code texts
+      document.querySelectorAll('.code-client-id').forEach(el => el.innerText = app.id);
+
+      updateJwtPreview();
+    }
+
+    function rotateSecret() {
+      const chars = 'abcdef0123456789';
+      let newSecret = 'sm_secret_';
+      for (let i = 0; i < 16; i++) {
+        newSecret += chars[Math.floor(Math.random() * chars.length)];
+      }
+      appDb[activeApp].secret = newSecret;
+      document.getElementById('clientSecret').value = newSecret;
+      clearAlerts();
+    }
+
+    function updateJwtPreview() {
+      const payload = {
+        iss: "https://identity.sintmaarten.gov",
+        sub: "sub_uuid_4f8e9a2b",
+        aud: document.getElementById('clientId').value,
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        iat: Math.floor(Date.now() / 1000),
+        auth_time: Math.floor(Date.now() / 1000) - 10,
+        acr: "http://sintmaarten.gov/assurance/high",
+        amr: ["pwd", "hwkey"]
+      };
+
+      if (document.getElementById('scope-profile').checked) {
+        payload.given_name = "John";
+        payload.family_name = "Connor";
+        payload.birthdate = "1990-05-15";
+      }
+      if (document.getElementById('scope-email').checked) {
+        payload.email = "john.connor@eid.sm";
+      }
+      if (document.getElementById('scope-uin').checked) {
+        payload.uin = "UN-SXM-26-000001-9";
+      }
+      if (document.getElementById('scope-bsn').checked) {
+        payload.bsn_number = "123456";
+      }
+      if (document.getElementById('scope-municipality').checked) {
+        payload.municipality = "Cole Bay";
+      }
+
+      document.getElementById('jwtCode').innerText = JSON.stringify(payload, null, 2);
+    }
+
+    function saveConfiguration() {
+      clearAlerts();
+      const redirects = document.getElementById('redirectUris').value.trim().split('\n');
+      const errBox = document.getElementById('alertError');
+      const errMsg = document.getElementById('alertErrorMessage');
+      const successBox = document.getElementById('alertSuccess');
+
+      // 🚨 Security Checks (OIDC & eIDAS Compliance)
+      for (let url of redirects) {
+        url = url.trim();
+        if (!url) continue;
+
+        // 1. Must be absolute URL
+        try {
+          const parsed = new URL(url);
+          // 2. Reject non-web schemas
+          if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+            showError('Invalid URI protocol. Redirection callback must use HTTPS schema.');
+            return;
+          }
+          // 3. Force HTTPS for non-localhost
+          if (parsed.protocol === 'http:' && parsed.hostname !== 'localhost' && parsed.hostname !== '127.0.0.1') {
+            showError('Security boundary violation. Callbacks to remote hosts MUST enforce SSL/HTTPS transport.');
+            return;
+          }
+        } catch {
+          showError('Malformed URL. Redirect URIs must be absolute HTTP/HTTPS paths.');
+          return;
+        }
+
+        // 4. Block wildcards
+        if (url.includes('*')) {
+          showError('Wildcard domains detected. OIDC protocols strictly forbid wildcards inside redirect mappings to prevent token redirection leaks.');
+          return;
+        }
+      }
+
+      // If validation succeeds:
+      successBox.style.display = 'block';
+      const sqlQuery = `UPDATE oauth_clients \nSET client_secret = '${document.getElementById('clientSecret').value}',\n    redirect_uris = '${redirects.join(',')}' \nWHERE client_id = '${document.getElementById('clientId').value}';`;
+      document.getElementById('sqlQueryBlock').innerText = sqlQuery;
+    }
+
+    function showError(msg) {
+      const errBox = document.getElementById('alertError');
+      const errMsg = document.getElementById('alertErrorMessage');
+      errBox.style.display = 'block';
+      errMsg.innerText = msg;
+    }
+
+    function clearAlerts() {
+      document.getElementById('alertSuccess').style.display = 'none';
+      document.getElementById('alertError').style.display = 'none';
+    }
+
+    // Init
+    loadAppDetails();
+  </script>
+</body>
+</html>

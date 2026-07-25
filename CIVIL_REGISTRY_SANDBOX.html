@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Civil Registry Sandbox Console</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #060919;
+      --panel-bg: #0c1330;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f28;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header-box h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header-box p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Sandbox Grid */
+    .sandbox-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    @media (min-width: 900px) {
+      .sandbox-grid {
+        grid-template-cols: 4fr 5fr;
+      }
+    }
+
+    .panel {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .panel h2 {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Seed reference card */
+    .seed-card {
+      background-color: rgba(255,255,255,0.015);
+      border: 1px dashed var(--border-color);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .seed-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .seed-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Tab Layout for Forms */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      padding: 4px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 13.5px;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    button.submit-btn {
+      width: 100%;
+      background-color: var(--accent-blue);
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button.submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Response block */
+    .response-terminal {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .response-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 6px;
+    }
+
+    .status-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .status-ok {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+    }
+    .status-fail {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--accent-red);
+    }
+
+    pre.response-body {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #e2e8f0;
+      max-height: 250px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    /* Flow Sequence boxes */
+    .flow-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 15px;
+    }
+
+    .flow-icon {
+      width: 32px;
+      height: 32px;
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1.5px solid var(--accent-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-blue);
+      font-weight: 800;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .flow-content {
+      background-color: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      width: 100%;
+    }
+
+    .flow-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .flow-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Gov top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • National Registry Integration</div>
+    <div class="doc-type">Interactive Sandbox Console</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header-box">
+      <h1>Civil Registry Sandbox</h1>
+      <p>Interactive playground to test demographics verification, lifecycle updates, and write-back flows</p>
+    </div>
+
+    <div class="sandbox-grid">
+      
+      <!-- Left Panel: Reference & Flow Explainer -->
+      <div class="space-y-4">
+        
+        <!-- Seed Guide -->
+        <div class="panel">
+          <h2>📁 Seeded Test Records</h2>
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:15px;">
+            Use these seeded registry keys to test different database states in the forms on the right:
+          </p>
+          
+          <div class="seed-card">
+            <div class="seed-title">⭐ Active Citizen dossier (John Connor)</div>
+            <div class="seed-value">
+              <strong>BSN Number:</strong> 123456<br/>
+              <strong>UIN Mapped:</strong> UN-SXM-26-000001-9<br/>
+              <strong>Expected:</strong> Verification returns <code>active</code>, mappings show <code>issued</code>.
+            </div>
+          </div>
+
+          <div class="seed-card" style="border-color: rgba(251, 191, 36, 0.3);">
+            <div class="seed-title">⭐ Pre-Provisioned birth record (Baby Connor)</div>
+            <div class="seed-value">
+              <strong>BSN Number:</strong> 999999<br/>
+              <strong>UIN Mapped:</strong> UN-SXM-26-999999-1<br/>
+              <strong>Expected:</strong> Ready for registration, mapping status <code>none</code>.
+            </div>
+          </div>
+
+          <div class="seed-card" style="border-color: rgba(239, 68, 68, 0.3);">
+            <div class="seed-title">⭐ Deceased / Suspended citizen (Sarah Connor)</div>
+            <div class="seed-value">
+              <strong>BSN Number:</strong> 888888<br/>
+              <strong>UIN Mapped:</strong> UN-SXM-26-888888-2<br/>
+              <strong>Expected:</strong> Blocked from logins and registrations.
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow diagram -->
+        <div class="panel" style="margin-top:20px;">
+          <h2>🔄 System Lifecycle Flow</h2>
+          
+          <div class="flow-step">
+            <div class="flow-icon">1</div>
+            <div class="flow-content">
+              <div class="flow-title">Verification (POST /verify)</div>
+              <div class="flow-desc">Compares entered BSN with Civil Registry records. Rejects deceased files.</div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-icon">2</div>
+            <div class="flow-content">
+              <div class="flow-title">Registration Write-Back (POST /register)</div>
+              <div class="flow-desc">Upon approval, registers profile and flags BSN mapping as <code>issued</code> in the DB.</div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-icon">3</div>
+            <div class="flow-content">
+              <div class="flow-title">Lifecycle trigger (POST /lifecycle-event)</div>
+              <div class="flow-desc">Death notification locks the citizen eID profile and revokes credentials.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Panel: Interactive Forms -->
+      <div class="panel">
+        <h2>🛠️ Sandbox Interactive Playground</h2>
+        
+        <!-- Tab menu -->
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('verify')">Verify BSN</button>
+          <button class="tab-btn" onclick="switchTab('lifecycle')">Trigger Lifecycle</button>
+          <button class="tab-btn" onclick="switchTab('recon')">SLA Reconciliation</button>
+        </div>
+
+        <!-- Tab 1: Verify BSN -->
+        <div id="verify-form" class="tab-content">
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:15px;">
+            Query Sint Maarten's Civil Registry archive database to verify dossier records.
+          </p>
+          <div class="form-group">
+            <label for="verify-bsn">BSN Number</label>
+            <input type="text" id="verify-bsn" value="123456" placeholder="e.g. 123456" />
+          </div>
+          <button class="submit-btn" onclick="runVerify()">Verify BSN</button>
+        </div>
+
+        <!-- Tab 2: Trigger Lifecycle -->
+        <div id="lifecycle-form" class="tab-content" style="display:none;">
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:15px;">
+            Simulate registrar lifecycle updates (Death Notifications or Pre-Provisioning Birth events).
+          </p>
+          <div class="form-group">
+            <label for="life-event">Event Type</label>
+            <select id="life-event" onchange="toggleLifecycleForm()">
+              <option value="DEATH_NOTIFICATION">💀 DEATH_NOTIFICATION</option>
+              <option value="BIRTH_PRE_PROVISION">🐣 BIRTH_PRE_PROVISION</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="life-uin">UIN (Unified Identification Number)</label>
+            <input type="text" id="life-uin" value="UN-SXM-26-888888-2" placeholder="e.g. UN-SXM-26-888888-2" />
+          </div>
+          <div id="birth-fields" style="display:none; border-top:1px dashed var(--border-color); padding-top:15px; margin-top:15px;">
+            <div class="form-group">
+              <label for="life-bsn">Pre-assigned BSN</label>
+              <input type="text" id="life-bsn" value="777777" placeholder="e.g. 777777" />
+            </div>
+            <div class="form-group">
+              <label for="life-name">Full Name</label>
+              <input type="text" id="life-name" value="Baby Connor Jr" placeholder="Full name" />
+            </div>
+            <div class="form-group">
+              <label for="life-dob">Date of Birth</label>
+              <input type="date" id="life-dob" value="2026-07-20" />
+            </div>
+          </div>
+          <button class="submit-btn" style="background-color: var(--accent-gold); color:#000;" onclick="runLifecycle()">Dispatch Event</button>
+        </div>
+
+        <!-- Tab 3: SLA Reconciliation -->
+        <div id="recon-form" class="tab-content" style="display:none;">
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:15px;">
+            Request synchronization consistency metrics logs, average SLA response latencies, and discrepancies.
+          </p>
+          <button class="submit-btn" style="background-color: var(--accent-emerald);" onclick="runReconciliation()">Run SLA Audit</button>
+        </div>
+
+        <!-- Terminal Output -->
+        <div class="response-terminal">
+          <div class="response-header">
+            <label style="margin-bottom:0;">JSON API Response Terminal</label>
+            <span class="status-badge status-ok" id="statusBadge">Status: IDLE</span>
+          </div>
+          <pre class="response-body"><code id="responseBody">{
+  "message": "Click a form button above to execute synchronous API requests."
+}</code></pre>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8082/api/v1/civil-registry';
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+      
+      event.target.classList.add('active');
+      document.getElementById(`${tab}-form`).style.display = 'block';
+    }
+
+    function toggleLifecycleForm() {
+      const type = document.getElementById('life-event').value;
+      const birthFields = document.getElementById('birth-fields');
+      const uinField = document.getElementById('life-uin');
+      
+      if (type === 'BIRTH_PRE_PROVISION') {
+        birthFields.style.display = 'block';
+        const rand = Math.floor(Math.random() * 900000) + 100000;
+        document.getElementById('life-bsn').value = rand;
+        document.getElementById('life-uin').value = `UN-SXM-26-000${rand.toString().substring(0, 3)}-9`;
+      } else {
+        birthFields.style.display = 'none';
+        document.getElementById('life-uin').value = 'UN-SXM-26-888888-2';
+      }
+    }
+
+    async function runVerify() {
+      const bsn = document.getElementById('verify-bsn').value;
+      updateTerminal('PENDING', 'Verifying...');
+
+      try {
+        const res = await fetch(`${API_BASE}/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bsn_number: bsn })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          updateTerminal('SUCCESS', data, true);
+        } else {
+          updateTerminal('ERROR', data, false);
+        }
+      } catch (err) {
+        updateTerminal('ERROR', { error: 'Network Error', message: 'Is the .NET backend API running at port 8082?' }, false);
+      }
+    }
+
+    async function runLifecycle() {
+      const type = document.getElementById('life-event').value;
+      const uin = document.getElementById('life-uin').value;
+      updateTerminal('PENDING', 'Dispatching Event...');
+
+      let payload = { event_type: type, uin: uin };
+
+      if (type === 'BIRTH_PRE_PROVISION') {
+        payload.bsn_number = document.getElementById('life-bsn').value;
+        payload.full_name = document.getElementById('life-name').value;
+        payload.dob = document.getElementById('life-dob').value;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/lifecycle-event`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          updateTerminal('SUCCESS', data, true);
+        } else {
+          updateTerminal('ERROR', data, false);
+        }
+      } catch (err) {
+        updateTerminal('ERROR', { error: 'Network Error', message: 'Is the .NET backend API running at port 8082?' }, false);
+      }
+    }
+
+    async function runReconciliation() {
+      updateTerminal('PENDING', 'Running Audit...');
+
+      try {
+        const res = await fetch(`${API_BASE}/reconciliation`);
+        const data = await res.json();
+        
+        if (res.ok) {
+          updateTerminal('SUCCESS', data, true);
+        } else {
+          updateTerminal('ERROR', data, false);
+        }
+      } catch (err) {
+        updateTerminal('ERROR', { error: 'Network Error', message: 'Is the .NET backend API running at port 8082?' }, false);
+      }
+    }
+
+    function updateTerminal(status, payload, isSuccess = true) {
+      const badge = document.getElementById('statusBadge');
+      const body = document.getElementById('responseBody');
+      
+      badge.className = 'status-badge';
+      if (status === 'PENDING') {
+        badge.classList.add('status-ok');
+        badge.innerText = 'Transmitting...';
+      } else if (status === 'SUCCESS' && isSuccess) {
+        badge.classList.add('status-ok');
+        badge.innerText = 'Status: 200 OK';
+      } else {
+        badge.classList.add('status-fail');
+        badge.innerText = status === 'ERROR' ? 'Status: 400 Bad Request' : `Status: ${status}`;
+      }
+
+      body.innerText = JSON.stringify(payload, null, 2);
+    }
+  </script>
+</body>
+</html>

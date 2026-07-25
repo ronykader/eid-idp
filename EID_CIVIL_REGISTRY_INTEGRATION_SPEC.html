@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Civil Registry & Lifecycle Integration Spec</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #060919;
+      --panel-bg: #0c1330;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f28;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-gold);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(251, 191, 36, 0.05);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flow-diagram-container {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 20px;
+      margin-bottom: 25px;
+      overflow-x: auto;
+    }
+
+    /* Flow Sequence boxes */
+    .flow-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 15px;
+    }
+
+    .flow-icon {
+      width: 36px;
+      height: 36px;
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1.5px solid var(--accent-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-blue);
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .flow-content {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 18px;
+      width: 100%;
+    }
+
+    .flow-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .flow-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* Code blocks */
+    pre {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #e2e8f0;
+      overflow-x: auto;
+      margin: 15px 0;
+      line-height: 1.5;
+    }
+
+    .endpoint-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-right: 8px;
+    }
+    .badge-post {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+    }
+    .badge-get {
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--accent-blue);
+    }
+
+    .alert-box {
+      background-color: rgba(251, 191, 36, 0.05);
+      border-left: 4px solid var(--accent-gold);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .alert-box h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Gov top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • National Registry Integration</div>
+    <div class="doc-type">Integration Specification</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header">
+      <h1>Civil Registry Connector Spec</h1>
+      <p>Technical integration schema, lifecycle orchestration flows, and reconciliation metrics</p>
+    </div>
+
+    <!-- Overview -->
+    <div class="card">
+      <h2>Ecosystem Integration Overview</h2>
+      <p class="step-desc">
+        Sint Maarten's Federated eID Ecosystem relies on a secure, bi-directional verification connector with the **Civil Registry database (BSN Archive)**. This integration governs identity enrollment, lifecycle transitions (births and deaths), and write-back synchronization to ensure non-repudiation and prevent key exploits.
+      </p>
+    </div>
+
+    <!-- Flow A: Verification and UIN Write-back -->
+    <div class="card">
+      <h2>1. Verification & UIN Write-Back Flow</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        When a citizen registers on the portal, their demographics are verified synchronously. If validated, the issued status is written back to the Civil Registry database:
+      </p>
+
+      <div class="flow-diagram-container">
+        <!-- Step 1 -->
+        <div class="flow-step">
+          <div class="flow-icon">1</div>
+          <div class="flow-content">
+            <div class="flow-title">Citizen Submits Application</div>
+            <div class="flow-desc">Citizen enters their BSN Number / National ID Number alongside demographics in the Next.js onboarding wizard.</div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="flow-step">
+          <div class="flow-icon">2</div>
+          <div class="flow-content">
+            <div class="flow-title">Synchronous Civil Registry Lookup</div>
+            <div class="flow-desc">The eID backend queries the <code>civil_registry_records</code> table to check matching dossiers. If the record does not exist or is flagged as <strong>Deceased</strong>, registration is rejected with <code>400 Bad Request</code>.</div>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="flow-step">
+          <div class="flow-icon">3</div>
+          <div class="flow-content">
+            <div class="flow-title">UIN Assignment</div>
+            <div class="flow-desc">The eID profile imports the pre-allocated UIN (Unified Identification Number) mapped to the BSN dossier.</div>
+          </div>
+        </div>
+        <!-- Step 4 -->
+        <div class="flow-step">
+          <div class="flow-icon">4</div>
+          <div class="flow-content">
+            <div class="flow-title">Write-Back Mapping Update</div>
+            <div class="flow-desc">In the same database transaction, the Civil Registry record's <code>eid_mapping_status</code> column is updated to <code>issued</code>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-box">
+        <h4>🔒 Security Mapping Rule</h4>
+        Writing back the issued status directly to the BSN database prevents the same BSN/National ID dossier from being reused to register another eID profile, eliminating identity duplication vectors.
+      </div>
+    </div>
+
+    <!-- API Reference: Verification -->
+    <div class="card">
+      <h2>2. Verification API Reference</h2>
+      <p class="step-desc">
+        <strong>Endpoint:</strong> <span class="endpoint-badge badge-post">POST</span> <code>/api/v1/civil-registry/verify</code>
+      </p>
+      
+      <pre>
+curl -X POST http://localhost:8082/api/v1/civil-registry/verify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bsn_number": "123456"
+  }'
+      </pre>
+
+      <p class="step-desc" style="margin-top:15px;"><strong>JSON Response (Success):</strong></p>
+      <pre>
+{
+  "success": true,
+  "message": "Citizen record verified successfully in Civil Registry archive",
+  "record": {
+    "uin": "UN-SXM-26-000001-9",
+    "bsn_number": "123456",
+    "national_id_number": "NID-987654",
+    "full_name": "John Connor",
+    "dob": "1990-05-15",
+    "status": "active",
+    "eid_mapping_status": "issued"
+  },
+  "sla_metrics": {
+    "latency_ms": 45,
+    "compliance": "SLA_METRIC_PASS",
+    "target_ms": 100
+  }
+}
+      </pre>
+    </div>
+
+    <!-- Flow B: Lifecycle Event (Death & Birth Pre-Provisioning) -->
+    <div class="card">
+      <h2>3. Lifecycle Events Flow (Births & Deaths)</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Updates from the national registrars automatically sync citizen credentials to prevent posthumous exploits:
+      </p>
+
+      <div class="flow-diagram-container">
+        <!-- Step 1 -->
+        <div class="flow-step">
+          <div class="flow-icon">A</div>
+          <div class="flow-content">
+            <div class="flow-title">Death Notification Triggered</div>
+            <div class="flow-desc">Registrar dispatches a <code>DEATH_NOTIFICATION</code> event containing the deceased's pre-assigned UIN.</div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="flow-step">
+          <div class="flow-icon">B</div>
+          <div class="flow-content">
+            <div class="flow-title">Civil Registry Suspension</div>
+            <div class="flow-desc">The BSN dossier status changes to <code>deceased</code> and its mapping status changes to <code>revoked</code>.</div>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="flow-step">
+          <div class="flow-icon">C</div>
+          <div class="flow-content">
+            <div class="flow-title">Credentials Revocation Loop</div>
+            <div class="flow-desc">The eID account status switches to <code>suspended</code>, and all registered credentials (passwords, TOTPs, WebAuthn keys) are set to <code>revoked</code> in the database, blocking all SSO access immediately.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Reference: Lifecycle Event -->
+    <div class="card">
+      <h2>4. Lifecycle Event API Reference</h2>
+      
+      <p class="step-desc">
+        <strong>Death Notification Endpoint:</strong> <span class="endpoint-badge badge-post">POST</span> <code>/api/v1/civil-registry/lifecycle-event</code>
+      </p>
+      <pre>
+curl -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event_type": "DEATH_NOTIFICATION",
+    "uin": "UN-SXM-26-888888-2"
+  }'
+      </pre>
+
+      <p class="step-desc" style="margin-top:15px;"><strong>JSON Response (Success):</strong></p>
+      <pre>
+{
+  "success": true,
+  "message": "DEATH_NOTIFICATION processed. eID citizen profile and credentials associated with UIN UN-SXM-26-888888-2 have been suspended and revoked."
+}
+      </pre>
+
+      <p class="step-desc" style="margin-top:25px;">
+        <strong>Birth Pre-Provisioning Endpoint:</strong> <span class="endpoint-badge badge-post">POST</span> <code>/api/v1/civil-registry/lifecycle-event</code>
+      </p>
+      <pre>
+curl -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event_type": "BIRTH_PRE_PROVISION",
+    "uin": "UN-SXM-26-777777-3",
+    "bsn_number": "777777",
+    "national_id_number": "NID-777777",
+    "full_name": "Sarah Connor Jr",
+    "dob": "2026-07-20"
+  }'
+      </pre>
+
+      <p class="step-desc" style="margin-top:15px;"><strong>JSON Response (Success):</strong></p>
+      <pre>
+{
+  "success": true,
+  "message": "BIRTH_PRE_PROVISION processed. Profile pre-provisioned in Civil Registry under UIN UN-SXM-26-777777-3."
+}
+      </pre>
+    </div>
+
+    <!-- SLA Reconciliation -->
+    <div class="card">
+      <h2>5. SLA Monitoring & Reconciliation Reports</h2>
+      <p class="step-desc" style="margin-bottom:20px;">
+        Monitor API performance logs and identify any database out-of-sync states using the reconciliation endpoint:
+      </p>
+
+      <p class="step-desc">
+        <strong>Endpoint:</strong> <span class="endpoint-badge badge-get">GET</span> <code>/api/v1/civil-registry/reconciliation</code>
+      </p>
+      <pre>
+curl -X GET http://localhost:8082/api/v1/civil-registry/reconciliation
+      </pre>
+
+      <p class="step-desc" style="margin-top:15px;"><strong>JSON Response:</strong></p>
+      <pre>
+{
+  "reconciliation_timestamp": "2026-07-25 14:23:19",
+  "total_civil_registry_records": 4,
+  "active_registered_eid_citizens": 1,
+  "reconciliation_status": "OUT_OF_SYNC_NONE",
+  "sla_average_latency_ms": 45,
+  "sla_status": "COMPLIANT_PASS",
+  "discrepancies": []
+}
+      </pre>
+    </div>
+
+  </div>
+
+</body>
+</html>

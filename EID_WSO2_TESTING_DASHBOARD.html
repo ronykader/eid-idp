@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eID & WSO2 IS Federated SSO Testing Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070b13;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #ff6a00;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(255, 106, 0, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6), rgba(30, 41, 59, 0.4));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #3b82f6, #60a5fa, #ff6a00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        /* Card Component */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 12px 20px -10px rgba(59, 130, 246, 0.15);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent-primary);
+        }
+
+        .card.wso2::before {
+            background-color: var(--accent-secondary);
+        }
+
+        .card.laravel::before {
+            background-color: var(--accent-purple);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Port Map Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        td a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-orange { background-color: rgba(255, 106, 0, 0.15); color: #ffa066; }
+        .badge-purple { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .badge-green { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+
+        /* Commands Codebox */
+        .cmd-block {
+            margin-top: 1rem;
+        }
+
+        .cmd-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .code-wrapper {
+            position: relative;
+            background-color: #030712;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            overflow-x: auto;
+            color: #10b981;
+        }
+
+        .btn-copy {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #1f2937;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            color: var(--text-main);
+            background-color: #1f2937;
+        }
+
+        /* Steps list */
+        .steps {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .steps li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .steps li::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            color: var(--bg-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .steps.wso2 li::before {
+            background-color: var(--accent-secondary);
+        }
+
+        .steps.laravel li::before {
+            background-color: var(--accent-purple);
+        }
+
+        .instruction {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Alert block */
+        .alert {
+            background-color: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 106, 0, 0.05);
+            border-left-color: var(--accent-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <header>
+            <h1>🇸🇽 Federated eID & WSO2 IS SSO Sandbox</h1>
+            <p>Interactive System Startup and Compliance Verification Hub</p>
+        </header>
+
+        <!-- Services Port Map -->
+        <div class="card" style="margin-bottom: 2rem; border-color: var(--accent-green);">
+            <h2>⚙️ System Component Port & URL Directory</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service / Portal</th>
+                        <th>Endpoint / Access URL</th>
+                        <th>Port</th>
+                        <th>Environment Tier</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>WSO2 Identity Server</strong> (IDP Broker)</td>
+                        <td><a href="https://localhost:9443/console" target="_blank">https://localhost:9443/console</a></td>
+                        <td><code>9443</code></td>
+                        <td><span class="badge badge-orange">Federated SSO</span></td>
+                        <td><span class="badge badge-green">Online</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>eID Backend Platform</strong> (.NET 8 Web API)</td>
+                        <td><a href="http://localhost:8082/swagger" target="_blank">http://localhost:8082/swagger</a></td>
+                        <td><code>8082</code></td>
+                        <td><span class="badge badge-blue">Core Identity API</span></td>
+                        <td><span class="badge badge-green">Online</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>eID Citizen Portal</strong> (Next.js Frontend)</td>
+                        <td><a href="http://localhost:3000" target="_blank">http://localhost:3000</a></td>
+                        <td><code>3000</code></td>
+                        <td><span class="badge badge-blue">Wizard & 2FA View</span></td>
+                        <td><span class="badge badge-green">Online</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Laravel Relying Party</strong> (MyGov Client App)</td>
+                        <td><a href="http://mygov.test/login" target="_blank">http://mygov.test/login</a></td>
+                        <td><code>80 / 443</code></td>
+                        <td><span class="badge badge-purple">Service Provider</span></td>
+                        <td><span class="badge badge-green">Online</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid grid-2">
+            
+            <!-- How to Run Services -->
+            <div class="card">
+                <h2>🚀 How to Run the Ecosystem</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Run these commands sequentially in separate terminal tabs to spin up all parts of the federated network:</p>
+
+                <div class="cmd-block">
+                    <div class="cmd-title">
+                        <span>1. Run WSO2 Identity Server & MySQL Database</span>
+                        <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
+                    </div>
+                    <div class="code-wrapper">docker-compose -f /Users/mdtarikulislam/Projects/Office/mygov/mordern-idp/onegov-wso2/docker-compose.yml up -d</div>
+                </div>
+
+                <div class="cmd-block">
+                    <div class="cmd-title">
+                        <span>2. Start eID Backend API (.NET 8)</span>
+                        <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
+                    </div>
+                    <div class="code-wrapper">dotnet run --project /Users/mdtarikulislam/Projects/Office/mygov/mordern-idp/eid-with-dotnet/SintMaarten.EID/SintMaarten.EID.Api/SintMaarten.EID.Api.csproj --launch-profile http</div>
+                </div>
+
+                <div class="cmd-block">
+                    <div class="cmd-title">
+                        <span>3. Start eID Frontend App (Next.js)</span>
+                        <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
+                    </div>
+                    <div class="code-wrapper">cd /Users/mdtarikulislam/Projects/Office/mygov/mordern-idp/eid-frontend && npm run dev</div>
+                </div>
+
+                <div class="cmd-block">
+                    <div class="cmd-title">
+                        <span>4. Check mygov.test Nginx Status</span>
+                        <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
+                    </div>
+                    <div class="code-wrapper">sudo nginx -s reload</div>
+                </div>
+            </div>
+
+            <!-- Complete Testing Flow -->
+            <div class="card wso2">
+                <h2>🧪 Full Login & MFA Testing Steps</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Follow this workflow in your browser to verify the multi-factor authentication (MFA) and token exchange flow:</p>
+                
+                <ul class="steps wso2">
+                    <li data-step="1">
+                        <strong>Open Relying Party App</strong>
+                        <div class="instruction">Navigate to <a href="http://mygov.test/login" target="_blank" style="color:#ffa066">http://mygov.test/login</a> in your browser.</div>
+                    </li>
+                    <li data-step="2">
+                        <strong>Initiate Federated SSO</strong>
+                        <div class="instruction">Click <strong>"🇸🇽 Log in using WSO2/eID"</strong>. You will be redirected to the WSO2 broker, which automatically delegates authentication to the Sint Maarten eID.</div>
+                    </li>
+                    <li data-step="3">
+                        <strong>Enter eID Platform Credentials</strong>
+                        <div class="instruction">When the eID portal screen loads on port 3000, log in with:<br>
+                        🔑 Username: <code>jahid.hassan.new@mygov.test</code><br>
+                        🔑 Password: <code>SuperSecurePassword123!</code></div>
+                    </li>
+                    <li data-step="4">
+                        <strong>2FA / MFA OTP Challenge</strong>
+                        <div class="instruction">Upon submitting credentials, the eID portal will prompt for a <strong>6-digit verification code</strong>. A blue debug alert will show the generated OTP. Enter it to pass the challenge.</div>
+                    </li>
+                    <li data-step="5">
+                        <strong>Consent Approval & Return</strong>
+                        <div class="instruction">WSO2 IS will prompt for user attributes consent (if enabled). Click <strong>"Approve"</strong>. You will be returned to the MyGov dashboard loaded with your secure demographic profile.</div>
+                    </li>
+                </ul>
+
+                <div class="alert alert-warning">
+                    <strong>💡 Demo OTP Bypass:</strong> For testing ease, entering the code <code>123456</code> is hardcoded as a universal bypass code in the <code>MfaService</code>.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid grid-2">
+            
+            <!-- Script Testing -->
+            <div class="card laravel">
+                <h2>⚡ Automated Script Verification</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">To perform instant, headless API verification of all backend components, use these test scripts:</p>
+
+                <div class="cmd-block">
+                    <div class="cmd-title">
+                        <span>Run OIDC Authorization, MFA & Token Exchange Flow Test</span>
+                        <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
+                    </div>
+                    <div class="code-wrapper">node /Users/mdtarikulislam/.gemini/antigravity-ide/brain/3f38da0f-f24d-4dee-ad92-c5f00a772988/scratch/test_oauth_flow.js</div>
+                </div>
+
+                <div class="cmd-block">
+                    <div class="cmd-title">
+                        <span>Run Federated WSO2 SSO Handshake Test</span>
+                        <button class="btn-copy" onclick="copyCmd(this)">Copy</button>
+                    </div>
+                    <div class="code-wrapper">node /Users/mdtarikulislam/.gemini/antigravity-ide/brain/3f38da0f-f24d-4dee-ad92-c5f00a772988/scratch/test_wso2_login.js</div>
+                </div>
+            </div>
+
+            <!-- WSO2 MFA Config -->
+            <div class="card">
+                <h2>🔒 Configuring MFA in WSO2 IS Console</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">If you need to enforce WSO2 IS native MFA policies (Google Authenticator / SMS) for additional Service Providers:</p>
+                
+                <ul class="steps">
+                    <li data-step="1">
+                        <strong>Login to Admin Portal</strong>
+                        <div class="instruction">Go to <a href="https://localhost:9443/console" target="_blank">WSO2 Console</a> and log in as <code>admin</code> / <code>admin</code>.</div>
+                    </li>
+                    <li data-step="2">
+                        <strong>Manage Applications</strong>
+                        <div class="instruction">Navigate to <strong>Applications</strong> ➔ Select <strong>"MyGov Portal"</strong>.</div>
+                    </li>
+                    <li data-step="3">
+                        <strong>Configure Authentication Steps</strong>
+                        <div class="instruction">Go to the <strong>"Sign-in Method"</strong> tab ➔ Add step 1 (Federated IDP - eID) ➔ Add step 2 (TOTP / Email OTP).</div>
+                    </li>
+                    <li data-step="4">
+                        <strong>Save & Enforce</strong>
+                        <div class="instruction">Click update. WSO2 IS will now natively double-verify the citizen's authentication after receiving the token from our eID platform.</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function copyCmd(btn) {
+            const codeBlock = btn.parentElement.nextElementSibling;
+            navigator.clipboard.writeText(codeBlock.innerText);
+            
+            const originalText = btn.innerText;
+            btn.innerText = "Copied!";
+            btn.style.borderColor = "var(--accent-green)";
+            btn.style.color = "var(--accent-green)";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.borderColor = "#1f2937";
+                btn.style.color = "var(--text-muted)";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

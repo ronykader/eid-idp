@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eID Technology Briefing: FIDO2 & WebAuthn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #030712;
+      --panel-bg: #0b0f19;
+      --border-color: #1f2937;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-blue: #3b82f6;
+      --accent-gold: #ffcc00;
+      --accent-emerald: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    /* Top Flag Ribbon */
+    .top-ribbon {
+      height: 6px;
+      background: linear-gradient(90deg, #ef4444 0%, #ffffff 50%, #2563eb 100%);
+      width: 100%;
+    }
+
+    /* Gov top bar */
+    .gov-banner {
+      background-color: #002266;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-blue);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 50%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    p.section-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    @media (min-width: 768px) {
+      .comparison-grid {
+        grid-template-cols: 1fr 1fr;
+      }
+    }
+
+    .comp-box {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .comp-box.bad {
+      border-left: 4px solid #ef4444;
+    }
+
+    .comp-box.good {
+      border-left: 4px solid var(--accent-emerald);
+    }
+
+    .comp-box h3 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .comp-box ul {
+      list-style-type: none;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .comp-box ul li {
+      margin-bottom: 8px;
+      padding-left: 15px;
+      position: relative;
+    }
+
+    .comp-box.bad ul li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #ef4444;
+    }
+
+    .comp-box.good ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-emerald);
+    }
+
+    /* Flow box */
+    .flow-step {
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
+    .flow-step span.step-badge {
+      display: inline-block;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .flow-step h4 {
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .flow-step p {
+      color: var(--text-muted);
+    }
+
+    .code-title {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--accent-gold);
+      background-color: #030612;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      margin-top: 15px;
+    }
+
+    pre {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding: 15px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      overflow-x: auto;
+      color: #38bdf8;
+      margin-bottom: 15px;
+    }
+
+    .highlight {
+      color: var(--accent-emerald);
+    }
+
+    .highlight-string {
+      color: #fbbf24;
+    }
+
+    .highlight-comment {
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-ribbon"></div>
+
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • Civil Registry Identity Management</div>
+    <span class="doc-type">FIDO2 & WebAuthn Guide</span>
+  </div>
+
+  <div class="container">
+    
+    <div class="header">
+      <h1>Understanding WebAuthn & FIDO2</h1>
+      <p>Technical briefing on passwordless public-key cryptography</p>
+    </div>
+
+    <!-- 1. WHY IT'S IMPORTANT -->
+    <div class="card">
+      <h2>🛡️ Why is WebAuthn Important?</h2>
+      <p class="section-desc">
+        WebAuthn (Web Authentication API) is a global W3C standard developed to completely eliminate traditional passwords and replace them with secure, un-phishable cryptographic credentials.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comp-box bad">
+          <h3>Traditional Passwords</h3>
+          <ul>
+            <li>Vulnerable to phishing sites masquerading as the official eID portal.</li>
+            <li>Users reuse credentials, causing leaks on unrelated sites to compromise government accounts.</li>
+            <li>Stored on backend servers as hashes; if a database is breached, passwords are targeted for offline brute-forcing.</li>
+          </ul>
+        </div>
+        <div class="comp-box good">
+          <h3>FIDO2 & WebAuthn</h3>
+          <ul>
+            <li><strong>Phishing Resistant:</strong> Credentials are cryptographically bound to the specific domain name (domain-bound). Browser blocks handshake if spoofed.</li>
+            <li><strong>Zero Shared Secrets:</strong> The server never receives or stores your password or biometric template. Touch ID/YubiKey remains local.</li>
+            <li><strong>Asymmetric Cryptography:</strong> The private key remains locked inside the device's hardware enclave; the server only retains the public key.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. REGISTRATION FLOW -->
+    <div class="card">
+      <h2>🔄 The Cryptographic Registration Flow (Binding)</h2>
+      <p class="section-desc">
+        When a citizen clicks "Bind New Biometric / Hardware Key" on their dashboard, the system initiates a handshake to generate a new key pair:
+      </p>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 1</span>
+        <h4>Get Challenge from Backend</h4>
+        <p>
+          The Next.js client requests a cryptographically random challenge from the C# WebAuthn endpoint. This challenge prevents replay attacks.
+        </p>
+      </div>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 2</span>
+        <h4>Prompt Browser Navigator</h4>
+        <p>
+          The browser invokes <code>navigator.credentials.create()</code>. The operating system prompts the user for Touch ID, Face ID, or YubiKey pin.
+        </p>
+      </div>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 3</span>
+        <h4>Generate Cryptographic Key Pair</h4>
+        <p>
+          The device's secure hardware enclave generates a brand new, unique key pair. The private key remains inside the enclave. The public key is sent back to the browser.
+        </p>
+      </div>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 4</span>
+        <h4>Register Public Key in Database</h4>
+        <p>
+          The client sends the public key and credential ID to the C# backend, which saves it in the <code>credentials</code> table for future login validations.
+        </p>
+      </div>
+
+      <div class="code-title">javascript_api_call.js (Registration)</div>
+      <pre>
+<span class="highlight-comment">// 1. Prompt the browser to generate new asymmetric credentials</span>
+<span class="highlight">const</span> credential = <span class="highlight">await navigator.credentials.create</span>({
+  publicKey: {
+    challenge: Uint8Array.from(challengeBuffer),
+    rp: { name: <span class="highlight-string">"Sint Maarten eID"</span>, id: <span class="highlight-string">"localhost"</span> },
+    user: {
+      id: Uint8Array.from(userBuffer),
+      name: <span class="highlight-string">"citizen@eid.sm"</span>,
+      displayName: <span class="highlight-string">"John Connor"</span>
+    },
+    pubKeyCredParams: [{ type: <span class="highlight-string">"public-key"</span>, alg: -7 }], <span class="highlight-comment">// ES256 algorithm</span>
+    authenticatorSelection: { authenticatorAttachment: <span class="highlight-string">"platform"</span> }, <span class="highlight-comment">// Touch ID / Face ID</span>
+    timeout: 60000
+  }
+});
+      </pre>
+    </div>
+
+    <!-- 3. AUTHENTICATION FLOW -->
+    <div class="card">
+      <h2>🔑 The Authentication Flow (Login)</h2>
+      <p class="section-desc">
+        When the citizen logs in later using their passkey, they bypass password and MFA screens completely via a cryptographic signature challenge:
+      </p>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 1</span>
+        <h4>Send Auth Challenge</h4>
+        <p>
+          The server sends an authentication challenge to the client along with the citizen's registered Credential ID.
+        </p>
+      </div>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 2</span>
+        <h4>Prompt Cryptographic Signature</h4>
+        <p>
+          The browser invokes <code>navigator.credentials.get()</code>. The user unlocks their biometric sensor (Touch ID). The device signs the challenge using the stored private key.
+        </p>
+      </div>
+
+      <div class="flow-step">
+        <span class="step-badge">Step 3</span>
+        <h4>Validate Signature on Server</h4>
+        <p>
+          The signed assertion is sent back to the C# backend. The backend retrieves the corresponding public key and verifies that the signature matches the challenge. If verified, access is granted.
+        </p>
+      </div>
+
+      <div class="code-title">javascript_api_call.js (Authentication)</div>
+      <pre>
+<span class="highlight-comment">// 2. Prompt browser to sign authentication challenge</span>
+<span class="highlight">const</span> assertion = <span class="highlight">await navigator.credentials.get</span>({
+  publicKey: {
+    challenge: Uint8Array.from(challengeBuffer),
+    allowCredentials: [{
+      id: Uint8Array.from(credentialIdBuffer),
+      type: <span class="highlight-string">"public-key"</span>
+    }],
+    timeout: 60000
+  }
+});
+      </pre>
+
+      <div class="code-title">WebAuthnController.cs (C# Backend Validation)</div>
+      <pre>
+<span class="highlight-comment">// C# Backend verification checks</span>
+[HttpPost(<span class="highlight-string">"login/verify"</span>)]
+<span class="highlight">public</span> IActionResult VerifyAssertion([FromBody] AssertionVerifyRequest req)
+{
+    <span class="highlight">var</span> credential = _dbContext.Credentials.FirstOrDefault(c => c.Uin == req.Uin);
+    <span class="highlight">if</span> (credential == <span class="highlight">null</span>) <span class="highlight">return</span> NotFound();
+
+    <span class="highlight-comment">// Cryptographic verification of client signature using stored public key</span>
+    <span class="highlight">bool</span> isValid = Cryptography.VerifySignature(
+        publicKey: credential.PublicKey,
+        data: req.ClientDataJSON + req.AuthenticatorData,
+        signature: req.Signature
+    );
+
+    <span class="highlight">if</span> (!isValid) <span class="highlight">return</span> Unauthorized(<span class="highlight-string">"Invalid passkey signature"</span>);
+    
+    <span class="highlight">return</span> Ok(new { token = GenerateToken(credential.Citizen) });
+}
+      </pre>
+    </div>
+
+  </div>
+</body>
+</html>

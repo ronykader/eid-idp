@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSO2 IS Configuration & Client Onboarding Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070b13;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --accent-wso2: #ff7300;
+            --accent-eid: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+            --border-color: #1e293b;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 115, 0, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.5));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-wso2), var(--accent-eid));
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, var(--accent-wso2), #ffa855, var(--accent-eid));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #cbd5e1;
+            font-size: 1.15rem;
+            font-weight: 300;
+        }
+
+        /* Section Cards */
+        .section-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Responsive Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            background-color: rgba(30, 41, 59, 0.4);
+        }
+
+        tr:hover {
+            background-color: rgba(30, 41, 59, 0.2);
+        }
+
+        td strong {
+            color: var(--text-main);
+        }
+
+        /* Code and copy buttons */
+        .code-box {
+            background-color: #030712;
+            border: 1px solid #1f2937;
+            border-radius: 6px;
+            padding: 0.25rem 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .code-inline {
+            font-family: var(--font-mono);
+            background-color: #030712;
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #38bdf8;
+        }
+
+        .btn-copy {
+            background: none;
+            border: 1px solid #1f2937;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            color: var(--text-main);
+            background-color: #1f2937;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-green { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .badge-blue { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-orange { background-color: rgba(255, 115, 0, 0.15); color: #ffa066; }
+
+        /* API diagnostics panel */
+        .diag-wrapper {
+            background-color: #030712;
+            border: 1px solid #1f2937;
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #10b981;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <header>
+            <h1>🔒 WSO2 IS Config & Onboarding Report</h1>
+            <p>Official deployment record of federated claim dialects and target Relying Party configurations</p>
+        </header>
+
+        <!-- Section 1: Claims Configuration -->
+        <div class="section-box">
+            <h2>🏷️ 1. Federated Claims Dialect Registration</h2>
+            <p style="color: #cbd5e1; margin-bottom: 1.5rem;">
+                The following custom claim properties were successfully added to the local WSO2 claim dialect (<code class="code-inline">http://wso2.org/claims</code>) to capture Sint Maarten demographic records:
+            </p>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Claim URI</th>
+                            <th>Display Name</th>
+                            <th>Description</th>
+                            <th>Mapped Attribute</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="code-inline">http://wso2.org/claims/bsn_number</code></td>
+                            <td><strong>BSN Number</strong></td>
+                            <td>Dutch BSN or Sint Maarten CRIB Number</td>
+                            <td><code>cribNumber</code></td>
+                            <td><span class="badge badge-green">Registered</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-inline">http://wso2.org/claims/uin</code></td>
+                            <td><strong>UIN Number</strong></td>
+                            <td>Unique Identification Number</td>
+                            <td><code>uinNumber</code></td>
+                            <td><span class="badge badge-green">Registered</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-inline">http://wso2.org/claims/eid</code></td>
+                            <td><strong>eID Number</strong></td>
+                            <td>Electronic Identification Number</td>
+                            <td><code>eidNumber</code></td>
+                            <td><span class="badge badge-green">Registered</span></td>
+                        </tr>
+                        <tr>
+                            <td><code class="code-inline">http://wso2.org/claims/municipality</code></td>
+                            <td><strong>Municipality</strong></td>
+                            <td>Sint Maarten District / Municipality</td>
+                            <td><code>district</code></td>
+                            <td><span class="badge badge-green">Registered</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2: Service Providers Onboarded -->
+        <div class="section-box">
+            <h2>🖥️ 2. Onboarded Service Providers (Portals)</h2>
+            <p style="color: #cbd5e1; margin-bottom: 1.5rem;">
+                All six primary service providers are registered as federated clients. Authentication is routed via OIDC authorization code flow to the <strong>eID-Provider</strong> federated Identity Provider:
+            </p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Portal</th>
+                            <th>Client ID</th>
+                            <th>Client Secret</th>
+                            <th>Callback URI</th>
+                            <th>Federation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>mygov</strong></td>
+                            <td>
+                                <div class="code-box">
+                                    <span>eiMgOByxPuwybGw2CKYW9nJl8_oa</span>
+                                    <button class="btn-copy" onclick="copyText('eiMgOByxPuwybGw2CKYW9nJl8_oa', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="code-box">
+                                    <span>2d0bcwOjhvF9OXEDzGlv1boUAiMa</span>
+                                    <button class="btn-copy" onclick="copyText('2d0bcwOjhvF9OXEDzGlv1boUAiMa', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td><code>http://mygov.test/auth/wso2/callback</code></td>
+                            <td><span class="badge badge-blue">eID-Provider</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>upsheba</strong></td>
+                            <td>
+                                <div class="code-box">
+                                    <span>upsheba-client-id-2026</span>
+                                    <button class="btn-copy" onclick="copyText('upsheba-client-id-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="code-box">
+                                    <span>upsheba-client-secret-key-2026</span>
+                                    <button class="btn-copy" onclick="copyText('upsheba-client-secret-key-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td><code>http://upsheba.test/auth/wso2/callback</code></td>
+                            <td><span class="badge badge-blue">eID-Provider</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>fintech</strong></td>
+                            <td>
+                                <div class="code-box">
+                                    <span>fintech-client-id-2026</span>
+                                    <button class="btn-copy" onclick="copyText('fintech-client-id-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="code-box">
+                                    <span>fintech-client-secret-key-2026</span>
+                                    <button class="btn-copy" onclick="copyText('fintech-client-secret-key-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td><code>http://fintech.test/auth/wso2/callback</code></td>
+                            <td><span class="badge badge-blue">eID-Provider</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>health</strong></td>
+                            <td>
+                                <div class="code-box">
+                                    <span>health-client-id-2026</span>
+                                    <button class="btn-copy" onclick="copyText('health-client-id-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="code-box">
+                                    <span>health-client-secret-key-2026</span>
+                                    <button class="btn-copy" onclick="copyText('health-client-secret-key-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td><code>http://health.test/auth/wso2/callback</code></td>
+                            <td><span class="badge badge-blue">eID-Provider</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>passport</strong></td>
+                            <td>
+                                <div class="code-box">
+                                    <span>passport-client-id-2026</span>
+                                    <button class="btn-copy" onclick="copyText('passport-client-id-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="code-box">
+                                    <span>passport-client-secret-key-2026</span>
+                                    <button class="btn-copy" onclick="copyText('passport-client-secret-key-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td><code>http://passport.test/auth/wso2/callback</code></td>
+                            <td><span class="badge badge-blue">eID-Provider</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>tax</strong></td>
+                            <td>
+                                <div class="code-box">
+                                    <span>tax-client-id-2026</span>
+                                    <button class="btn-copy" onclick="copyText('tax-client-id-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="code-box">
+                                    <span>tax-client-secret-key-2026</span>
+                                    <button class="btn-copy" onclick="copyText('tax-client-secret-key-2026', this)">Copy</button>
+                                </div>
+                            </td>
+                            <td><code>http://tax.test/auth/wso2/callback</code></td>
+                            <td><span class="badge badge-blue">eID-Provider</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 3: Diagnostic Queries -->
+        <div class="section-box">
+            <h2>🔍 3. Programmatic Configuration Verification</h2>
+            <p style="color: #cbd5e1; margin-bottom: 1rem;">
+                Run these terminal curl commands from the command line to verify WSO2 config states directly:
+            </p>
+            
+            <div class="diag-wrapper">
+# 1. Fetch Registered Claims Dialects
+curl -k -s -u admin:admin https://localhost:9443/api/server/v1/claim-dialects
+
+# 2. Check Custom Claims in Local Dialect
+curl -k -s -u admin:admin https://localhost:9443/api/server/v1/claim-dialects/local/claims | grep -o -E '"claimURI":"[^"]+"'
+
+# 3. Retrieve Registered Service Providers
+curl -k -s -u admin:admin https://localhost:9443/api/server/v1/applications
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function copyText(txt, btn) {
+            navigator.clipboard.writeText(txt);
+            const orig = btn.innerText;
+            btn.innerText = "Copied!";
+            btn.style.color = "var(--accent-green)";
+            btn.style.borderColor = "var(--accent-green)";
+            setTimeout(() => {
+                btn.innerText = orig;
+                btn.style.color = "var(--text-muted)";
+                btn.style.borderColor = "#1f2937";
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

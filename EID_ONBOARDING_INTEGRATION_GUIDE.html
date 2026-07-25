@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Multi-Agency SSO Onboarding & Integration Manual</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #070b19;
+      --panel-bg: #0e1635;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --code-bg: #040815;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+
+    /* Top Ribbon Header */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    /* Official Government Banner */
+    .gov-banner {
+      background-color: #0c122c;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.active-tag {
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gov-banner span.active-tag::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-gold);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 40px auto 20px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 50%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Wizard Step Indicators */
+    .wizard-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 40px 0;
+    }
+
+    .step-btn {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px 15px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-btn:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    .step-btn.active {
+      border-color: var(--accent-blue);
+      background-color: rgba(59, 130, 246, 0.05);
+      box-shadow: 0 4px 20px -5px rgba(59, 130, 246, 0.15);
+    }
+
+    .step-number {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .step-btn.active .step-number {
+      color: var(--accent-gold);
+    }
+
+    .step-label {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+    }
+
+    /* Content Cards */
+    .step-panel {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .step-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 35px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .card-title span.icon {
+      font-size: 22px;
+    }
+
+    /* Content Styling */
+    h3.section-header {
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin: 24px 0 12px 0;
+      letter-spacing: 0.05em;
+    }
+
+    p.paragraph {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    ul.bullet-list {
+      list-style-type: none;
+      margin-bottom: 20px;
+      padding-left: 5px;
+    }
+
+    ul.bullet-list li {
+      position: relative;
+      padding-left: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    ul.bullet-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-emerald);
+      font-weight: 900;
+    }
+
+    /* Code stack selector */
+    .stack-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stack-btn {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .stack-btn:hover {
+      border-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    .stack-btn.active {
+      background-color: rgba(59, 130, 246, 0.1);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .code-panel {
+      display: none;
+    }
+
+    .code-panel.active {
+      display: block;
+    }
+
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #818cf8;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+      line-height: 1.5;
+    }
+
+    .code-keyword { color: #f43f5e; font-weight: bold; }
+    .code-string { color: #10b981; }
+    .code-comment { color: #64748b; font-style: italic; }
+
+    /* Interactive WSO2 Setup mapping details */
+    .wso2-console-step {
+      display: flex;
+      gap: 20px;
+      background-color: rgba(255, 255, 255, 0.01);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .step-body h4 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .step-body p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flag Accent Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Government top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • Federated Identity Network</div>
+    <div class="active-tag">Federation Gateway Hub Setup</div>
+  </div>
+
+  <!-- Title/Hero -->
+  <div class="hero">
+    <h1>Government Portal Integration Guide</h1>
+    <p>Step-by-step onboarding walkthrough for developer teams and agency portals</p>
+  </div>
+
+  <div class="container">
+    
+    <!-- Wizard Steps Buttons -->
+    <div class="wizard-steps">
+      <button class="step-btn active" onclick="switchStep(1)">
+        <span class="step-number">Step 01</span>
+        <span class="step-label">Prerequisites</span>
+      </button>
+
+      <button class="step-btn" onclick="switchStep(2)">
+        <span class="step-number">Step 02</span>
+        <span class="step-label">WSO2 Setup</span>
+      </button>
+
+      <button class="step-btn" onclick="switchStep(3)">
+        <span class="step-number">Step 03</span>
+        <span class="step-label">Code Integration</span>
+      </button>
+
+      <button class="step-btn" onclick="switchStep(4)">
+        <span class="step-number">Step 04</span>
+        <span class="step-label">Testing & Audit</span>
+      </button>
+    </div>
+
+    <!-- PANEL 1: PREREQUISITES & SECURITY STANDARDS -->
+    <div id="step-panel-1" class="step-panel active">
+      <div class="card">
+        <div class="card-title">
+          <span class="icon">🔑</span>
+          <h2>Step 1: Prerequisites & Security Compliance Standards</h2>
+        </div>
+        <p class="paragraph">
+          Before applying for credentials, your developer team must ensure that your application conforms to the national eID security guidelines. All onboarding portals must meet the following baseline requirements:
+        </p>
+
+        <h3 class="section-header">Security Requirements Checklist</h3>
+        <ul class="bullet-list">
+          <li><strong>Enforce HTTPS globally:</strong> All callback endpoints must run under TLS 1.2 or TLS 1.3 in production environments. Plain HTTP is strictly forbidden (except for `localhost` during development).</li>
+          <li><strong>Authorization Code Flow with PKCE:</strong> Applications must implement Proof Key for Code Exchange (PKCE) to prevent code interception attacks. Implicit flow is deprecated.</li>
+          <li><strong>Secure Client Secrets:</strong> Client secrets issued by WSO2 IS must be stored in server-side environment variables (`.env`). Never commit credentials to version control.</li>
+          <li><strong>Claim Release & User Consent:</strong> Declare the minimum set of attributes required. For example, if you do not require Tax/CRIB numbers, do not request the BSN claim scope.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PANEL 2: WSO2 ADMIN CONSOLE SETUP -->
+    <div id="step-panel-2" class="step-panel">
+      <div class="card">
+        <div class="card-title">
+          <span class="icon">⚙️</span>
+          <h2>Step 2: WSO2 Identity Server Configuration</h2>
+        </div>
+        <p class="paragraph">
+          Administrators must register the portal application inside WSO2 Identity Server to configure it as a federated relying party. Follow these console steps:
+        </p>
+
+        <div class="wso2-console-step">
+          <div class="step-badge">1</div>
+          <div class="step-body">
+            <h4>Register Service Provider (SP)</h4>
+            <p>Log in to the WSO2 IS console, click "Applications", select "New Application" and choose "OpenID Connect". Input your portal's display name and client redirect URLs.</p>
+          </div>
+        </div>
+
+        <div class="wso2-console-step">
+          <div class="step-badge">2</div>
+          <div class="step-body">
+            <h4>Configure PKCE and Grant Types</h4>
+            <p>Under OIDC configurations, ensure "Code" is checkmarked, check "Mandatory PKCE", and disable "Implicit Grant" to protect the authentication code exchange.</p>
+          </div>
+        </div>
+
+        <div class="wso2-console-step">
+          <div class="step-badge">3</div>
+          <div class="step-body">
+            <h4>Claim Attribute Mapping</h4>
+            <p>Under the Application's claim configurations, choose mapping dialect `http://wso2.org/claims`. Add required claims: `uin` (Unique ID), `bsn` (Tax/CRIB ID), `email`, and `fullname` to allow token claim release.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: CODE INTEGRATION & STACK SAMPLES -->
+    <div id="step-panel-3" class="step-panel">
+      <div class="card">
+        <div class="card-title">
+          <span class="icon">💻</span>
+          <h2>Step 3: Portal Codebase Integration</h2>
+        </div>
+        <p class="paragraph">
+          Select your tech stack below to view the standardized integration template configured to execute federated SSO checks against WSO2 IS Broker.
+        </p>
+
+        <!-- Stack Selector Buttons -->
+        <div class="stack-selector">
+          <button class="stack-btn active" onclick="switchStack('nextjs')">Next.js (NextAuth)</button>
+          <button class="stack-btn" onclick="switchStack('php')">PHP (Standard)</button>
+          <button class="stack-btn" onclick="switchStack('dotnet')">.NET 8 / C#</button>
+        </div>
+
+        <!-- Next.js Code -->
+        <div id="code-nextjs" class="code-panel active">
+          <pre><code><span class="code-keyword">import</span> NextAuth <span class="code-keyword">from</span> <span class="code-string">"next-auth"</span>;
+<span class="code-keyword">import</span> WSO2Provider <span class="code-keyword">from</span> <span class="code-string">"next-auth/providers/wso2"</span>;
+
+<span class="code-keyword">export const</span> authOptions = {
+  <span class="code-comment">// Central WSO2 Identity Server broker configuration</span>
+  providers: [
+    WSO2Provider({
+      clientId: process.env.WSO2_CLIENT_ID,
+      clientSecret: process.env.WSO2_CLIENT_SECRET,
+      issuer: <span class="code-string">"https://localhost:9443/oauth2/token"</span>,
+      wellKnown: <span class="code-string">"https://localhost:9443/oauth2/token/.well-known/openid-configuration"</span>,
+      authorization: { params: { scope: <span class="code-string">"openid profile email uin bsn"</span> } },
+    }),
+  ],
+  callbacks: {
+    <span class="code-keyword">async</span> jwt({ token, profile }) {
+      <span class="code-keyword">if</span> (profile) {
+        token.uin = profile.uin; <span class="code-comment">// Unified Identity UIN</span>
+        token.bsn = profile.bsn_number; <span class="code-comment">// Tax CRIB Number</span>
+      }
+      <span class="code-keyword">return</span> token;
+    }
+  }
+};
+<span class="code-keyword">export default</span> NextAuth(authOptions);</code></pre>
+        </div>
+
+        <!-- PHP Code -->
+        <div id="code-php" class="code-panel">
+          <pre><code><span class="code-comment">// Setup standard OpenID Connect Client configuration</span>
+<span class="code-keyword">use</span> Jumbojett\OpenIDConnectClient;
+
+$oidc = <span class="code-keyword">new</span> OpenIDConnectClient(
+    <span class="code-string">'https://localhost:9443/oauth2/token'</span>,
+    $_ENV[<span class="code-string">'WSO2_CLIENT_ID'</span>],
+    $_ENV[<span class="code-string">'WSO2_CLIENT_SECRET'</span>]
+);
+
+$oidc->setProviderConfigValue(<span class="code-string">'authorization_endpoint'</span>, <span class="code-string">'https://localhost:9443/oauth2/authorize'</span>);
+$oidc->setProviderConfigValue(<span class="code-string">'token_endpoint'</span>, <span class="code-string">'https://localhost:9443/oauth2/token'</span>);
+$oidc->addScope([<span class="code-string">'openid'</span>, <span class="code-string">'profile'</span>, <span class="code-string">'uin'</span>, <span class="code-string">'bsn'</span>]);
+
+<span class="code-comment">// Perform auth challenge redirect</span>
+$oidc->authenticate();
+
+<span class="code-comment">// Extract federated identity attributes</span>
+$uin = $oidc->requestUserInfo(<span class="code-string">'uin'</span>);
+$email = $oidc->requestUserInfo(<span class="code-string">'email'</span>);</code></pre>
+        </div>
+
+        <!-- C# / .NET Code -->
+        <div id="code-dotnet" class="code-panel">
+          <pre><code><span class="code-keyword">using</span> Microsoft.AspNetCore.Authentication.OpenIdConnect;
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddOpenIdConnect(options =>
+{
+    <span class="code-comment">// Connect program middleware to central WSO2 Hub</span>
+    options.Authority = <span class="code-string">"https://localhost:9443/oauth2/token"</span>;
+    options.ClientId = builder.Configuration[<span class="code-string">"WSO2:ClientId"</span>];
+    options.ClientSecret = builder.Configuration[<span class="code-string">"WSO2:ClientSecret"</span>];
+    options.ResponseType = OpenIdConnectResponseType.Code;
+    options.SaveTokens = <span class="code-keyword">true</span>;
+    
+    options.Scope.Add(<span class="code-string">"uin"</span>);
+    options.Scope.Add(<span class="code-string">"bsn"</span>);
+});</code></pre>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PANEL 4: TESTING & AUDIT -->
+    <div id="step-panel-4" class="step-panel">
+      <div class="card">
+        <div class="card-title">
+          <span class="icon">✅</span>
+          <h2>Step 4: Testing & Compliance Verification</h2>
+        </div>
+        <p class="paragraph">
+          Once integration is complete in sandbox settings, testing teams must submit evidence verifying that their application complies with data protection logs:
+        </p>
+
+        <h3 class="section-header">Testing Verification Rules</h3>
+        <ul class="bullet-list">
+          <li><strong>Audit Trail Check:</strong> Trigger a login flow on your portal. Ensure that an Annex E evidence record is automatically generated in the eID dashboard under the Unified Identity logs, detailing the release transaction.</li>
+          <li><strong>Token Token Expiry:</strong> Verify that your portal successfully handles session expirations and refreshes access tokens using standard OAuth refresh cycles.</li>
+          <li><strong>Correlation Tracing:</strong> Ensure that all API calls route the standardized `x-correlation-id` header to enable transaction trace mappings.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Tab & Details Toggle Logic -->
+  <script>
+    function switchStep(stepNum) {
+      // Hide all panels
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      // Deactivate all step buttons
+      document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+      
+      // Show selected panel
+      document.getElementById('step-panel-' + stepNum).classList.add('active');
+      // Highlight button
+      event.currentTarget.classList.add('active');
+    }
+
+    function switchStack(stackId) {
+      // Hide all code panels
+      document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+      // Deactivate all stack buttons
+      document.querySelectorAll('.stack-btn').forEach(b => b.classList.remove('active'));
+      
+      // Show targeted code panel
+      document.getElementById('code-' + stackId).classList.add('active');
+      // Highlight button
+      event.currentTarget.classList.add('active');
+    }
+  </script>
+</body>
+</html>

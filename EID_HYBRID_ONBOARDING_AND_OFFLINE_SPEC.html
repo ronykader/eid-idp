@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Onboarding, Biometrics & Offline Verification Specification</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #050814;
+      --panel-bg: #0b112c;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --code-bg: #030611;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+
+    /* Top Flag Ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    /* Top Government bar */
+    .gov-banner {
+      background-color: #090e24;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.active-tag {
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gov-banner span.active-tag::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-gold);
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1200px;
+      margin: 40px auto 20px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 50%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs-container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 24px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-blue);
+      background-color: rgba(59, 130, 246, 0.08);
+      box-shadow: inset 0 0 1px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Content Area */
+    .tab-content {
+      display: none;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .card-title span.icon {
+      font-size: 20px;
+    }
+
+    /* Inner Layouts */
+    .grid-info {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (min-width: 768px) {
+      .grid-info {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    h3.section-header {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    p.desc-text {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    ul.bullet-list {
+      list-style-type: none;
+      margin-bottom: 16px;
+    }
+
+    ul.bullet-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    ul.bullet-list li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+      color: var(--accent-gold);
+    }
+
+    /* Live camera integration panel */
+    .camera-integration-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      background-color: var(--code-bg);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .video-view-screen {
+      width: 320px;
+      height: 240px;
+      background-color: #030409;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .video-view-screen video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-overlay-frame {
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-overlay-frame.active {
+      border-color: rgba(59, 130, 246, 0.4);
+      background: radial-gradient(circle, transparent 55%, rgba(3, 4, 9, 0.8) 56%);
+    }
+
+    .video-overlay-oval {
+      width: 140px;
+      height: 180px;
+      border: 2px dashed var(--accent-blue);
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .camera-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Logic Code Block */
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: #818cf8;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+      line-height: 1.5;
+    }
+
+    .code-kw { color: #f43f5e; font-weight: bold; }
+    .code-str { color: #10b981; }
+    .code-com { color: #64748b; font-style: italic; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Government top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • eID Master Specifications</div>
+    <div class="active-tag">Reference Guide Online</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>System Architecture & Operational Logic</h1>
+    <p>Offline Verification, PSC Onboarding, and Contactless ePassport Chip Mappings</p>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="nav-tabs-container">
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('offline')">1. Offline Verification</button>
+      <button class="tab-btn" onclick="switchTab('psc')">2. PSC Onboarding</button>
+      <button class="tab-btn" onclick="switchTab('passport')">3. ePassport & MRZ Scan</button>
+    </div>
+  </div>
+
+  <!-- TAB 1: OFFLINE VERIFICATION -->
+  <div id="tab-offline" class="tab-content active">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">📡</span>
+        <h2>What is Offline Verification & Why is it Needed?</h2>
+      </div>
+      
+      <div class="grid-info">
+        
+        <div>
+          <h3 class="section-header">1. The Problem: Connectivity Vulnerability</h3>
+          <p class="desc-text">
+            Sint Maarten's infrastructure is vulnerable to hurricanes and network outages. During power loss or fiber line cutoffs, standard OIDC online authentication fails. 
+          </p>
+          <p class="desc-text">
+            However, critical border controls (such as crossings between the Dutch and French sides) and emergency health check points must verify identities under all circumstances.
+          </p>
+
+          <h3 class="section-header">2. The Solution: Signed QR Credentials</h3>
+          <p class="desc-text">
+            Offline Verification allows citizens to display a high-assurance **Cryptographic QR Code** from their eID mobile app. 
+          </p>
+          <p class="desc-text">
+            The QR code does not contain plain text databases; instead, it holds a JWT payload signed with the eID registry's **asymmetric private key**. Verifying devices scan the code and validate the signature offline using the pre-cached public key.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="section-header">Key Capabilities Mapped</h3>
+          <ul class="bullet-list">
+            <li><strong>Asymmetric Trust:</strong> Validates signatures without connection to the central database server.</li>
+            <li><strong>Outage-Only Fallback:</strong> Automatically triggers when verifier systems detect loss of backend gateway links.</li>
+            <li><strong>Tamper Proof:</strong> Any manual claim adjustments break the cryptographic hash, invalidating the signature.</li>
+            <li><strong>Reconciliation Queue:</strong> Checked logs are stored locally on scanning devices and synced to the core server once connection returns.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <h3 class="section-header">Underlying Cryptographic Logic</h3>
+      <pre><code><span class="code-com">// C# Controller generating signed offline QR assertions</span>
+[HttpGet(<span class="code-str">"citizens/offline-qr"</span>)]
+<span class="code-kw">public async</span> Task&lt;IActionResult&gt; GetOfflineQR()
+{
+    <span class="code-com">// 1. Resolve and validate the OIDC session token from request</span>
+    <span class="code-kw">var</span> principal = _tokenService.ValidateToken(jwtToken);
+    
+    <span class="code-com">// 2. Query citizen demographics from MySQL Registry</span>
+    <span class="code-kw">var</span> citizen = <span class="code-kw">await</span> _dbContext.Citizens.FirstOrDefaultAsync(c =&gt; c.Uuid == uuid);
+    
+    <span class="code-com">// 3. Generate RS256-signed JWT containing core claims</span>
+    <span class="code-kw">var</span> qrToken = _tokenService.GenerateToken(citizen.Uuid, citizen.Uin, citizen.Eid, citizen.Email, citizen.Role);
+    
+    <span class="code-kw">return</span> Ok(<span class="code-kw">new</span> { qr_payload = qrToken });
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- TAB 2: PSC ASSISTED ONBOARDING & CAMERA -->
+  <div id="tab-psc" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">👥</span>
+        <h2>PSC Assisted Enrollment & Camera Integration</h2>
+      </div>
+
+      <div class="grid-info">
+        
+        <div>
+          <h3 class="section-header">1. Why We Need the Biometric Enroller</h3>
+          <p class="desc-text">
+            Under the **EU eIDAS Regulation (Assurance Level High)** and Sint Maarten legal frameworks, binding a digital credential (like a FIDO2 passkey) to a verified physical identity is mandatory. The Biometric Enroller prevents **impersonation and enrollment fraud** by ensuring that the person registering the eID is indeed the legitimate owner of the identity document.
+          </p>
+          <p class="desc-text">
+            Additionally, it provides an official **assisted channel** for citizens who do not own modern smartphones with biometric scanners, ensuring equal access to digital government services.
+          </p>
+
+          <h3 class="section-header">2. How It Works (Biometric Processing Logic)</h3>
+          <p class="desc-text">
+            <strong>A. Image Acquisition:</strong> The operator activates the enroller camera. The browser opens a media stream with a centered oval guide to ensure optimal positioning and light balancing.
+          </p>
+          <p class="desc-text">
+            <strong>B. Landmark Extraction & Hashing:</strong> Once captured, the system maps **68 key facial landmarks** (eye spacing, nose bridge shape, jawline angle). These landmarks are converted into a 128-dimensional floating-point **Feature Vector (Face Template)**.
+          </p>
+          <p class="desc-text">
+            <strong>C. Matching & Hashing:</strong> The computed vector is compared against the passport photograph using a **Cosine Similarity** algorithm. If the match confidence score exceeds **95.0%**, the template is cryptographically hashed and bound to the citizen record inside the eID registry database.
+          </p>
+
+          <h3 class="section-header">3. Key Use Cases</h3>
+          <ul class="bullet-list" style="margin-bottom:14px;">
+            <li><strong>Assisted Office Enrollment:</strong> Validating offline or elderly citizens at counter desks.</li>
+            <li><strong>Verification Override:</strong> Resolving identity suspensions if automatic remote document uploads fail matching thresholds.</li>
+            <li><strong>Identity Duplication Checks:</strong> Scanning the database to prevent a single citizen from registering multiple active UIN profiles.</li>
+          </ul>
+        </div>
+
+        <!-- Live Camera Sandbox Widget -->
+        <div class="camera-integration-container">
+          <h4 class="text-xs font-bold uppercase tracking-widest text-slate-300">Live Camera Simulator</h4>
+          
+          <div class="video-view-screen">
+            <video id="webcam-feed" autoplay playsinline muted></video>
+            <div id="cam-overlay" class="video-overlay-frame">
+              <div class="video-overlay-oval"></div>
+            </div>
+            <!-- Loading Indicator -->
+            <div id="cam-loader" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.8); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--accent-blue);">
+              Snapping Profile Image...
+            </div>
+          </div>
+
+          <div class="camera-actions">
+            <button id="btn-toggle-cam" class="btn" onclick="toggleWebcam()">Start Camera</button>
+            <button id="btn-capture-cam" class="btn btn-secondary" onclick="snapWebcam()" disabled>Capture Snapshot</button>
+          </div>
+          <div id="cam-status" style="font-size:10px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">
+            Camera Offline
+          </div>
+        </div>
+
+      </div>
+
+      <h3 class="section-header">WebCam Capture Logic</h3>
+      <pre><code><span class="code-com">// Javascript logic to open camera feed & capture photo frame</span>
+<span class="code-kw">async function</span> toggleWebcam() {
+    <span class="code-kw">const</span> constraints = { video: { width: 320, height: 240 } };
+    <span class="code-com">// Stream browser webcam to HTML5 video element</span>
+    <span class="code-kw">const</span> stream = <span class="code-kw">await</span> navigator.mediaDevices.getUserMedia(constraints);
+    videoElement.srcObject = stream;
+}
+
+<span class="code-kw">function</span> snapWebcam() {
+    <span class="code-com">// Draw video frame onto hidden HTML5 canvas</span>
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    <span class="code-kw">const</span> base64Image = canvas.toDataURL(<span class="code-str">'image/jpeg'</span>);
+    <span class="code-com">// Extract image bytes and post to eID biometrics matcher API</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- TAB 3: EPASSPORT & MRZ SCAN -->
+  <div id="tab-passport" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">🛂</span>
+        <h2>ePassport NFC Chip & MRZ Scanner Mappings</h2>
+      </div>
+
+      <div class="grid-info">
+        
+        <div>
+          <h3 class="section-header">1. What is an ePassport?</h3>
+          <p class="desc-text">
+            An ePassport is a secure biometric travel document containing a microchip. The microchip stores demographic claims, biometric data (face image), and public keys signed by the issuing country’s CSCA (Country Signing Certification Authority).
+          </p>
+
+          <h3 class="section-header">2. Contactless NFC & MRZ Logic</h3>
+          <p class="desc-text">
+            To extract chip data, scanners read the **Machine Readable Zone (MRZ)** (two lines of text at the bottom of the passport page). 
+          </p>
+          <p class="desc-text">
+            The scanner uses details from the MRZ (Passport number, DOB, and Expiry date) to calculate a cryptographic access key. Using this key, the reader establishes a **Basic Access Control (BAC)** connection via NFC to decrypt the chip payload.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="section-header">3. Pattern B Fallback</h3>
+          <p class="desc-text">
+            If the passport lacks a chip, or the chip is damaged/corrupted, the scanner activates the **Pattern B Documentary Fallback** protocol. 
+          </p>
+          <p class="desc-text">
+            Under Pattern B, the operator manually reviews the security features under UV light and enters passport data manually, maintaining legal onboarding audits despite hardware failures.
+          </p>
+        </div>
+
+      </div>
+
+      <h3 class="section-header">Contactless Handshake Logic</h3>
+      <pre><code><span class="code-com">// Cryptographic handshake to establish contactless session keys</span>
+<span class="code-kw">public class</span> ePassportNfcSession
+{
+    <span class="code-kw">public</span> byte[] CalculateBACSessionKey(string mrzLine)
+    {
+        <span class="code-com">// 1. Extract PassportNumber, DateOfBirth, and ExpiryDate from MRZ</span>
+        <span class="code-kw">var</span> input = PassportNumber + DateOfBirth + ExpiryDate;
+        
+        <span class="code-com">// 2. Compute SHA-1 hash to generate document access keys</span>
+        <span class="code-kw">using</span> (SHA1 sha1 = SHA1.Create()) {
+            <span class="code-kw">return</span> sha1.ComputeHash(Encoding.ASCII.GetBytes(input));
+        }
+    }
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Webcam Scripts -->
+  <script>
+    let localStream = null;
+    const video = document.getElementById('webcam-feed');
+    const overlay = document.getElementById('cam-overlay');
+    const statusText = document.getElementById('cam-status');
+    const btnToggle = document.getElementById('btn-toggle-cam');
+    const btnCapture = document.getElementById('btn-capture-cam');
+
+    async function toggleWebcam() {
+      if (localStream) {
+        // Stop Webcam
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+        video.srcObject = null;
+        overlay.classList.remove('active');
+        btnToggle.innerText = 'Start Camera';
+        btnCapture.disabled = true;
+        statusText.innerText = 'Camera Offline';
+      } else {
+        // Start Webcam
+        try {
+          statusText.innerText = 'Initializing camera...';
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+          localStream = stream;
+          video.srcObject = stream;
+          overlay.classList.add('active');
+          btnToggle.innerText = 'Stop Camera';
+          btnCapture.disabled = false;
+          statusText.innerText = 'Camera Active — Face Centered';
+        } catch (err) {
+          statusText.innerText = 'Failed to load media: ' + err.message;
+        }
+      }
+    }
+
+    function snapWebcam() {
+      const loader = document.getElementById('cam-loader');
+      loader.style.display = 'flex';
+      btnCapture.disabled = true;
+      
+      setTimeout(() => {
+        loader.style.display = 'none';
+        btnCapture.disabled = false;
+        const score = (96 + Math.random() * 3.8).toFixed(2);
+        statusText.innerHTML = `✓ Snapshot captured! Match Score: <span style="color:#10b981;">${score}%</span>`;
+      }, 1500);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

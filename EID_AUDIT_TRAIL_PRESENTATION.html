@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Annex E Cryptographic Audit Trail Presentation</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #070b19;
+      --panel-bg: #0e1635;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+
+    /* Top Ribbon Header */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    /* Official Government Banner */
+    .gov-banner {
+      background-color: #0c122c;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.active-tag {
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gov-banner span.active-tag::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 40px auto 20px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 50%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs-container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 24px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-blue);
+      background-color: rgba(59, 130, 246, 0.08);
+      box-shadow: inset 0 0 1px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Content Layout */
+    .tab-content {
+      display: none;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+    }
+
+    .card-title span.icon {
+      font-size: 20px;
+    }
+
+    /* Tab 1: Why it Exists */
+    .grid-why {
+      display: grid;
+      grid-cols: 1;
+      gap: 20px;
+    }
+    @media (min-width: 640px) {
+      .grid-why {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .why-item {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .why-item:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    .why-tag {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    .why-tag.eidas { color: var(--accent-gold); }
+    .why-tag.nonrep { color: var(--accent-blue); }
+    .why-tag.gdpr { color: var(--accent-emerald); }
+    .why-tag.tamper { color: #f43f5e; }
+
+    .why-item h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .why-item p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Tab 2: Where it Shows */
+    .system-mapping {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .system-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .system-node {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 8px 16px;
+      border-radius: 6px;
+      min-width: 150px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .system-node.citizen { background-color: rgba(59, 130, 246, 0.1); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.2); }
+    .system-node.admin { background-color: rgba(251, 191, 36, 0.1); color: var(--accent-gold); border: 1px solid rgba(251, 191, 36, 0.2); }
+    .system-node.db { background-color: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+    .system-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .system-desc strong {
+      color: #ffffff;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    /* Tab 3: How we Track */
+    .stepper {
+      position: relative;
+      padding-left: 30px;
+      margin-top: 10px;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--border-color);
+    }
+
+    .step-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .step-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--bg-color);
+      border: 2px solid var(--accent-blue);
+    }
+
+    .step-item.completed::before {
+      border-color: var(--accent-emerald);
+      background-color: var(--accent-emerald);
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Tab 4: Field Reference (Dictionary & Mock DB Interaction) */
+    .db-dictionary-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .db-dictionary-container {
+        grid-template-columns: 3fr 2fr;
+      }
+    }
+
+    /* Mock DB Row */
+    .mock-db-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background-color: #030712;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .db-field {
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+
+    .db-field:hover, .db-field.selected {
+      border-color: var(--accent-blue);
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .db-field .field-name {
+      color: #f43f5e;
+      font-weight: 700;
+      margin-right: 10px;
+    }
+
+    .db-field .field-val {
+      color: #10b981;
+      word-break: break-all;
+    }
+
+    /* Details Panel */
+    .details-panel {
+      background-color: rgba(255, 255, 255, 0.01);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .details-placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 40px 0;
+    }
+
+    .field-details {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .field-details.active {
+      display: block;
+    }
+
+    .field-details h3 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 6px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .field-details h4 {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .field-details p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .field-details pre {
+      background-color: #030712;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flag Accent Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Government top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • National Identity Framework</div>
+    <div class="active-tag">Audit Assurance System Online</div>
+  </div>
+
+  <!-- Title/Hero -->
+  <div class="hero">
+    <h1>Annex E Cryptographic Audit Trail</h1>
+    <p>Architecture, Compliance, Tracking, and Schema Reference Specification</p>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="nav-tabs-container">
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('why')">1. Governance Goal</button>
+      <button class="tab-btn" onclick="switchTab('where')">2. Presentation Layers</button>
+      <button class="tab-btn" onclick="switchTab('track')">3. Tracking Sequence</button>
+      <button class="tab-btn" onclick="switchTab('dict')">4. Field Schema</button>
+    </div>
+  </div>
+
+  <!-- TAB 1: GOVERNANCE GOAL (WHY IT EXISTS) -->
+  <div id="tab-why" class="tab-content active">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">🏛️</span>
+        <h2>Why We Maintain the Annex E Audit Trail</h2>
+      </div>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px; max-width: 800px;">
+        Under EU eIDAS (Assurance Level High) and UN/CEFACT citizen protection covenants, identity providers are required to guarantee tamper-proof evidence logs. This audit trail tracks every claim release transaction.
+      </p>
+
+      <div class="grid-why">
+        <div class="why-item">
+          <span class="why-tag eidas">eIDAS Level High</span>
+          <h3>Assurance Compliance</h3>
+          <p>Ensures that any release of core citizen metadata (like CRIB or UIN) to relying parties has a recorded authorization path, meeting legal security standards.</p>
+        </div>
+
+        <div class="why-item">
+          <span class="why-tag nonrep">Legal Non-Repudiation</span>
+          <h3>Cryptographic Evidence</h3>
+          <p>By registering the SHA-256 hash of the released payload, both the citizen and the relying party are bound to the transaction. Neither party can deny the data release occurred.</p>
+        </div>
+
+        <div class="why-item">
+          <span class="why-tag gdpr">GDPR Transparency</span>
+          <h3>Right to Audit</h3>
+          <p>Citizens have the legal right to trace exactly who accessed their data, when they accessed it, and what claims were released. This dashboard renders these records directly.</p>
+        </div>
+
+        <div class="why-item">
+          <span class="why-tag tamper">Tamper Evidence</span>
+          <h3>Database Integrity</h3>
+          <p>Each log is signed with an absolute transaction correlation key. If database records are modified, the stored payload hash breaks alignment, indicating data tampering.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: PRESENTATION LAYERS (WHERE IT SHOWS) -->
+  <div id="tab-where" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">🖥️</span>
+        <h2>Where Audit Trail Records are Presented</h2>
+      </div>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px;">
+        To ensure total trust, transparency, and auditability, transaction records appear on three distinct layers in our environment:
+      </p>
+
+      <div class="system-mapping">
+        <div class="system-row">
+          <div class="system-node citizen">Citizen Dashboard</div>
+          <div class="system-desc">
+            <strong>Evidence Audit Logs Tab:</strong> Citizen-facing logs displaying their personal authentications, OIDC token releases, and WebAuthn signatures to respect GDPR transparency.
+          </div>
+        </div>
+
+        <div class="system-row">
+          <div class="system-node admin">Admin Console</div>
+          <div class="system-desc">
+            <strong>Security Audit Logs:</strong> System-wide, read-only paginated listing of all identity release transactions. Used by civil registry officers for compliance auditing.
+          </div>
+        </div>
+
+        <div class="system-row">
+          <div class="system-node db">MySQL database</div>
+          <div class="system-desc">
+            <strong>audit_evidence_records table:</strong> The persistent backend repository mapped in Entity Framework Core. Stores the correlation keys, verification status, and cryptographic hashes.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: TRACKING SEQUENCE (HOW WE TRACK) -->
+  <div id="tab-track" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">⚡</span>
+        <h2>The Transaction Logging Flow</h2>
+      </div>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px;">
+        The chronological lifecycle of an audit log transaction starting from a relying party request:
+      </p>
+
+      <div class="stepper">
+        <div class="step-item completed">
+          <div class="step-title">1. Authentication Initiated</div>
+          <div class="step-desc">A citizen attempts to access a service (e.g. MyGov Portal). The portal redirects them to WSO2 Identity Server.</div>
+        </div>
+
+        <div class="step-item completed">
+          <div class="step-title">2. Federated OIDC Request</div>
+          <div class="step-desc">WSO2 IS acts as the broker and routes the request to our eID platform backend along with a generated request Correlation ID.</div>
+        </div>
+
+        <div class="step-item completed">
+          <div class="step-title">3. Citizen Verification (FIDO2)</div>
+          <div class="step-desc">The citizen authenticates on the eID platform using their cryptographic passkey. The platform verifies the assertion signature.</div>
+        </div>
+
+        <div class="step-item completed">
+          <div class="step-title">4. Annex E Logging</div>
+          <div class="step-desc">Before releasing the claim token, OAuthController calls IAnnexEEvidenceLogger. The service hashes the claim payload and saves the evidence record.</div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-title">5. Token Release & Session Active</div>
+          <div class="step-desc">The secure token is released to WSO2, and the citizen is redirected to MyGov with their verified claims. The audit log is now auditable in both dashboards.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: FIELD SCHEMA (FIELD INTERACTION) -->
+  <div id="tab-dict" class="tab-content">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">📖</span>
+        <h2>Audit Database Fields Reference</h2>
+      </div>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px;">
+        Select fields in the database evidence record to understand its cryptographic function and compliance role.
+      </p>
+
+      <div class="db-dictionary-container">
+        
+        <!-- Left Column: Mock Row -->
+        <div class="mock-db-row">
+          <div style="color: var(--text-muted); font-size: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 8px;">
+            TABLE: audit_evidence_records (1 Row Selected)
+          </div>
+          
+          <div class="db-field selected" onclick="showDetails('ref_id', this)">
+            <span class="field-name">reference_id</span>
+            <span class="field-val">"EVID-SX-73a8f2cd5c"</span>
+          </div>
+
+          <div class="db-field" onclick="showDetails('corr_id', this)">
+            <span class="field-name">correlation_id</span>
+            <span class="field-val">"c892b1a0-d2d1-41e9-91f2-12a809f2d11b"</span>
+          </div>
+
+          <div class="db-field" onclick="showDetails('ts', this)">
+            <span class="field-name">timestamp</span>
+            <span class="field-val">"2026-07-24 01:21:11"</span>
+          </div>
+
+          <div class="db-field" onclick="showDetails('sub', this)">
+            <span class="field-name">subject_uin</span>
+            <span class="field-val">"UN-BGD-26-489021-9"</span>
+          </div>
+
+          <div class="db-field" onclick="showDetails('status', this)">
+            <span class="field-name">verification_status</span>
+            <span class="field-val">"VERIFIED_HIGH_ASSURANCE"</span>
+          </div>
+
+          <div class="db-field" onclick="showDetails('hash', this)">
+            <span class="field-name">payload_hash</span>
+            <span class="field-val">"b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"</span>
+          </div>
+        </div>
+
+        <!-- Right Column: Details Pane -->
+        <div class="details-panel">
+          <div id="placeholder-detail" class="details-placeholder">
+            Click on any database field to inspect its description, purpose, and sample representation.
+          </div>
+
+          <!-- REFERENCE ID DETAILS -->
+          <div id="detail-ref_id" class="field-details active">
+            <h3>Reference ID</h3>
+            <h4>Field Schema: VARCHAR(100) NOT NULL</h4>
+            <p>
+              A unique human-readable transactional identifier generated by the eID platform for this claim release. It serves as the receipt number shared with the citizen.
+            </p>
+            <pre>Value: "EVID-SX-73a8f2cd5c"</pre>
+          </div>
+
+          <!-- CORRELATION ID DETAILS -->
+          <div id="detail-corr_id" class="field-details">
+            <h3>Correlation ID</h3>
+            <h4>Field Schema: VARCHAR(100) NOT NULL</h4>
+            <p>
+              A GUID mapped directly from the calling federated broker (Keycloak or WSO2 Identity Server). It allows security auditors to link the database log to corresponding WSO2 authentication logs.
+            </p>
+            <pre>Value: "c892b1a0-d2d1-41e9-91f2-12a809f2d11b"</pre>
+          </div>
+
+          <!-- TIMESTAMP DETAILS -->
+          <div id="detail-ts" class="field-details">
+            <h3>Timestamp</h3>
+            <h4>Field Schema: TIMESTAMP DEFAULT CURRENT_TIMESTAMP</h4>
+            <p>
+              The precise UTC date and time that the transaction was processed, validated, and logged to the MySQL database.
+            </p>
+            <pre>Value: "2026-07-24 01:21:11"</pre>
+          </div>
+
+          <!-- SUBJECT UIN DETAILS -->
+          <div id="detail-sub" class="field-details">
+            <h3>Subject UIN</h3>
+            <h4>Field Schema: VARCHAR(100) NOT NULL</h4>
+            <p>
+              The Unified Identification Number (UIN) of the citizen requesting the credentials check. Serves as the foreign link mapping the record back to the citizen directory.
+            </p>
+            <pre>Value: "UN-BGD-26-489021-9"</pre>
+          </div>
+
+          <!-- VERIFICATION STATUS DETAILS -->
+          <div id="detail-status" class="field-details">
+            <h3>Verification Status</h3>
+            <h4>Field Schema: VARCHAR(50) NOT NULL</h4>
+            <p>
+              Details the levels of assurance (LoA) met during the authentication handshake. Standard status outputs are `VERIFIED_HIGH_ASSURANCE` (for passkey/FIDO2 check) and `VERIFIED_SUBSTANTIAL` (for basic logins).
+            </p>
+            <pre>Value: "VERIFIED_HIGH_ASSURANCE"</pre>
+          </div>
+
+          <!-- PAYLOAD HASH DETAILS -->
+          <div id="detail-hash" class="field-details">
+            <h3>Payload Hash</h3>
+            <h4>Field Schema: VARCHAR(255) NOT NULL</h4>
+            <p>
+              The SHA-256 cryptographic hash of the JSON claim attributes released to the relying party. This ensures data non-repudiation while respecting privacy by not storing plain text user details directly in logs.
+            </p>
+            <pre>Hash Algorithm: SHA-256
+Input Claims: {"uin": "...", "eid": "..."}
+Hash Output: "b94d27b9934..."</pre>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Tab & Details Toggle Logic -->
+  <script>
+    function switchTab(tabId) {
+      // Hide all contents
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      // Deactivate all buttons
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      // Activate selected
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showDetails(fieldId, element) {
+      // Hide placeholder
+      document.getElementById('placeholder-detail').style.display = 'none';
+      
+      // Hide all details
+      document.querySelectorAll('.field-details').forEach(d => d.classList.remove('active'));
+      // Remove selection from fields
+      document.querySelectorAll('.db-field').forEach(f => f.classList.remove('selected'));
+      
+      // Show target details
+      document.getElementById('detail-' + fieldId).classList.add('active');
+      // Highlight field
+      element.classList.add('selected');
+    }
+  </script>
+</body>
+</html>

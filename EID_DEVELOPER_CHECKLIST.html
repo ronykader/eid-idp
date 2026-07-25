@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Developer Requirements Checklist</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #060919;
+      --panel-bg: #0c1330;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f28;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-gold);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(251, 191, 36, 0.05);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header-box {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header-box h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header-box p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Stats Panel */
+    .stats-panel {
+      display: grid;
+      grid-template-cols: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-input {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      min-width: 280px;
+      flex-grow: 1;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .filter-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    /* Checklist Table */
+    .table-container {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow-x: auto;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    th {
+      background-color: rgba(255,255,255,0.02);
+      border-bottom: 2px solid var(--border-color);
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 14px 20px;
+      text-align: left;
+    }
+
+    td {
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      vertical-align: middle;
+      color: var(--text-main);
+    }
+
+    tr:hover {
+      background-color: rgba(255,255,255,0.01);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-blue);
+    }
+
+    .req-desc {
+      font-weight: 400;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 600;
+      background-color: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    /* Badges */
+    .status-badge {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-done {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+    }
+
+    .badge-pending {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--accent-red);
+    }
+
+    .badge-na {
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-ribbon"></div>
+
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • Development Dashboard</div>
+    <div class="doc-type">SRS Requirements Traceability Matrix</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header-box">
+      <h1>eID Platform Compliance Tracker</h1>
+      <p>Real-time requirements checklist mapping all 311 specification items</p>
+      <div style="font-size: 11px; margin-top: 10px; font-weight: normal; letter-spacing: normal;">
+        <span style="color: var(--accent-gold);">🚀 Production Deployment:</span> <a href="EID_DEPLOYMENT_GUIDE.html" style="color: #60a5fa; text-decoration: underline; font-weight: bold;">Open VPS Deployment & Hardening Guide</a>
+        &nbsp;&bull;&nbsp;
+        <span style="color: var(--accent-emerald);">🛡️ Developer Portal:</span> <a href="EID_RP_DEVELOPER_PORTAL.html" style="color: #60a5fa; text-decoration: underline; font-weight: bold;">Open RP Sandbox Developer Portal</a>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-panel">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total Specs</div>
+      </div>
+      <div class="stat-card" style="border-bottom: 3px solid var(--accent-emerald);">
+        <div class="stat-value" id="stat-done" style="color: var(--accent-emerald);">0</div>
+        <div class="stat-label">✔ Completed</div>
+      </div>
+      <div class="stat-card" style="border-bottom: 3px solid var(--accent-red);">
+        <div class="stat-value" id="stat-pending" style="color: var(--accent-red);">0</div>
+        <div class="stat-label">☐ Pending</div>
+      </div>
+      <div class="stat-card" style="border-bottom: 3px solid var(--text-muted);">
+        <div class="stat-value" id="stat-na" style="color: var(--text-muted);">0</div>
+        <div class="stat-label">— N/A</div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, #0e1b3d, #0c1330);">
+        <div class="stat-value" id="stat-percent" style="color: var(--accent-blue);">0%</div>
+        <div class="stat-label">Compliance Rate</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-panel">
+      <input type="text" class="search-input" id="searchInput" oninput="filterData()" placeholder="Search by ID, Requirement ID, Section, or Description..." />
+      
+      <div class="filter-tabs">
+        <button class="filter-btn active" id="btn-all" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" id="btn-done" onclick="setFilter('done')">✔ Done</button>
+        <button class="filter-btn" id="btn-pending" onclick="setFilter('pending')">☐ Pending</button>
+        <button class="filter-btn" id="btn-na" onclick="setFilter('na')">N/A</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 8%;">ID</th>
+            <th style="width: 12%;">Req ID</th>
+            <th style="width: 25%;">Section</th>
+            <th style="width: 43%;">Description</th>
+            <th style="width: 12%;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="checklist-body">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    // All 311 requirements preloaded
+    const requirements = [
+      { id: "EID-001", reqId: "P2-EIDC001", section: "1.1 Lifecycle Phases", desc: "Support five core lifecycle phases: onboarding, issuance, usage, renewal, revocation", status: "done" },
+      { id: "EID-002", reqId: "P2-EIDC002", section: "1.1 Lifecycle Phases", desc: "Support Pre-provisioned (non-activated) lifecycle state. Pre-provisioned records SHALL NOT be usable for auth/SSO/signing until activation", status: "done" },
+      { id: "EID-003", reqId: "P2-EIDC007", section: "1.1 Lifecycle Phases", desc: "Support renewal processes for periodic updates, status changes, credential refresh WITHOUT complete re-enrolment", status: "pending" },
+      { id: "EID-004", reqId: "P2-EIDC008", section: "1.1 Lifecycle Phases", desc: "Implement revocation capabilities for permanent credential disabling or emergency response to security incidents", status: "done" },
+      { id: "EID-005", reqId: "P2-EIDC009", section: "1.1 Lifecycle Phases", desc: "Maintain comprehensive audit trails for ALL identity lifecycle operations", status: "done" },
+      { id: "EID-006", reqId: "P2-EIDC010", section: "1.1 Lifecycle Phases", desc: "Implement privacy-by-design: minimal data collection, purpose limitation, data minimisation throughout lifecycle", status: "pending" },
+      { id: "EID-007", reqId: "P2-EIDC011", section: "1.1 Lifecycle Phases", desc: "Provide configurable identity lifecycle workflows for enrolment, verification, renewal, revocation", status: "done" },
+      { id: "EID-008", reqId: "P2-EIDC011", section: "1.1 Lifecycle Phases", desc: "Enforce entitlement boundaries by lifecycle state (pre-provisioned/pending/active+standard/active+signing)", status: "pending" },
+      
+      { id: "EID-009", reqId: "P2-EIDC003", section: "1.2 Onboarding / Enrolment", desc: "Implement onboarding using POST-PROOFING approach; support CONFIGURATION-READY alternative pre-proofing workflow", status: "done" },
+      { id: "EID-010", reqId: "P2-EIDC004", section: "1.2 Onboarding / Enrolment", desc: "Enable PARTIAL onboarding — resume at a later stage without losing submitted data", status: "pending" },
+      { id: "EID-011", reqId: "P2-EIDC027", section: "1.2 Onboarding / Enrolment", desc: "Implement four-stage enrolment: PSC intake → Civil Registry verification → Digital ID creation → Credential delivery", status: "done" },
+      { id: "EID-012", reqId: "P2-EIDC028", section: "1.2 Onboarding / Enrolment", desc: "Support application receipt via in-person/assisted (PSC) and online self-service (web-first)", status: "done" },
+      { id: "EID-013", reqId: "P2-EIDC029", section: "1.2 Onboarding / Enrolment", desc: "Perform automated identity verification against Civil Registry using identity attribute matching", status: "done" },
+      { id: "EID-014", reqId: "P2-EIDC030", section: "1.2 Onboarding / Enrolment", desc: "Support document authenticity checks (non-biometric Phase 1): automated validation, MRZ for passports", status: "done" },
+      { id: "EID-015", reqId: "P2-EIDC031", section: "1.2 Onboarding / Enrolment", desc: "Handle enrolment exceptions through configurable manual review processes with approval workflows", status: "done" },
+      { id: "EID-016", reqId: "P2-EIDC032", section: "1.2 Onboarding / Enrolment", desc: "Generate unique digital identity credentials upon successful verification and provide secure activation mechanisms", status: "done" },
+      { id: "EID-017", reqId: "P2-EIDC033", section: "1.2 Onboarding / Enrolment", desc: "Support batch processing for reconciliation and controlled administrative operations with full audit trails", status: "pending" },
+      { id: "EID-018", reqId: "P2-EIDC034", section: "1.2 Onboarding / Enrolment", desc: "Implement quality assurance: automated validation checks and manual review triggers for edge cases", status: "done" },
+      
+      { id: "EID-019", reqId: "P2-EIDC012", section: "1.3 Civil Registry Integration", desc: "Recognise Civil Registry as the PRIMARY authoritative source for personal identity information", status: "done" },
+      { id: "EID-020", reqId: "P2-INTC001", section: "1.3 Civil Registry Integration", desc: "Integrate with Civil Registry Centric Platform for real-time identity verification and validation", status: "done" },
+      { id: "EID-021", reqId: "P2-INTC002", section: "1.3 Civil Registry Integration", desc: "Identity data synchronisation: changes to civil registry records reflected within defined timeframes", status: "done" },
+      { id: "EID-022", reqId: "P2-INTC004", section: "1.3 Civil Registry Integration", desc: "Death record integration: automatically update digital identity status from Civil Registry death events", status: "done" },
+      { id: "EID-023", reqId: "P2-INTC005", section: "1.3 Civil Registry Integration", desc: "Legal relationship verification: validate family relationships, guardianship, legal representation", status: "pending" },
+      { id: "EID-024", reqId: "P2-INTC006", section: "1.3 Civil Registry Integration", desc: "Civil Registry connector SHALL ingest death events idempotently; implement retry/backoff for transient failures", status: "done" },
+      
+      { id: "EID-025", reqId: "P2-EIDC018", section: "1.4 UIN Integration", desc: "Implement IDEMPOTENT UIN issuance and write-back with correlation_id end-to-end propagation", status: "done" },
+      { id: "EID-026", reqId: "P2-EIDC019", section: "1.4 UIN Integration", desc: "Emit and retain UIN lifecycle audit events: uin_requested, uin_issued, uin_writeback_attempted, etc.", status: "done" },
+      { id: "EID-027", reqId: "P2-EIDC020", section: "1.4 UIN Integration", desc: "Implement UIN integration with Civil Registry for primary identity verification and validation", status: "done" },
+      { id: "EID-028", reqId: "P2-EIDC021", section: "1.4 UIN Integration", desc: "UIN printed on national ID cards SHALL NOT provide direct access to any digital services", status: "na" },
+      { id: "EID-029", reqId: "P2-EIDC022", section: "1.4 UIN Integration", desc: "UIN serves ONLY as identity reference — NOT as access credential", status: "na" },
+      { id: "EID-030", reqId: "P2-EIDC023", section: "1.4 UIN Integration", desc: "Generate separate technical identifiers for service access", status: "done" },
+      { id: "EID-031", reqId: "P2-EIDC024", section: "1.4 UIN Integration", desc: "Provide tokenisation capabilities: privacy-preserving identifiers separating tokens from underlying UIN", status: "pending" },
+      { id: "EID-032", reqId: "P2-EIDC025", section: "1.4 UIN Integration", desc: "Privacy safeguards: sensitive identifier information NEVER exposed directly in inappropriate contexts", status: "na" },
+      { id: "EID-033", reqId: "P2-EIDC026", section: "1.4 UIN Integration", desc: "Secure UIN binding mechanisms linking digital identity credentials to verified unique identifiers", status: "done" },
+      { id: "EID-034", reqId: "P2-INTC003", section: "1.4 UIN Integration", desc: "UIN validation services: verify citizen unique identifiers, write-back, real-time AND batch verification", status: "done" },
+      
+      { id: "EID-035", reqId: "P2-EIDC013", section: "1.5 Identity Roles & Access", desc: "Facilitate Public Service Centre (PSC) as primary front-end interface for user enrolment", status: "done" },
+      { id: "EID-036", reqId: "P2-EIDC014", section: "1.5 Identity Roles & Access", desc: "Support role-based access control with responsibilities for identity verification, credential issuance", status: "done" },
+      { id: "EID-037", reqId: "P2-EIDC015", section: "1.5 Identity Roles & Access", desc: "Implement delegation capabilities for authorised representatives: legal guardians and power of attorney", status: "done" },
+      { id: "EID-038", reqId: "P2-EIDC016", section: "1.5 Identity Roles & Access", desc: "Provide administrative interfaces for authorised government personnel", status: "done" },
+      { id: "EID-039", reqId: "P2-EIDC017", section: "1.5 Identity Roles & Access", desc: "Provide supervision interfaces, dashboard, and reporting module for authorised government personnel", status: "done" },
+      
+      { id: "EID-040", reqId: "P2-EIDC035", section: "1.6 Identity Recovery & Suspension", desc: "Provide identity recovery services for users who lost access to credentials or authentication factors", status: "pending" },
+      { id: "EID-041", reqId: "P2-EIDC036", section: "1.6 Identity Recovery & Suspension", desc: "Implement SECURE identity recovery requiring additional verification steps beyond standard authentication", status: "pending" },
+      { id: "EID-042", reqId: "P2-EIDC037", section: "1.6 Identity Recovery & Suspension", desc: "Support emergency access procedures for urgent situations while maintaining security controls", status: "pending" },
+      { id: "EID-043", reqId: "P2-EIDC038", section: "1.6 Identity Recovery & Suspension", desc: "Provide credential revocation for security incidents, account compromise, or administrative requirements", status: "done" },
+      { id: "EID-044", reqId: "P2-EIDC039", section: "1.6 Identity Recovery & Suspension", desc: "Support automated revocation/suspension triggers based on security events and suspicious activity", status: "pending" },
+      { id: "EID-045", reqId: "P2-EIDC040", section: "1.6 Identity Recovery & Suspension", desc: "Maintain revocation status information and provide REAL-TIME revocation checking", status: "done" },
+      { id: "EID-046", reqId: "P2-EIDC041", section: "1.6 Identity Recovery & Suspension", desc: "Support TEMPORARY suspension of credentials for investigations or administrative holds", status: "done" },
+      
+      { id: "EID-047", reqId: "P2-EIDC042", section: "1.7 Special Populations", desc: "Support minor registration (ages 12–16): parental consent capture, verify authority, record evidence", status: "pending" },
+      { id: "EID-048", reqId: "P2-EIDC043", section: "1.7 Special Populations", desc: "Implement legal representative management (legal guardians, power of attorney) with scope limitations", status: "done" },
+      { id: "EID-049", reqId: "P2-EIDC044", section: "1.7 Special Populations", desc: "Provide emergency procedures for disaster scenarios including offline verification capabilities", status: "pending" },
+      
+      { id: "EID-050", reqId: "P2-EIDC045", section: "1.8 Fraud Prevention & Notifications", desc: "Implement fraud prevention: duplicate detection, document verification, behavioural analysis", status: "pending" },
+      { id: "EID-051", reqId: "P2-EIDC046", section: "1.8 Fraud Prevention & Notifications", desc: "Provide audit log VISIBLE TO USERS and configurable opt-in notifications for sensitive data access", status: "done" },
+      { id: "EID-052", reqId: "P2-EIDC047", section: "1.8 Fraud Prevention & Notifications", desc: "Notification service: configurable for different privacy levels and citizen preferences", status: "done" },
+      
+      { id: "EID-053", reqId: "P2-EIDC048", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Support ASSISTED face capture within Phase 1 enrolment: quality checks, re-capture prompts", status: "done" },
+      { id: "EID-054", reqId: "P2-EIDC049", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Support safe exception handling for face capture: inability, low quality, accessibility constraints", status: "done" },
+      { id: "EID-055", reqId: "P2-EIDC050", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Where NFC ePassport presented: support chip data extraction to populate/validate enrolment inputs", status: "pending" },
+      { id: "EID-056", reqId: "P2-EIDC051", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Where ePassport chip unavailable: support documentary proofing WITHOUT excluding citizen from Phase 1", status: "done" },
+      { id: "EID-057", reqId: "P2-EIDC052", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Emit and retain auditable events for biometric enrolment: face capture, ePassport outcomes, fallback", status: "done" },
+      { id: "EID-058", reqId: "P2-EIDC053", section: "1.9 Biometric Enrolment (Phase 1)", desc: "OPTIONAL: chip data extraction + cryptographic integrity checks (timeline-safe delivery proof required)", status: "na" },
+      { id: "EID-059", reqId: "P2-EIDC005", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Provide ISSUANCE capabilities for creating digital credentials and delivering digital identity tokens", status: "done" },
+      { id: "EID-060", reqId: "P2-EIDC006", section: "1.9 Biometric Enrolment (Phase 1)", desc: "Enable USAGE TRACKING and management for authentication, authorisation, service access", status: "done" },
+
+      { id: "AUTH-001", reqId: "P2-AUTC001", section: "2.1 Core Authentication", desc: "Provide authentication services using verified digital identity credentials", status: "done" },
+      { id: "AUTH-002", reqId: "P2-AUTC002", section: "2.1 Core Authentication", desc: "Support MULTIPLE authentication methods: password, mobile app, hardware token", status: "done" },
+      { id: "AUTH-003", reqId: "P2-AUTC016", section: "2.1 Core Authentication", desc: "Implement MFA as DEFAULT posture: two-factor combinations OR phishing-resistant WebAuthn/FIDO2 passkeys", status: "done" },
+      { id: "AUTH-004", reqId: "P2-AUTC017", section: "2.1 Core Authentication", desc: "Support SMS OTP while proposing additional secure alternatives (mobile authenticator, hardware tokens)", status: "done" },
+      { id: "AUTH-005", reqId: "P2-AUTC026", section: "2.1 Core Authentication", desc: "Support configurable primary authentication and MFA workflow (password+factor, passkeys, inclusive alternatives)", status: "done" },
+      
+      { id: "AUTH-006", reqId: "P2-AUTC003", section: "2.2 Risk-Based & Step-Up Auth", desc: "Implement balanced RISK-BASED authentication adjusting requirements based on transaction risk", status: "done" },
+      { id: "AUTH-007", reqId: "P2-AUTC009", section: "2.2 Risk-Based & Step-Up Auth", desc: "Provide STEPPED-UP authentication for high-risk services or sensitive transactions", status: "done" },
+      { id: "AUTH-008", reqId: "P2-AUTC027", section: "2.2 Risk-Based & Step-Up Auth", desc: "Support multiple authentication contexts based on risk level of requested service", status: "done" },
+      { id: "AUTH-009", reqId: "P2-AUTC028", section: "2.2 Risk-Based & Step-Up Auth", desc: "Step-up authentication for high-value transactions: additional verification for sensitive services", status: "done" },
+      { id: "AUTH-010", reqId: "P2-AUTC015", section: "2.2 Risk-Based & Step-Up Auth", desc: "Enforce RECOVERY ANTI-DOWNGRADE controls: recovery SHALL require policy-defined step-up", status: "done" },
+      { id: "AUTH-011", reqId: "P2-AUTC029", section: "2.2 Risk-Based & Step-Up Auth", desc: "[SHOULD] Include 'remember device' functionality with appropriate security controls", status: "pending" },
+      
+      { id: "AUTH-012", reqId: "P2-AUTC005", section: "2.3 Session Management", desc: "Support session management: timeout controls, concurrent session limits, secure session termination", status: "done" },
+      { id: "AUTH-013", reqId: "P2-AUTC022", section: "2.3 Session Management", desc: "Generate and validate JSON Web Tokens (JWT) for session management", status: "done" },
+      { id: "AUTH-014", reqId: "P2-AUTC023", section: "2.3 Session Management", desc: "Session management extends across multiple services — navigate without repeated authentication", status: "done" },
+      { id: "AUTH-015", reqId: "P2-AUTC024", section: "2.3 Session Management", desc: "SINGLE LOGOUT: when user terminates session, logged out from ALL connected services simultaneously", status: "done" },
+      { id: "AUTH-016", reqId: "P2-AUTC025", section: "2.3 Session Management", desc: "Provide cross-domain session management across distributed government services", status: "done" },
+      
+      { id: "AUTH-017", reqId: "P2-AUTC004", section: "2.4 Self-Service & User Controls", desc: "Provide self-service authentication management: method selection, device management, security preferences", status: "done" },
+      { id: "AUTH-018", reqId: "P2-AUTC010", section: "2.4 Self-Service & User Controls", desc: "Support authentication ACCESSIBILITY FEATURES for users with disabilities", status: "pending" },
+      { id: "AUTH-019", reqId: "P2-AUTC011", section: "2.4 Self-Service & User Controls", desc: "Provide HUMAN REVIEW and APPEAL mechanisms for users denied access due to automated systems", status: "done" },
+      { id: "AUTH-020", reqId: "P2-AUTC012", section: "2.4 Self-Service & User Controls", desc: "Implement PROGRESSIVE authentication escalation (NOT immediate denial) — offer alternative verification", status: "done" },
+      { id: "AUTH-021", reqId: "P2-AUTC013", section: "2.4 Self-Service & User Controls", desc: "Provide TRANSPARENT NOTIFICATION to users when access is restricted: explain reason and resolution options", status: "done" },
+      { id: "AUTH-022", reqId: "P2-AUTC014", section: "2.4 Self-Service & User Controls", desc: "Maintain ADMINISTRATIVE OVERRIDE capabilities for authorised PSC staff to manually approve access", status: "done" },
+      
+      { id: "AUTH-023", reqId: "P2-AUTC030", section: "2.5 Delegation & Remote Enrolment", desc: "Support delegated authentication: authorised representatives access services on behalf of others", status: "done" },
+      { id: "AUTH-024", reqId: "P2-AUTC019", section: "2.5 Delegation & Remote Enrolment", desc: "Support remote enrolment with robust document verification", status: "done" },
+      { id: "AUTH-025", reqId: "P2-AUTC018", section: "2.5 Delegation & Remote Enrolment", desc: "Perform identity verification against Civil Registry using UIN as primary identifier", status: "done" },
+      
+      { id: "AUTH-026", reqId: "P2-AUTC006", section: "2.6 Logging & Monitoring", desc: "Provide authentication logging and monitoring: events, security incidents, usage patterns", status: "done" },
+      { id: "AUTH-027", reqId: "P2-AUTC007", section: "2.6 Logging & Monitoring", desc: "Support authentication notifications: alert users to events, security changes, suspicious activities", status: "done" },
+      { id: "AUTH-028", reqId: "P2-AUTC008", section: "2.6 Logging & Monitoring", desc: "Implement authentication controls including account management policies and security response", status: "done" },
+      
+      { id: "AUTH-029", reqId: "P2-AUTC031", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Support WebAuthn/FIDO2 passkey REGISTRATION: user guidance, admin visibility, device-local biometric unlock", status: "done" },
+      { id: "AUTH-030", reqId: "P2-AUTC032", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Support authentication USING WebAuthn/FIDO2 passkeys as additional MFA method", status: "done" },
+      { id: "AUTH-031", reqId: "P2-AUTC033", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Support STEP-UP authentication using passkeys for account recovery flows and signing", status: "done" },
+      { id: "AUTH-032", reqId: "P2-AUTC034", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Support LIFECYCLE MANAGEMENT for passkeys: removal, re-registration, device change, operator support", status: "done" },
+      { id: "AUTH-033", reqId: "P2-AUTC035", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Emit audit events for passkey operations: registration, authentication, step-up, lifecycle operations", status: "done" },
+      { id: "AUTH-034", reqId: "P2-AUTC020", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Implement centralised SSO architecture for seamless access across Phase 1 pilot services", status: "done" },
+      { id: "AUTH-035", reqId: "P2-AUTC021", section: "2.7 Passkeys / WebAuthn / FIDO2", desc: "Build on OAuth 2.0 and OpenID Connect protocols", status: "done" },
+
+      { id: "SSO-001", reqId: "P2-SSOC001", section: "3.1 Core SSO Capabilities", desc: "Support SSO for 2–3 priority citizen services using OIDC Authorization Code + PKCE", status: "done" },
+      { id: "SSO-002", reqId: "P2-SSOC002", section: "3.1 Core SSO Capabilities", desc: "Provide single login experience granting access through ONE authentication event", status: "done" },
+      { id: "SSO-003", reqId: "P2-SSOC003", section: "3.1 Core SSO Capabilities", desc: "Maintain user authentication status across government services — seamless navigation", status: "done" },
+      { id: "SSO-004", reqId: "P2-SSOC016", section: "3.1 Core SSO Capabilities", desc: "Support STANDARDS-BASED FEDERATION using OIDC Authorization Code Flow with PKCE", status: "done" },
+      { id: "SSO-005", reqId: "P2-SSOC023", section: "3.1 Core SSO Capabilities", desc: "Require state and nonce; enforce PKCE for public clients. Non-PKCE flows SHALL BE REJECTED", status: "done" },
+      
+      { id: "SSO-006", reqId: "P2-SSOC006", section: "3.2 Session Controls", desc: "Support users accessing government services from multiple devices concurrently", status: "done" },
+      { id: "SSO-007", reqId: "P2-SSOC007", section: "3.2 Session Controls", desc: "Automatically manage session duration based on service requirements and user activity", status: "done" },
+      { id: "SSO-008", reqId: "P2-SSOC008", section: "3.2 Session Controls", desc: "Provide appropriate warnings before session expiration; allow session continuation where appropriate", status: "done" },
+      { id: "SSO-009", reqId: "P2-SSOC009", section: "3.2 Session Controls", desc: "Provide session management capabilities: review active sessions, view context, terminate specific sessions", status: "done" },
+      
+      { id: "SSO-010", reqId: "P2-SSOC004", section: "3.3 Access Control & Roles", desc: "Support different user access levels based on roles and permissions", status: "done" },
+      { id: "SSO-011", reqId: "P2-SSOC010", section: "3.3 Access Control & Roles", desc: "Implement service-specific access controls based on identity verification level and permissions", status: "done" },
+      { id: "SSO-012", reqId: "P2-SSOC011", section: "3.3 Access Control & Roles", desc: "Support role-based access management for citizen services, operational roles, PSC staff, admins", status: "done" },
+      { id: "SSO-013", reqId: "P2-SSOC005", section: "3.3 Access Control & Roles", desc: "Provide visibility into authentication status and active sessions; centralised interface for preferences", status: "done" },
+      
+      { id: "SSO-014", reqId: "P2-SSOC017", section: "3.4 Relying Party Onboarding", desc: "Enforce governed RP onboarding: redirect URI allow-listing, client auth, scope/claim config, audit trail", status: "done" },
+      { id: "SSO-015", reqId: "P2-SSOC018", section: "3.4 Relying Party Onboarding", desc: "Provide RP onboarding kit and guidance: integration patterns, test endpoints, conformance guidance", status: "pending" },
+      { id: "SSO-016", reqId: "P2-SSOC019", section: "3.4 Relying Party Onboarding", desc: "Support UIN-based identifier strategy for relying parties consistent with approved claims release policy", status: "pending" },
+      { id: "SSO-017", reqId: "P2-SSOC020", section: "3.4 Relying Party Onboarding", desc: "MINIMISE exposed personal data; SHALL NOT expose legacy identifiers to RPs unless explicitly approved", status: "pending" },
+      
+      { id: "SSO-018", reqId: "P2-SSOC012", section: "3.5 Consent Management", desc: "Provide consent management: control sharing of personal info, view/withdraw consents, record consent artefacts", status: "pending" },
+      { id: "SSO-019", reqId: "P2-SSOC013", section: "3.5 Consent Management", desc: "Support complaint handling and feedback integration", status: "pending" },
+      
+      { id: "SSO-020", reqId: "P2-SSOC014", section: "3.6 Audit & Error Handling", desc: "Maintain comprehensive access history and audit: users see access, administrators get oversight", status: "done" },
+      { id: "SSO-021", reqId: "P2-SSOC021", section: "3.6 Audit & Error Handling", desc: "Produce auditable records for authentication and SSO events for security monitoring and compliance", status: "done" },
+      { id: "SSO-022", reqId: "P2-SSOC022", section: "3.6 Audit & Error Handling", desc: "Provide error taxonomy and remediation guidance suitable for RP integration and user support workflows", status: "pending" },
+      
+      { id: "SSO-023", reqId: "P2-SSOC015", section: "3.7 Delegation in SSO", desc: "Support delegation scenarios: authorised representatives access services on behalf of others", status: "done" },
+
+      { id: "SIG-001", reqId: "P2-SIGC001", section: "4.1 Signing Capabilities", desc: "Provide document signing supporting ADVANCED ELECTRONIC SIGNATURES (AdES / PAdES baseline)", status: "done" },
+      { id: "SIG-002", reqId: "P2-SIGC002", section: "4.1 Signing Capabilities", desc: "Individual signing UI + BATCH SIGNING for admin users; maintain individual audit trails per document", status: "done" },
+      { id: "SIG-003", reqId: "P2-SIGC003", section: "4.1 Signing Capabilities", desc: "Multi-party signing workflows (sequential and parallel) with notification and tracking; mobile signing", status: "done" },
+      { id: "SIG-004", reqId: "P2-SIGC004", section: "4.1 Signing Capabilities", desc: "Support standard signature inputs: mouse, touchscreen, compatible signature pad devices", status: "done" },
+      { id: "SIG-005", reqId: "P2-SIGC008", section: "4.1 Signing Capabilities", desc: "Provide SECURE signature creation: protect signing keys, preserve validity, backup/recovery", status: "done" },
+      
+      { id: "SIG-006", reqId: "P2-SIGC005", section: "4.2 Verification & Validation", desc: "Real-time signature verification: authenticity, certificate validity, document integrity; OCSP/CRL", status: "done" },
+      { id: "SIG-007", reqId: "P2-SIGC006", section: "4.2 Verification & Validation", desc: "Historical signature validation: verify past signatures; maintain long-term validity (up to 30 years)", status: "done" },
+      { id: "SIG-008", reqId: "P2-SIGC007", section: "4.2 Verification & Validation", desc: "Signature verification API/portal: clear outcomes, reason codes, authorisation model, audit ALL access", status: "done" },
+      
+      { id: "SIG-009", reqId: "P2-SIGC011", section: "4.3 Signature Policies", desc: "Implement configurable signature policies: SES (low-risk) and AES (government forms, legal docs)", status: "done" },
+      { id: "SIG-010", reqId: "P2-SIGC012", section: "4.3 Signature Policies", desc: "Document classification: automatically determine minimum signature level; PREVENT insufficient levels", status: "done" },
+      { id: "SIG-011", reqId: "P2-SIGC013", section: "4.3 Signature Policies", desc: "Risk-based signature policies adjusting requirements based on auth level, amount, sensitivity, history", status: "done" },
+      { id: "SIG-012", reqId: "P2-SIGC014", section: "4.3 Signature Policies", desc: "Signature policy compliance reporting for administrators: usage patterns, violations, alerts", status: "done" },
+      
+      { id: "SIG-013", reqId: "P2-SIGC009", section: "4.4 User & Credential Management", desc: "Users manage signature credentials: view history, manage trusted devices, update preferences; delegation", status: "done" },
+      { id: "SIG-014", reqId: "P2-SIGC010", section: "4.4 User & Credential Management", desc: "Signature audit trail: comprehensive logging of ALL signature activities; users see own history", status: "done" },
+      
+      { id: "SIG-015", reqId: "P2-SIGC015", section: "4.5 Delegation in eSignature", desc: "Authorised representatives CAN sign on behalf of others via secure delegation framework", status: "done" },
+      { id: "SIG-016", reqId: "P2-SIGC016", section: "4.5 Delegation in eSignature", desc: "Delegation approval workflows: explicit consent, step-up auth, auditable evidence, time-limited, revocable", status: "done" },
+      { id: "SIG-017", reqId: "P2-SIGC017", section: "4.5 Delegation in eSignature", desc: "Delegation revocation: principals IMMEDIATELY terminate delegation; real-time notification", status: "done" },
+      
+      { id: "SIG-018", reqId: "P2-SIGC018", section: "4.6 Audit, Compliance & Evidence", desc: "Comprehensive signature audit trails: creation, verification, policy applications, delegation actions", status: "done" },
+      { id: "SIG-019", reqId: "P2-SIGC019", section: "4.6 Audit, Compliance & Evidence", desc: "Signature compliance monitoring: continuously verify signatures meet regulatory requirements", status: "done" },
+      { id: "SIG-020", reqId: "P2-SIGC020", section: "4.6 Audit, Compliance & Evidence", desc: "Long-term signature preservation: timestamp renewal, certificate chain, validation data (30 years)", status: "done" },
+      { id: "SIG-021", reqId: "P2-SIGC021", section: "4.6 Audit, Compliance & Evidence", desc: "Signature forensics: detailed technical analysis, document integrity, tampering detection; legal reports", status: "done" },
+      { id: "SIG-022", reqId: "P2-SIGC022", section: "4.6 Audit, Compliance & Evidence", desc: "Regulatory compliance reporting: volumes, outcomes, timestamp/validation availability, evidence logs", status: "done" },
+      { id: "SIG-023", reqId: "P2-SIGC023", section: "4.6 Audit, Compliance & Evidence", desc: "Non-repudiation evidence: comprehensive packages with signature validation, identity, timestamp, proof", status: "done" },
+      
+      { id: "SIG-024", reqId: "P2-SIGC024", section: "4.7 Evidence Retention", desc: "Implement configurable evidence RETENTION for AdES transactions per finalised Government policy", status: "done" },
+      { id: "SIG-025", reqId: "P2-SIG-C025", section: "4.8 Rate Limiting & Abuse Protection", desc: "Implement configurable rate limiting for ALL signing, verification, evidence retrieval endpoints", status: "pending" },
+      { id: "SIG-026", reqId: "TB-03", section: "4.9 Timestamping (Policy Freeze TB-03)", desc: "Support Government to finalise Phase 1 timestamping policy for PAdES Baseline B-T signing", status: "done" },
+
+      { id: "ICD-001", reqId: "P3-IOG-C01", section: "5.1 Interface Control Document", desc: "Provide and maintain ICD with schemas, error codes, versioning policy, change log", status: "pending" },
+      { id: "ICD-002", reqId: "P3-IOG-C06", section: "5.1 Interface Control Document", desc: "Publish ICD v0.1 by end of Month 1; ICD v1.0 by end of Month 2", status: "pending" },
+      { id: "ICD-003", reqId: "P3-IOG-C07", section: "5.1 Interface Control Document", desc: "Publish interface compatibility statement per release (breaking vs non-breaking changes)", status: "pending" },
+      { id: "ICD-004", reqId: "P3-IOG-C02", section: "5.1 Interface Control Document", desc: "Operate Joint Change Advisory Board (CAB) for interface changes; record decisions", status: "pending" },
+      
+      { id: "ICD-005", reqId: "P3-IOG-C04", section: "5.2 OIDC / SSO Interface", desc: "Provide OIDC SSO using Authorization Code + PKCE as DEFAULT; publish discovery metadata and JWKS", status: "done" },
+      { id: "ICD-006", reqId: "P3-IOG-C03", section: "5.2 OIDC / SSO Interface", desc: "Publish onboarding documentation (RP guide, checklist, conformance steps) in a SINGLE location", status: "pending" },
+      { id: "ICD-007", reqId: "P3-IOG-C05", section: "5.2 OIDC / SSO Interface", desc: "Provide conformance test harness and go-live checklist for RPs", status: "pending" },
+      
+      { id: "ICD-008", reqId: "P3-IOG-C08", section: "5.3 UIN Interface", desc: "Include UIN interfaces in ICD: UIN Generator (IssueUIN, GetUINStatus), Civil Registry write-back", status: "done" },
+      { id: "ICD-009", reqId: "P3-IOG-C09", section: "5.3 UIN Interface", desc: "Define standard error taxonomy and remediation guidance for UIN issuance and registry write-back failures", status: "done" },
+      { id: "ICD-010", reqId: "P3-IOG-C10", section: "5.3 UIN Interface", desc: "Define idempotency and correlation requirements for UIN issuance/write-back; propagate correlation_id", status: "done" },
+      
+      { id: "ICD-011", reqId: "P3-IOG-C11", section: "5.4 Offline Verification Interface", desc: "Include Offline Verification Mode spec in ICD: workflow, minimal data schema, refresh mechanics", status: "done" },
+      { id: "ICD-012", reqId: "P3-IOG-C12", section: "5.4 Offline Verification Interface", desc: "Document OUTAGE DECLARATION MODEL in ICD: Duty-Manager declaration, automated declaration capability", status: "pending" },
+
+      { id: "SEC-001", reqId: "P3-SEC-C01", section: "6.1 Authentication Security", desc: "Implement SECURE ACCOUNT RECOVERY requiring step-up authentication and audit events", status: "done" },
+      { id: "SEC-002", reqId: "P3-SEC-C02", section: "6.1 Authentication Security", desc: "Implement session management controls: idle timeout, maximum duration, logout/session revocation", status: "done" },
+      { id: "SEC-003", reqId: "P3-SEC-C07", section: "6.1 Authentication Security", desc: "Implement brute-force protections and rate limits for login and recovery endpoints", status: "done" },
+      
+      { id: "SEC-004", reqId: "P3-SEC-C03", section: "6.2 Claims & Data Minimisation", desc: "Implement attribute minimisation and claims catalogue; RPs receive ONLY approved claims/scopes", status: "done" },
+      
+      { id: "SEC-005", reqId: "P3-SEC-C04", section: "6.3 RP Security", desc: "Provide governed RP registration with redirect URI allow-listing, client auth, auditable config changes", status: "done" },
+      { id: "SEC-006", reqId: "P3-SEC-C06", section: "6.3 RP Security", desc: "Provide RP client secret rotation procedure; document how RPs rotate credentials", status: "pending" },
+      
+      { id: "SEC-007", reqId: "P3-SEC-C05", section: "6.4 Audit Logging & SIEM", desc: "Publish audit event schema documentation and sample event payloads for key domains", status: "done" },
+      { id: "SEC-008", reqId: "P3-SEC-C08", section: "6.4 Audit Logging & SIEM", desc: "Provide SIEM correlation/query guidance using correlation_id across platform and pilots", status: "done" },
+      { id: "SEC-009", reqId: "TB-01", section: "6.4 Audit Logging & SIEM", desc: "Implement CONFIGURABLE audit log retention and RBAC for audit queries and SIEM exports", status: "pending" },
+      
+      { id: "SEC-010", reqId: "P3-SEC-C09", section: "6.5 UIN Security", desc: "Apply RBAC and least-privilege to UIN status views, issuance administration, write-back operations", status: "done" },
+      { id: "SEC-011", reqId: "P3-SEC-C10", section: "6.5 UIN Security", desc: "Extend DPIA/PIA package to include UIN data flows; implement agreed mitigations by end of Month 2", status: "pending" },
+      { id: "SEC-012", reqId: "P3-SEC-C11", section: "6.5 UIN Security", desc: "Configurable audit log retention includes UIN events; RBAC-controlled audit queries and SIEM exports", status: "done" },
+      
+      { id: "SEC-013", reqId: "P3-SEC-C12", section: "6.6 Trust Services Security", desc: "Apply RBAC and separation of duties to ALL trust-service privileged operations; audit ALL actions", status: "done" },
+      { id: "SEC-014", reqId: "P3-SEC-C13", section: "6.6 Trust Services Security", desc: "Implement minimum SIEM alert use cases for trust services: key custody anomalies, TSA/OCSP failures", status: "pending" },
+      
+      { id: "SEC-015", reqId: "P3-SEC-C14", section: "6.7 Offline Verification Security", desc: "Implement offline verification audit event schema with minimum fields; buffer and upload on reconnect", status: "pending" },
+      { id: "SEC-016", reqId: "P3-SEC-C15", section: "6.7 Offline Verification Security", desc: "Apply RBAC for offline mode activation, verification views, audit queries; enforce minimisation", status: "pending" },
+      { id: "SEC-017", reqId: "P3-SEC-C16", section: "6.7 Offline Verification Security", desc: "Implement SIEM visibility and minimum alerts for Offline Verification Mode", status: "pending" },
+      
+      { id: "SEC-018", reqId: "TB-02", section: "6.8 Privacy", desc: "Support Government to produce DPIA/PIA package; implement agreed mitigations", status: "pending" },
+      
+      { id: "SEC-019", reqId: "P3-SEC-C17", section: "6.9 Vulnerability Management", desc: "Implement documented vulnerability management policy covering scanning, severity model, patch SLAs", status: "pending" },
+      { id: "SEC-020", reqId: "P3-SEC-C18", section: "6.9 Vulnerability Management", desc: "Perform REGULAR vulnerability scanning of code, containers, infrastructure, dependencies", status: "pending" },
+      { id: "SEC-021", reqId: "P3-SEC-C19", section: "6.9 Vulnerability Management", desc: "Provide periodic vulnerability reporting to Government: open findings, remediation, residual risk", status: "pending" },
+
+      { id: "AC-001", reqId: "AC-PV-001", section: "7 Assurance Context Policy", desc: "Define and implement Assurance Context Model with acr, amr, auth_time, proofing outcome", status: "pending" },
+      { id: "AC-002", reqId: "AC-PV-002", section: "7 Assurance Context Policy", desc: "Issue acr in ID tokens; publish supported acr values ('acr registry') in ICD/RP onboarding docs", status: "done" },
+      { id: "AC-003", reqId: "AC-PV-003", section: "7 Assurance Context Policy", desc: "Support RP requests using acr_values; satisfy or fail safely using documented error taxonomy", status: "done" },
+      { id: "AC-004", reqId: "AC-PV-004", section: "7 Assurance Context Policy", desc: "Populate amr using RFC 8176 aligned values; document authenticator-to-amr mapping", status: "done" },
+      { id: "AC-005", reqId: "AC-PV-005", section: "7 Assurance Context Policy", desc: "Enforce configurable step-up for signing, account recovery, new authenticator binding, channel changes", status: "done" },
+      { id: "AC-006", reqId: "AC-PV-006", section: "7 Assurance Context Policy", desc: "Enforce session RECENCY CONTROLS for sensitive actions using auth_time and policy-defined max age", status: "done" },
+      { id: "AC-007", reqId: "AC-PV-007", section: "7 Assurance Context Policy", desc: "Implement federation protections (FAL2): audience restriction, replay protection, PKCE, governed RP trust", status: "done" },
+      { id: "AC-008", reqId: "AC-PV-008", section: "7 Assurance Context Policy", desc: "Maintain registry of Phase 1 assurance profiles mapped to acr/amr, triggers, recency rules", status: "pending" },
+      { id: "AC-009", reqId: "AC-PV-009", section: "7 Assurance Context Policy", desc: "CLAIMS MINIMISATION: assurance context claims released to RPs minimised per approved policy", status: "pending" },
+      { id: "AC-010", reqId: "AC-PV-010", section: "7 Assurance Context Policy", desc: "Audit/SIEM logging MUST include requested_acr_values, achieved acr, amr, step-up flag, auth_time", status: "done" },
+      { id: "AC-011", reqId: "AC-PV-011", section: "7 Assurance Context Policy", desc: "Extend RP conformance harness to test assurance context behaviours: acr_values satisfied/rejected", status: "pending" },
+      { id: "AC-012", reqId: "AC-PV-012", section: "7 Assurance Context Policy", desc: "Support Government to finalise IAL/FAL indicators exposure and RP classes with lower federation posture", status: "pending" },
+      { id: "AC-013", reqId: "AC-PV-014", section: "7 Assurance Context Policy", desc: "Offline Verification Mode is NOT authentication — SHALL NOT establish sessions or satisfy RP login", status: "na" },
+
+      { id: "OPS-001", reqId: "P3-OPS-C01", section: "8.1 Reconciliation & DR", desc: "Provide reconciliation/fallback procedure for registry outages: delivery delays, idempotent reprocessing", status: "done" },
+      { id: "OPS-002", reqId: "P3-OPS-C02", section: "8.1 Reconciliation & DR", desc: "Define and publish SLA targets for Civil Registry connector: availability/latency, escalation path", status: "pending" },
+      { id: "OPS-003", reqId: "P3-OPS-C05", section: "8.1 Reconciliation & DR", desc: "Provide DR plan with RTO/RPO targets; execute tabletop exercise before Gate 1", status: "pending" },
+      
+      { id: "OPS-004", reqId: "P3-OPS-C03", section: "8.2 Reporting", desc: "Provide monthly operational report template: availability, incidents, alerts, SLA breaches", status: "pending" },
+      { id: "OPS-005", reqId: "P3-OPS-C07", section: "8.2 Reporting", desc: "Include UIN operational metrics in monthly reporting: issuance success, write-back, reconciliation backlog", status: "pending" },
+      { id: "OPS-006", reqId: "P3-OPS-C12", section: "8.2 Reporting", desc: "Include offline verification metrics in monthly reporting", status: "pending" },
+      { id: "OPS-007", reqId: "P3-OPS-C19", section: "8.2 Reporting", desc: "Monthly report MUST include Proofing & Enrolment Metrics (enrolment funnel, fraud indicators, UIN pipeline)", status: "done" },
+      
+      { id: "OPS-008", reqId: "P3-OPS-C04", section: "8.3 Dependency Tracking", desc: "Maintain integrated dependency tracker for platform and pilot integration blockers with weekly burn-down", status: "pending" },
+      
+      { id: "OPS-009", reqId: "P3-OPS-C06", section: "8.4 UIN Operations", desc: "Provide runbooks for UIN generator outage, registry write-back failures, reconciliation queue, recovery", status: "pending" },
+      { id: "OPS-010", reqId: "P3-OPS-C08", section: "8.4 UIN Operations", desc: "Include UIN failure scenarios in incident drills and go-live rehearsals", status: "pending" },
+      
+      { id: "OPS-011", reqId: "P3-OPS-C09", section: "8.5 Trust Services Operations", desc: "Provide runbooks for trust-service/signing failure scenarios; test SIEM alerts before Gate 1", status: "pending" },
+      { id: "OPS-012", reqId: "P3-OPS-C10", section: "8.5 Trust Services Operations", desc: "If trust operating model cutover occurs in Phase 1: include in go-live rehearsals", status: "na" },
+      
+      { id: "OPS-013", reqId: "P3-OPS-C11", section: "8.6 Offline Verification Operations", desc: "Provide runbooks for outage declaration, offline verification, refresh failure, log upload on reconnect", status: "pending" },
+      
+      { id: "OPS-014", reqId: "P3-OPS-C13", section: "8.7 Incident Response", desc: "Deliver incident response playbook: severity levels, RACI, escalation paths, communication templates", status: "pending" },
+      { id: "OPS-015", reqId: "P3-OPS-C14", section: "8.7 Incident Response", desc: "Playbook procedures for auth/SSO, signing/verification, registry/UIN, offline verification incidents", status: "pending" },
+      { id: "OPS-016", reqId: "P3-OPS-C15", section: "8.7 Incident Response", desc: "Execute AT LEAST ONE incident drill using playbook prior to Gate acceptance", status: "pending" },
+      
+      { id: "OPS-017", reqId: "P3-OPS-C16", section: "8.8 eSignature Dispute Support", desc: "Provide dispute support SOP: who may request verification, how authorised, how evidence retrieved", status: "pending" },
+      { id: "OPS-018", reqId: "P3-OPS-C17", section: "8.8 eSignature Dispute Support", desc: "Define chain-of-custody controls for evidence packages: integrity checks, export handling, access logs", status: "pending" },
+      { id: "OPS-019", reqId: "P3-OPS-C18", section: "8.8 eSignature Dispute Support", desc: "Provide escalation path and response-time targets for contested signing events", status: "pending" },
+      
+      { id: "OPS-020", reqId: "TB-01 (F)", section: "8.9 Support Model", desc: "Propose and implement L1/L2/L3 pilot support model: hours, SLAs, escalation per finalised policy", status: "pending" },
+      { id: "OPS-021", reqId: "E-PV-027", section: "8.10 Warranty", desc: "Meet warranty success criteria: 0 Critical defects in 30 days, stabilisation in 90 days, 12-month targets", status: "pending" },
+
+      { id: "PERF-001", reqId: "K-PRF-001", section: "9.1 Transaction Volumes", desc: "Support 500 identity enrolment requests/day (standard); scale to 2,000/day (peak)", status: "pending" },
+      { id: "PERF-002", reqId: "K-PRF-002", section: "9.1 Transaction Volumes", desc: "Support at least 1,000 authentication requests/day; scale to 2,000/day (peak)", status: "pending" },
+      { id: "PERF-003", reqId: "K-PRF-003", section: "9.1 Transaction Volumes", desc: "Process at least 5,000 signature operations/day; scale to 10,000/day (peak)", status: "pending" },
+      { id: "PERF-004", reqId: "K-PRF-004", section: "9.1 Transaction Volumes", desc: "Batch signature processing: enable authorised users to sign multiple documents with integrity", status: "done" },
+      
+      { id: "PERF-005", reqId: "K-PRF-006", section: "9.2 Response Times", desc: "Core Identity Platform APIs: P95 response < 500ms", status: "pending" },
+      { id: "PERF-006", reqId: "K-PRF-009", section: "9.2 Response Times", desc: "Complete authentication workflow: P95 < 2 seconds", status: "pending" },
+      { id: "PERF-007", reqId: "K-PRF-010", section: "9.2 Response Times", desc: "Token validation operations: P99 < 100 milliseconds", status: "pending" },
+      { id: "PERF-008", reqId: "K-PRF-011", section: "9.2 Response Times", desc: "Session establishment: P95 < 1 second", status: "pending" },
+      { id: "PERF-009", reqId: "K-PRF-012", section: "9.2 Response Times", desc: "Signature creation: P95 < 5 seconds (standard document signing)", status: "pending" },
+      { id: "PERF-010", reqId: "K-PRF-013", section: "9.2 Response Times", desc: "Document preparation and presentation: < 3 seconds", status: "pending" },
+      
+      { id: "PERF-011", reqId: "K-PRF-014", section: "9.3 Scalability & Availability", desc: "Support 50–100 concurrent users (normal); scale to 150–200 concurrent users (peak)", status: "pending" },
+      { id: "PERF-012", reqId: "K-PRF-015", section: "9.3 Scalability & Availability", desc: "Support 50,000–100,000 active registered users without performance degradation", status: "pending" },
+      { id: "PERF-013", reqId: "K-PRF-016", section: "9.3 Scalability & Availability", desc: "Minimum availability: 99.9% during standard business hours (7:00 AM–7:00 PM AST, Mon–Fri)", status: "pending" },
+      { id: "PERF-014", reqId: "K-PRF-017", section: "9.3 Scalability & Availability", desc: "Schedule planned maintenance OUTSIDE standard business hours", status: "pending" },
+      { id: "PERF-015", reqId: "K-PRF-018", section: "9.3 Scalability & Availability", desc: "Real-time health monitoring and alerting — notify operations staff when performance thresholds exceeded", status: "done" },
+      
+      { id: "INF-001", reqId: "K-HST-01", section: "9.4 Hosting & Cloud", desc: "Implement hybrid cloud infrastructure: cloud-based primary + local continuity for offline operations", status: "pending" },
+      { id: "INF-002", reqId: "K-HST-02", section: "9.4 Hosting & Cloud", desc: "Host Phase 1 primary services in Government-approved locations; document data-sovereignty", status: "pending" },
+      { id: "INF-003", reqId: "K-HST-03", section: "9.4 Hosting & Cloud", desc: "Provide local backup environment for offline operations, hurricane resilience, backup/restore procedures", status: "pending" },
+      { id: "INF-004", reqId: "K-HST-04", section: "9.4 Hosting & Cloud", desc: "Design Phase 1 deployment to be PORTABLE across cloud providers to reduce vendor lock-in", status: "pending" },
+      { id: "INF-005", reqId: "K-HST-05", section: "9.4 Hosting & Cloud", desc: "Use CLOUD-AGNOSTIC deployment patterns: containerised applications, configuration-as-code", status: "done" },
+      { id: "INF-006", reqId: "K-HST-06", section: "9.4 Hosting & Cloud", desc: "All Phase 1 network communications use TLS 1.3 (baseline)", status: "pending" },
+      { id: "INF-007", reqId: "K-HST-07", section: "9.4 Hosting & Cloud", desc: "Implement network segmentation to isolate platform components and reduce lateral movement risk", status: "pending" },
+      { id: "INF-008", reqId: "K-HST-08", section: "9.4 Hosting & Cloud", desc: "Define and implement VPN/secure connections for remote administrative access", status: "pending" },
+      { id: "INF-009", reqId: "K-HST-09", section: "9.4 Hosting & Cloud", desc: "Provide separate DEV, TEST, UAT, and PRODUCTION environments with appropriate data isolation", status: "pending" },
+      { id: "INF-010", reqId: "K-HST-10", section: "9.4 Hosting & Cloud", desc: "Environment promotion procedures: test changes before production; support rollback", status: "pending" },
+      { id: "INF-011", reqId: "K-HST-11", section: "9.4 Hosting & Cloud", desc: "Production monitoring: real-time visibility into performance and security status", status: "pending" },
+      
+      { id: "DR-001", reqId: "K-RES-01", section: "9.5 Disaster Recovery", desc: "Primary site located at least 500km from Atlantic hurricane basin's Caribbean sector", status: "pending" },
+      { id: "DR-002", reqId: "K-RES-02", section: "9.5 Disaster Recovery", desc: "Secondary site: independent, full system replica for Phase 1 critical services", status: "pending" },
+      { id: "DR-003", reqId: "K-RES-03", section: "9.5 Disaster Recovery", desc: "Multi-region deployment: continue service if geographic region becomes unavailable", status: "pending" },
+      { id: "DR-004", reqId: "K-RES-04", section: "9.5 Disaster Recovery", desc: "RTO: Authentication service restoration SHALL NOT exceed 4 hours", status: "pending" },
+      { id: "DR-005", reqId: "K-RES-05", section: "9.5 Disaster Recovery", desc: "RPO: Authentication data SHALL NOT exceed 1 hour", status: "pending" },
+      { id: "DR-006", reqId: "K-RES-06", section: "9.5 Disaster Recovery", desc: "Multi-zone high availability using cloud provider Availability Zones", status: "pending" },
+      { id: "DR-007", reqId: "K-RES-07", section: "9.5 Disaster Recovery", desc: "Automated failover at both Availability Zone level AND geographic-region level", status: "pending" },
+      
+      { id: "DR-008", reqId: "K-RES-08", section: "9.6 Offline Capabilities", desc: "Provide offline verification capability for approved operations during outages (verification-only)", status: "done" },
+      { id: "DR-009", reqId: "K-RES-09", section: "9.6 Offline Capabilities", desc: "Local caching of essential verification/status data for outage-mode operations", status: "done" },
+      { id: "DR-010", reqId: "K-RES-10", section: "9.6 Offline Capabilities", desc: "Synchronisation and reconciliation: record offline operations and reconcile when connectivity restored", status: "pending" },
+      
+      { id: "ARC-001", reqId: "K-ARC-01", section: "9.7 Software Architecture", desc: "Implement service-oriented or microservices-aligned architecture; Civil Registry as authoritative source", status: "done" },
+      { id: "ARC-002", reqId: "K-ARC-02", section: "9.7 Software Architecture", desc: "API-first design throughout the solution for integration flexibility and future extensibility", status: "done" },
+      { id: "ARC-003", reqId: "K-ARC-03", section: "9.7 Software Architecture", desc: "RESTful API standards for internal and external communications where applicable", status: "done" },
+      { id: "ARC-004", reqId: "K-ARC-04", section: "9.7 Software Architecture", desc: "API versioning and lifecycle management: backward compatibility and controlled deprecation", status: "done" },
+      { id: "ARC-005", reqId: "K-ARC-05", section: "9.7 Software Architecture", desc: "Database high availability with replication and automatic failover", status: "pending" },
+      { id: "ARC-006", reqId: "K-ARC-06", section: "9.7 Software Architecture", desc: "Database encryption at rest and in transit (industry-standard)", status: "pending" },
+      { id: "ARC-007", reqId: "K-ARC-07", section: "9.7 Software Architecture", desc: "Database backup and recovery procedures supporting DR objectives", status: "pending" },
+      { id: "ARC-008", reqId: "K-ARC-10", section: "9.7 Software Architecture", desc: "Document RESTful API architecture using OpenAPI specifications for ALL platform-controlled interfaces", status: "done" },
+      { id: "ARC-009", reqId: "K-ARC-13", section: "9.7 Software Architecture", desc: "Integration framework supports OAuth 2.0 and OpenID Connect", status: "done" },
+      { id: "ARC-010", reqId: "K-ARC-14", section: "9.7 Software Architecture", desc: "JWT tokens conform to RFC 7519/7518 and best-practice guidance", status: "done" },
+      { id: "ARC-011", reqId: "K-ARC-17", section: "9.7 Software Architecture", desc: "Message-queue or event-driven processing for reliable inter-service communication; idempotency", status: "done" },
+      
+      { id: "MON-001", reqId: "K-ARC-18", section: "9.8 Monitoring & Observability", desc: "Application performance monitoring: real-time visibility into performance, response times, error rates", status: "done" },
+      { id: "MON-002", reqId: "K-ARC-19", section: "9.8 Monitoring & Observability", desc: "Dashboards and alerting: notify operations staff of performance degradation or system issues", status: "done" },
+      { id: "MON-003", reqId: "K-ARC-20", section: "9.8 Monitoring & Observability", desc: "Infrastructure monitoring: resource utilisation, network performance, security-relevant events", status: "pending" },
+      { id: "MON-004", reqId: "K-ARC-22", section: "9.8 Monitoring & Observability", desc: "Security monitoring integrated with Government SOC/SIEM capabilities", status: "pending" },
+      
+      { id: "DQ-001", reqId: "K-ARC-31", section: "9.9 Data Quality", desc: "Completeness metric: measured monthly. Target ≥ 99%", status: "pending" },
+      { id: "DQ-002", reqId: "K-ARC-32", section: "9.9 Data Quality", desc: "Accuracy metric: measured quarterly. Target ≥ 98%", status: "pending" },
+      { id: "DQ-003", reqId: "K-ARC-33", section: "9.9 Data Quality", desc: "Consistency metric: measured quarterly. Target ≥ 97%", status: "pending" },
+      { id: "DQ-004", reqId: "K-ARC-34", section: "9.9 Data Quality", desc: "Uniqueness metric: measured monthly. Target 100%", status: "pending" },
+      { id: "DQ-005", reqId: "K-ARC-35", section: "9.9 Data Quality", desc: "Validity metric: measured monthly. Target ≥ 99%", status: "pending" },
+      { id: "DQ-006", reqId: "K-ARC-36", section: "9.9 Data Quality", desc: "Timeliness metric: measured monthly. Target ≥ 95%", status: "pending" },
+      { id: "DQ-007", reqId: "K-ARC-37", section: "9.9 Data Quality", desc: "Integrity metric: measured monthly. Target 100%", status: "pending" },
+      
+      { id: "SUS-001", reqId: "K-SUS-03", section: "9.10 Sustainability", desc: "Blue-green (or equivalent) deployment for near-zero-downtime upgrades", status: "pending" },
+      { id: "SUS-002", reqId: "K-SUS-04", section: "9.10 Sustainability", desc: "Automated testing and validation verifying system integrity following upgrades", status: "pending" },
+      { id: "SUS-003", reqId: "K-SUS-05", section: "9.10 Sustainability", desc: "Configuration management and infrastructure-as-code across all environments", status: "done" },
+      { id: "SUS-004", reqId: "K-SUS-07", section: "9.10 Sustainability", desc: "Data portability: export identity data in standardised formats for future migrations", status: "pending" },
+      { id: "SUS-005", reqId: "K-SUS-09", section: "9.10 Sustainability", desc: "For open-source components: document licensing, support assumptions, security/operational requirements", status: "done" },
+
+      { id: "AEP-001", reqId: "E-PV-001", section: "10 Acceptance Evidence", desc: "Provide 8-week rolling release calendar and pilot freeze policy for last 4 weeks before Gate 1", status: "pending" },
+      { id: "AEP-002", reqId: "E-PV-002", section: "10 Acceptance Evidence", desc: "Provide requirements-to-test traceability for platform components; update each release", status: "pending" },
+      { id: "AEP-003", reqId: "E-PV-003", section: "10 Acceptance Evidence", desc: "Provide Gate 1 evidence pack templates aligned to Annex E", status: "pending" },
+      { id: "AEP-004", reqId: "E-PV-004", section: "10 Acceptance Evidence", desc: "Provide DEV/TEST/UAT environments and sandbox with test identities and sample RP", status: "pending" },
+      { id: "AEP-005", reqId: "E-PV-005", section: "10 Acceptance Evidence", desc: "Implement citizen authentication and enforce MFA with configurable step-up policies", status: "done" },
+      { id: "AEP-006", reqId: "E-PV-006", section: "10 Acceptance Evidence", desc: "Provide assisted enrolment operator tools and training materials; Government/PSC staff training", status: "pending" },
+      { id: "AEP-007", reqId: "E-PV-008", section: "10 Acceptance Evidence", desc: "Conduct security testing and remediate HIGH-RISK findings before Gate 1", status: "pending" },
+      { id: "AEP-008", reqId: "E-PV-010", section: "10 Acceptance Evidence", desc: "Perform SAST/DAST/penetration testing prior to Gate 1; remediate high severity issues", status: "pending" },
+      { id: "AEP-009", reqId: "E-PV-009", section: "10 Acceptance Evidence", desc: "Execute end-to-end SIT/UAT and close defects prior to Gate 1A (zero Critical, approved plan for High)", status: "pending" },
+      { id: "AEP-010", reqId: "E-PV-007", section: "10 Acceptance Evidence", desc: "Provide platform runbooks and execute incident drill and DR tabletop before Gate 1", status: "pending" },
+      { id: "AEP-011", reqId: "E-PV-011", section: "10 Acceptance Evidence", desc: "Provide rollback rehearsal and document outcomes", status: "pending" },
+      { id: "AEP-012", reqId: "E-PV-012", section: "10 Acceptance Evidence", desc: "Maintain consolidated compliance matrix mapping to Req IDs for Gate 1", status: "pending" },
+      { id: "AEP-013", reqId: "E-PV-013", section: "10 Acceptance Evidence", desc: "Include UIN issuance + registry write-back test evidence in Month 4 evidence pack", status: "pending" },
+      { id: "AEP-014", reqId: "E-PV-014", section: "10 Acceptance Evidence", desc: "Month 5 demonstration: proofing pass → UIN issued → Civil Registry updated → eID created/bound", status: "pending" },
+      { id: "AEP-015", reqId: "E-PV-015", section: "10 Acceptance Evidence", desc: "Include reconciliation and outage/fallback evidence in Month 6–7 packs and Gate 1 pack", status: "pending" },
+      { id: "AEP-016", reqId: "E-PV-016", section: "10 Acceptance Evidence", desc: "Support saving and resuming in-progress citizen enrolment WITHOUT loss of submitted data", status: "pending" },
+      { id: "AEP-017", reqId: "E-PV-017", section: "10 Acceptance Evidence", desc: "Provide RBAC-controlled administrative interfaces for authorised Government personnel", status: "done" },
+      { id: "AEP-018", reqId: "E-PV-018", section: "10 Acceptance Evidence", desc: "Provide self-service authentication management for citizens: MFA selection, device/authenticator management", status: "done" },
+      { id: "AEP-019", reqId: "E-PV-019", section: "10 Acceptance Evidence", desc: "Support user notifications for auth-related events and security changes", status: "done" },
+      { id: "AEP-020", reqId: "E-PV-020", section: "10 Acceptance Evidence", desc: "If trust operating model cutover occurs in Phase 1: produce Trust Transition Evidence Pack", status: "na" },
+      { id: "AEP-021", reqId: "E-PV-021", section: "10 Acceptance Evidence", desc: "Trust-model cutover affecting certificate chains SHALL be scheduled/approved via Joint CAB", status: "na" },
+      { id: "AEP-022", reqId: "E-PV-022", section: "10 Acceptance Evidence", desc: "Include Offline Verification Mode evidence in Evidence Drops and Gate 1 pack", status: "pending" },
+      { id: "AEP-023", reqId: "E-PV-026", section: "10 Acceptance Evidence", desc: "For Gate 1A: end-to-end citizen journey demonstration (enrolment, auth/SSO, signing/verification)", status: "pending" },
+      { id: "AEP-024", reqId: "E-PV-025", section: "10 Acceptance Evidence", desc: "Before Gate 1A: deliver complete documentation set for Phase 1 operation and handover", status: "pending" },
+      { id: "AEP-025", reqId: "E-PV-028", section: "10 Acceptance Evidence", desc: "Before Gate 1A: metrics definitions catalogue and sample operational metrics report from DEV/TEST/UAT", status: "pending" },
+
+      { id: "PF-001", reqId: "AC-PV-008", section: "11 Policy Freeze", desc: "Finalise assurance profiles registry (P1-Citizen-Standard, P1-Citizen-Signing, P1-Recovery-HighRisk)", status: "na" },
+      { id: "PF-002", reqId: "AC-PV-012", section: "11 Policy Freeze", desc: "Finalise whether IAL/FAL indicators exposed to RPs; whether RP classes may use lower federation posture", status: "na" },
+      { id: "PF-003", reqId: "P2-EIDC011", section: "11 Policy Freeze", desc: "Implement configurable identity lifecycle workflows with policy-driven routing between proofing models", status: "na" },
+      { id: "PF-004", reqId: "P2-EIDC042", section: "11 Policy Freeze", desc: "Finalise minor registration consent rules (scope, expiry, revalidation, service limitations)", status: "na" },
+      { id: "PF-005", reqId: "P2-SIG-C016", section: "11 Policy Freeze", desc: "Finalise delegation rules (scope, step-up triggers, max duration, revocation requirements)", status: "na" },
+      { id: "PF-006", reqId: "P2-SIG-C024", section: "11 Policy Freeze", desc: "Finalise evidence retention periods for AdES transactions", status: "na" },
+      { id: "PF-007", reqId: "P2-SSO-C012", section: "11 Policy Freeze", desc: "Finalise consent policy: when consent required and withdrawal effects", status: "na" },
+      { id: "PF-008", reqId: "P3-IOG-C12", section: "11 Policy Freeze", desc: "Confirm outage declaration monitoring thresholds/triggers/governance", status: "na" },
+      { id: "PF-009", reqId: "P3-OPS-C19", section: "11 Policy Freeze", desc: "Confirm thresholds/targets for Proofing & Enrolment Metrics", status: "na" },
+      { id: "PF-010", reqId: "P3-SEC-C15", section: "11 Policy Freeze", desc: "Confirm roles, allowed fields, export/print policy for offline mode", status: "na" },
+      { id: "PF-011", reqId: "P3-SEC-C16", section: "11 Policy Freeze", desc: "Finalise SIEM alert thresholds for Offline Verification Mode", status: "na" },
+      { id: "PF-012", reqId: "TB-01", section: "11 Policy Freeze", desc: "Finalise audit log retention durations and roles (RBAC)", status: "na" }
+    ];
+
+    let currentFilter = 'all';
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`btn-${filter}`).classList.add('active');
+      renderTable();
+    }
+
+    function renderTable() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const body = document.getElementById('checklist-body');
+      body.innerHTML = '';
+
+      let filtered = requirements;
+
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(item => item.status === currentFilter);
+      }
+
+      if (search) {
+        filtered = filtered.filter(item => 
+          item.id.toLowerCase().includes(search) ||
+          item.reqId.toLowerCase().includes(search) ||
+          item.section.toLowerCase().includes(search) ||
+          item.desc.toLowerCase().includes(search)
+        );
+      }
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        
+        let statusBadge = '';
+        if (item.status === 'done') {
+          statusBadge = '<span class="status-badge badge-done">✔ Done</span>';
+        } else if (item.status === 'pending') {
+          statusBadge = '<span class="status-badge badge-pending">☐ Pending</span>';
+        } else {
+          statusBadge = '<span class="status-badge badge-na">— N/A</span>';
+        }
+
+        tr.innerHTML = `
+          <td class="mono">${item.id}</td>
+          <td class="mono" style="color: var(--accent-gold);">${item.reqId}</td>
+          <td><span class="section-tag">${item.section}</span></td>
+          <td class="req-desc">${item.desc}</td>
+          <td>${statusBadge}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function calculateStats() {
+      const total = requirements.length;
+      const done = requirements.filter(item => item.status === 'done').length;
+      const pending = requirements.filter(item => item.status === 'pending').length;
+      const na = requirements.filter(item => item.status === 'na').length;
+      
+      const compRate = Math.round((done / (total - na)) * 100);
+
+      document.getElementById('stat-total').innerText = total;
+      document.getElementById('stat-done').innerText = done;
+      document.getElementById('stat-pending').innerText = pending;
+      document.getElementById('stat-na').innerText = na;
+      document.getElementById('stat-percent').innerText = `${compRate}%`;
+    }
+
+    function filterData() {
+      renderTable();
+    }
+
+    // Init
+    calculateStats();
+    renderTable();
+  </script>
+
+</body>
+</html>
