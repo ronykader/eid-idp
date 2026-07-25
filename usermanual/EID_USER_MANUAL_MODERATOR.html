@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — PSC Operator & Moderator Manual</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #050714;
+      --panel-bg: #0a0f28;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #080c20;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(16, 185, 129, 0.05);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-box {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .step-number {
+      position: absolute;
+      top: -12px;
+      left: 15px;
+      background-color: var(--accent-emerald);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      margin-top: 5px;
+      color: var(--accent-gold);
+    }
+
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .security-note {
+      background-color: rgba(239, 68, 68, 0.05);
+      border-left: 4px solid var(--accent-red);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .security-note h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-note {
+      background-color: rgba(59, 130, 246, 0.05);
+      border-left: 4px solid var(--accent-blue);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .info-note h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    ul.check-list {
+      list-style-type: none;
+      padding-left: 5px;
+      margin: 10px 0;
+    }
+
+    ul.check-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    ul.check-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-emerald);
+      font-weight: bold;
+    }
+
+    .demo-box {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(251, 191, 36, 0.05));
+      border: 1.5px solid var(--accent-emerald);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+
+    .demo-box h3 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .demo-grid {
+        grid-template-cols: 1fr 1fr;
+      }
+    }
+
+    .demo-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      line-height: 1.5;
+    }
+
+    .demo-item span.label {
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .standards-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Gov top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • Public Service Center (PSC)</div>
+    <div class="doc-type">PSC Operator Manual</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header">
+      <h1>PSC Assisted Onboarding Manual</h1>
+      <p>Operational guide for PSC counter agents and registry facilitators</p>
+    </div>
+
+    <!-- DEMO CREDENTIALS BANNER -->
+    <div class="demo-box">
+      <h3>🔑 Moderator Session Credentials</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; line-height:1.5;">
+        Use these counter operator credentials to demonstrate biometrics capture and assisted onboarding workflows.
+      </p>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <span class="label">Moderator Portal Login</span>
+          <strong>Email:</strong> moderator@eid.sm<br/>
+          <strong>Password:</strong> Password123!<br/>
+          <strong>UIN:</strong> UN-SXM-26-000002-8
+        </div>
+        <div class="demo-item">
+          <span class="label">Operator Identity</span>
+          <strong>Name:</strong> PSC Agent Sarah<br/>
+          <strong>Access Tier:</strong> Assisted Counter Modules & Verification
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. ASSISTED ONBOARDING FLOW -->
+    <div class="card">
+      <h2>1. Running Assisted Onboarding</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        When a citizen approaches the counter for eID enrollment, open the **PSC Assisted** tab (`/admin/psc-assisted`) to initiate the enrollment wizard.
+      </p>
+
+      <div class="step-box">
+        <span class="step-number">Action 01</span>
+        <div class="step-title">Lookup Citizen Profile</div>
+        <p class="step-desc">
+          Enter the applicant's UIN, Email address, or Full Name in the search console. Click **Search Citizen**. Verify their identity photo and demographics.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Action 02</span>
+        <div class="step-title">Execute Biometric Face Capture</div>
+        <p class="step-desc">
+          Instruct the citizen to face the camera. Click **Start Capture Camera** to activate the webcam stream overlay. Align their head inside the blue dotted guide line and click **Snap Photo**. Ensure the match validation score exceeds **95%** threshold to comply with eIDAS High assurance mandates.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Action 03</span>
+        <div class="step-title">Document Inspection</div>
+        <p class="step-desc">
+          Inspect the citizen's physical passport or ID card. Check the security features under UV magnifying light. Once checked, check the **Documents Inspected** box to approve.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Action 04</span>
+        <div class="step-title">Commit & Generate eID</div>
+        <p class="step-desc">
+          Click **Commit Enrollment & Issue eID**. The backend database will activate their profile and automatically output their official eID serial key.
+        </p>
+      </div>
+
+      <div class="security-note">
+        <h4>🚨 Physical Verification Standard</h4>
+        Operators must strictly verify that the individual sitting at the service window matches the photograph in the physical passport. Assisted approvals without a face-to-face inspection are severe compliance violations.
+      </div>
+    </div>
+
+    <!-- 2. EPASSPORT NFC SCANNING -->
+    <div class="card">
+      <h2>2. ePassport NFC & MRZ Scan Mappings</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        For passports supporting electronic chips, execute automated verification on the **ePassport Scan** page (`/admin/epassport-stub`).
+      </p>
+
+      <div class="step-box">
+        <span class="step-number">Pattern A</span>
+        <div class="step-title">Automated NFC Chip Verification</div>
+        <p class="step-desc">
+          Place the passport face down on the scanner surface. Click **Trigger ePassport Scan**. The scanner reads the MRZ, calculates the BAC key, and validates the contactless chip.
+        </p>
+        <ul class="check-list">
+          <li><strong>Passed:</strong> Displays `CSCA_CHIP_VERIFIED_PASS`. Proceed with biometric enroller.</li>
+          <li><strong>Failed:</strong> Initiates Pattern B fallback automatically.</li>
+        </ul>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Pattern B</span>
+        <div class="step-title">Documentary Manual Fallback</div>
+        <p class="step-desc">
+          If the chip is corrupted or the passport is non-electronic, enter details manually:
+        </p>
+        <ul class="check-list">
+          <li>Input the physical Passport Number and Expiration Date.</li>
+          <li>Confirm visual inspection of the physical holograms/watermarks.</li>
+          <li>Click **Commit Pattern B Verification** to save.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. OUTAGE ACTIONS -->
+    <div class="card">
+      <h2>3. Outage Protocols: Offline Check Point Scans</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        During system network outages, operators switch to the **Offline Verify** scanner portal (`/admin/offline-verification`).
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">Scanning Offline eID QR Codes</div>
+        <p class="step-desc">
+          1. Ask the citizen to display their eID Offline QR code from their mobile dashboard app.<br/>
+          2. Scan the QR code or paste the token payload into the textarea. Click **Verify Offline Token**.<br/>
+          3. The system executes the **RS256 digital signature validation** locally using the public key. If the certificate is authentic and has not expired, it parses and displays the citizen's verified details.
+        </p>
+      </div>
+
+      <div class="info-note">
+        <h4>🔒 Offline Signature Cryptography</h4>
+        Offline verification relies entirely on verifying signatures against the central registry's certificate. Since the portal is disconnected from the central server, operators must verify the "Certificate Validity" date displayed on the output layout.
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

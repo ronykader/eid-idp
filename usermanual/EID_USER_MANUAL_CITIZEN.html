@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Citizen User & Security Compliance Manual</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #060919;
+      --panel-bg: #0c1330;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f28;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-blue);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-box {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .step-number {
+      position: absolute;
+      top: -12px;
+      left: 15px;
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      margin-top: 5px;
+      color: var(--accent-gold);
+    }
+
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .security-note {
+      background-color: rgba(239, 68, 68, 0.05);
+      border-left: 4px solid var(--accent-red);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .security-note h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-note {
+      background-color: rgba(59, 130, 246, 0.05);
+      border-left: 4px solid var(--accent-blue);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .info-note h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    ul.check-list {
+      list-style-type: none;
+      padding-left: 5px;
+      margin: 10px 0;
+    }
+
+    ul.check-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    ul.check-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-emerald);
+      font-weight: bold;
+    }
+
+    .ui-preview-mock {
+      background-color: #030612;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .demo-box {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(251, 191, 36, 0.05));
+      border: 1.5px solid var(--accent-blue);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+
+    .demo-box h3 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .demo-grid {
+        grid-template-cols: 1fr 1fr;
+      }
+    }
+
+    .demo-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      line-height: 1.5;
+    }
+
+    .demo-item span.label {
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .standards-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Gov top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • National Identity & Security Management</div>
+    <div class="doc-type">Citizen User & Security Compliance Manual</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header">
+      <h1>eID Portal Citizen Manual</h1>
+      <p>A step-by-step operational guide & security compliance specification for Sint Maarten residents</p>
+    </div>
+
+    <!-- DEMO CREDENTIALS BANNER -->
+    <div class="demo-box">
+      <h3>🔑 Sandbox Demo Credentials</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; line-height:1.5;">
+        Use these seeded credentials to demonstrate the complete citizen registration, multi-factor login, and security dashboard flow.
+      </p>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <span class="label">Citizen Portal Login</span>
+          <strong>Email:</strong> citizen@eid.sm<br/>
+          <strong>Password:</strong> Password123!<br/>
+          <strong>UIN:</strong> UN-SXM-26-000001-9
+        </div>
+        <div class="demo-item">
+          <span class="label">Demographics Details</span>
+          <strong>Name:</strong> John Connor<br/>
+          <strong>Residence:</strong> Sint Maarten<br/>
+          <strong>MFA Secret:</strong> JBSWY3DPEHPK3PXP
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. REGISTRATION -->
+    <div class="card">
+      <h2>1. Account Application & Registration Wizard</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        To register your national eID profile, navigate to the eID Portal homepage and click the **Register** link to launch the 4-step onboarding wizard.
+      </p>
+
+      <div class="step-box">
+        <span class="step-number">Step 01</span>
+        <div class="step-title">Identity & Demographics</div>
+        <p class="step-desc">
+          Enter your authoritative personal info. You must provide your **9-digit CRIB / Citizen ID Number** (assigned by the Sint Maarten Tax Authority). Ensure your spelling matches your passport.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Step 02</span>
+        <div class="step-title">Residence & District Selection</div>
+        <p class="step-desc">
+          Specify your local residential address. Select your district/municipality (e.g. *Philipsburg, Simpson Bay, Cul de Sac, Cole Bay*) from the drop-down menu to map municipal permissions.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Step 03</span>
+        <div class="step-title">Security & MFA setup</div>
+        <p class="step-desc">
+          Input your email address and active mobile phone number. Choose your preferred **Multi-Factor Authentication (MFA)** fallback option: Google Authenticator (TOTP), SMS OTP, or Passkey/FIDO2 biometrics.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Step 04</span>
+        <div class="step-title">Liveness Check & Document Upload</div>
+        <p class="step-desc">
+          Upload a high-resolution scan of your passport or ID card. You can select **Capture with Webcam** to perform a live selfie liveness check, or choose **Select Photo File** to upload a portrait image directly.
+        </p>
+      </div>
+    </div>
+
+    <!-- 2. LOGIN AND SSO -->
+    <div class="card">
+      <h2>2. Logging In & Accessing Government Portals</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Once registered and activated by the Civil Registry, you can use your eID to sign in to any federated government portal (such as the *MyGov Portal* or *Tax Authority Portal*).
+      </p>
+
+      <div class="step-box">
+        <span class="step-number">Phase A</span>
+        <div class="step-title">OIDC Federated Login Redirect</div>
+        <p class="step-desc">
+          When you click "Login with eID" on an agency portal, you are redirected to the secure central WSO2 login gate. Enter your UIN, Email address, or eID Serial alongside your password.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Phase B</span>
+        <div class="step-title">Multi-Factor Authentication Challenge</div>
+        <p class="step-desc">
+          Depending on the security tier of the portal (e.g., Tax and Health require High Assurance), the portal will challenge you to input a **6-digit verification code** generated by your Google Authenticator app or sent via SMS/Email.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Phase C</span>
+        <div class="step-title">Scope Consent Approval</div>
+        <p class="step-desc">
+          Review the metadata consent prompt. WSO2 will display the specific attributes requested by the portal (e.g. *Email, Name, UIN, CRIB*). Check the approval boxes to permit the attribute release.
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. GOOGLE AUTHENTICATOR & SMS OTP -->
+    <div class="card">
+      <h2>3. Google Authenticator (TOTP) & SMS Mobile OTP</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Multi-Factor Authentication (MFA) protects your identity from unauthorized access. The eID portal supports two dynamic second-factor options:
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">📱 Google Authenticator (TOTP)</div>
+        <p class="step-desc">
+          Using a Time-Based One-Time Password (TOTP) app is the most secure offline option.
+        </p>
+        <ul class="check-list">
+          <li><strong>QR Setup Toggle:</strong> The QR enrollment canvas is hidden behind an expandable trigger link to prevent shoulder surfing or scanning by unauthorized onlookers.</li>
+          <li><strong>Key Backup:</strong> Save the printed alphanumeric secret seed in a secure location to restore access if you change or lose your mobile device.</li>
+          <li><strong>Verification Check:</strong> You must enter a valid 6-digit code from your app to complete configuration and link the device.</li>
+        </ul>
+      </div>
+
+      <div class="step-box">
+        <div class="step-title">💬 SMS Mobile OTP (BulkSMSBD Integration)</div>
+        <p class="step-desc">
+          SMS OTP delivers one-time security codes directly to your mobile phone number.
+        </p>
+        <ul class="check-list">
+          <li><strong>60-Second Cooldown:</strong> When you request an SMS OTP, a countdown timer starts. You cannot request a new SMS code until the 60-second limit expires.</li>
+          <li><strong>6-Digit Format Guard:</strong> The input form strictly validates that the code you type is exactly 6 numeric digits before transmitting it. Non-numeric characters are blocked automatically.</li>
+        </ul>
+      </div>
+
+      <div class="security-note">
+        <h4>⚠️ Security Compliance Warning</h4>
+        To comply with international NIST guidelines, SMS OTP is vulnerable to SIM-swapping exploits. We highly recommend registering a **Touch ID / Face ID Passkey** or using **Google Authenticator (TOTP)** as your primary MFA method for sensitive portals.
+      </div>
+    </div>
+
+    <!-- 4. PASSKEY AND LAST FACTOR GUARD -->
+    <div class="card">
+      <h2>4. Cryptographic Passkeys & The Last Factor Guard</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        eID Passkeys use public-key cryptography (FIDO2 / WebAuthn standards) to allow secure, passwordless logins using biometric scanners (Touch ID / Face ID) or physical hardware keys (YubiKeys).
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">🔑 FIDO2 Biometric Enrollment</div>
+        <p class="step-desc">
+          From the **Security Vault** on your dashboard, click **Register Passkey** to prompt your device's biometric scanner. Your private key remains locked on your device, and only the public key is registered with the eID database.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <div class="step-title">🛡️ eIDAS Last Factor Guard (Strict Lockout Prevention)</div>
+        <p class="step-desc">
+          Under eIDAS Level High compliance, your profile **must always have at least one active MFA factor enabled**. 
+        </p>
+        <div class="info-note" style="margin-top:10px; margin-bottom: 10px;">
+          <h4>🔒 Security Rule</h4>
+          The dashboard will **block** you from revoking/deleting your last remaining MFA method. If you try to delete your only registered passkey, the system will trigger a validation error:
+          <p style="font-family: 'JetBrains Mono', monospace; font-size:11px; margin-top:5px; color: var(--accent-gold);">
+            "eIDAS Assurance Level High requires at least one active Multi-Factor Authentication (MFA) method. Please configure Google Authenticator or SMS verification before revoking your last remaining passkey."
+          </p>
+        </div>
+        <p class="step-desc">
+          To revoke your last passkey, you must first set up Google Authenticator or configure verified SMS delivery as your alternative factor.
+        </p>
+      </div>
+
+      <div class="standards-badge">✓ eIDAS Assurance Level High Compliant</div>
+      <div class="standards-badge" style="background-color: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: var(--accent-blue);">✓ NIST AAL3 Certified</div>
+    </div>
+
+    <!-- 5. SINGLE LOGOUT PROTOCOL -->
+    <div class="card">
+      <h2>5. OIDC Single Logout (SLO) Protection</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        To protect your privacy when accessing government portals on shared or public devices (e.g., library computers, internet cafes), the eID system implements a secure multi-service Single Logout (SLO) protocol.
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">🔄 The Single Logout Chain</div>
+        <p class="step-desc">
+          Clicking "Logout" on the MyGov portal (`mygov.test`) triggers an automatic, secure redirect loop that cleanses all sessions:
+        </p>
+        <ul class="check-list">
+          <li><strong>Laravel Session:</strong> Clears your active session on the relying agency portal.</li>
+          <li><strong>eID Portal Session:</strong> The browser is redirected to `http://localhost:3000/logout` to clear the local browser storage keys (`eid_token`, `eid_profile`).</li>
+          <li><strong>WSO2 Broker Session:</strong> Contacts WSO2 Carbon to invalidate your active SSO identity token.</li>
+          <li><strong>eID Backend Session:</strong> Contacts the eID API to revoke your server-side session token.</li>
+        </ul>
+      </div>
+
+      <div class="info-note">
+        <h4>🔒 Shared Device Guideline</h4>
+        Always wait for the logout redirects to complete fully and display the portal login screen before leaving your browser. This ensures that no cached session tokens remain in the browser local storage.
+      </div>
+    </div>
+
+    <!-- 6. AUDIT LOGS -->
+    <div class="card">
+      <h2>6. Annex E Cryptographic Transaction Auditing</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        The eID portal provides complete accountability and transparency regarding how your data is accessed by government agencies.
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">📋 Evidence Records</div>
+        <p class="step-desc">
+          Every time an agency requests your details, a non-repudiation record is written to the eID audit ledger. You can inspect these logs under the **Evidence Audit Logs** tab on your dashboard:
+        </p>
+        <ul class="check-list">
+          <li><strong>Reference ID:</strong> The unique transaction token generated for the authentication request.</li>
+          <li><strong>Subject UIN:</strong> Your unique national citizen identifier.</li>
+          <li><strong>Verification Status:</strong> The level of assurance verification used (e.g., `VERIFIED_HIGH_ASSURANCE`).</li>
+          <li><strong>Payload Hash:</strong> A cryptographic SHA-256 hash of the attributes shared with the agency, guaranteeing that the data has not been modified.</li>
+        </ul>
+        <div class="ui-preview-mock">
+          Audit Row Example:<br/>
+          Reference ID: EVID-SX-38a9e10d<br/>
+          Status: VERIFIED_HIGH_ASSURANCE<br/>
+          Payload Hash: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

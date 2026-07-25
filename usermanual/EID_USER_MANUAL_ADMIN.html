@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — Administrator Console & Compliance Manual</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #070913;
+      --panel-bg: #0d122b;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top flag ribbon */
+    .top-ribbon {
+      background: linear-gradient(to right, #ef4444, #ffffff, #2563eb);
+      height: 6px;
+      width: 100%;
+    }
+
+    .gov-banner {
+      background-color: #0a0f25;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
+    .gov-banner span.doc-type {
+      color: var(--accent-gold);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background-color: rgba(251, 191, 36, 0.05);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 15px;
+      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-box {
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .step-number {
+      position: absolute;
+      top: -12px;
+      left: 15px;
+      background-color: var(--accent-gold);
+      color: #000000;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      margin-top: 5px;
+      color: var(--accent-blue);
+    }
+
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .security-note {
+      background-color: rgba(239, 68, 68, 0.05);
+      border-left: 4px solid var(--accent-red);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .security-note h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-note {
+      background-color: rgba(59, 130, 246, 0.05);
+      border-left: 4px solid var(--accent-blue);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .info-note h4 {
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    ul.check-list {
+      list-style-type: none;
+      padding-left: 5px;
+      margin: 10px 0;
+    }
+
+    ul.check-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    ul.check-list li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+      color: var(--accent-gold);
+      font-weight: bold;
+    }
+
+    .demo-box {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(251, 191, 36, 0.05));
+      border: 1.5px solid var(--accent-gold);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+
+    .demo-box h3 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .demo-grid {
+        grid-template-cols: 1fr 1fr;
+      }
+    }
+
+    .demo-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      line-height: 1.5;
+    }
+
+    .demo-item span.label {
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .standards-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: var(--accent-gold);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Flag Ribbon -->
+  <div class="top-ribbon"></div>
+
+  <!-- Gov top bar -->
+  <div class="gov-banner">
+    <div>🇸🇽 Land Sint Maarten • eID Platform Administration</div>
+    <div class="doc-type">Administrator Console Manual</div>
+  </div>
+
+  <div class="container">
+    
+    <div class="header">
+      <h1>eID Platform Admin Manual</h1>
+      <p>Operational instructions and security auditing parameters for registry administrators</p>
+    </div>
+
+    <!-- DEMO CREDENTIALS BANNER -->
+    <div class="demo-box">
+      <h3>🔑 Admin Session Credentials</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; line-height:1.5;">
+        Use these central admin credentials to demonstrate registry oversight, log access, and settings controls.
+      </p>
+      <div class="demo-grid">
+        <div class="demo-item">
+          <span class="label">Admin Portal Login</span>
+          <strong>Email:</strong> admin@eid.sm<br/>
+          <strong>Password:</strong> Password123!<br/>
+          <strong>UIN:</strong> UN-SXM-26-000003-7
+        </div>
+        <div class="demo-item">
+          <span class="label">Oversight Role</span>
+          <strong>Name:</strong> Admin Director Miller<br/>
+          <strong>Access Tier:</strong> Full Global Registry Settings
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. REGISTRY OPERATIONS -->
+    <div class="card">
+      <h2>1. Citizen Registry & Dossier Management</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Administrators review citizen profile details, confirm document uploads, and update registry statuses on the **Citizens** management page (`/admin/citizens`).
+      </p>
+
+      <div class="step-box">
+        <span class="step-number">Action A</span>
+        <div class="step-title">Reviewing Pending Registrations</div>
+        <p class="step-desc">
+          Browse the citizen registry table. Click **View Details** on any pending row to inspect the submitted name, CRIB number, and address. Review uploaded photo and ID scans in the overlay modal.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Action B</span>
+        <div class="step-title">Manual eID Issuance</div>
+        <p class="step-desc">
+          If the system setting is set to manual mode, citizens must be manually approved. Click **Generate eID** to issue a unique national eID serial key and activate the citizen profile.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Action C</span>
+        <div class="step-title">Status Changes (Suspensions)</div>
+        <p class="step-desc">
+          Use the details modal to update the citizen status:
+        </p>
+        <ul class="check-list">
+          <li><strong>Active:</strong> Permits federated SSO logins across government portals.</li>
+          <li><strong>Suspended:</strong> Rejects all authentication requests, blocking access.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. CREDENTIALS AND OAUTH CLIENTS -->
+    <div class="card">
+      <h2>2. Credentials Registry & Client Registrations</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Control active cryptographic authenticators and manage federated Relying Party client parameters:
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">🔑 Biometric Keys Administration (`/admin/credentials`)</div>
+        <p class="step-desc">
+          Browse the global directory of registered FIDO2 / WebAuthn credentials bound to citizen accounts.
+        </p>
+        <ul class="check-list">
+          <li><strong>Key Audit:</strong> Verify the credential ID, key signature algorithms, and the active status of registered hardware tokens.</li>
+          <li><strong>Emergency Revocation:</strong> Administrators can manually delete an authenticator key if a citizen reports their biometric device as compromised or lost.</li>
+        </ul>
+      </div>
+
+      <div class="step-box">
+        <div class="step-title">🔌 OAuth Client Applications (`/admin/clients`)</div>
+        <p class="step-desc">
+          Manage the configurations for federated platforms linked to the eID identity provider:
+        </p>
+        <ul class="check-list">
+          <li><strong>Client ID / Secrets:</strong> Add or edit Relying Party portals (e.g., `mygov-broker`, `tax-portal`).</li>
+          <li><strong>Redirect URI White-listing:</strong> White-list exact redirect endpoints to prevent Open Redirector hijack attempts.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. GLOBAL SYSTEM SETTINGS -->
+    <div class="card">
+      <h2>3. Global System Configuration</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Configure eID platform generation rules and configuration bindings on the **System Settings** page (`/admin/settings`).
+      </p>
+
+      <div class="step-box">
+        <span class="step-number">Setting 01</span>
+        <div class="step-title">eID Generation Mode</div>
+        <p class="step-desc">
+          Toggles how the registry processes new applications:
+        </p>
+        <ul class="check-list">
+          <li><strong>Automatic Mode:</strong> Automatically generates and assigns eID serial keys upon citizen registration. Suitable for low-risk testing or fully integrated database states.</li>
+          <li><strong>Manual Mode:</strong> Newly registered citizens are saved as pending. Requires an administrator or PSC operator to manually review documents and click "Generate eID" to issue credentials.</li>
+        </ul>
+      </div>
+
+      <div class="step-box">
+        <span class="step-number">Setting 02</span>
+        <div class="step-title">MFA Gateway Configuration Bindings</div>
+        <p class="step-desc">
+          Verify and administer settings for SMS Gateway (BulkSMSBD) delivery systems configured inside the `.NET` web services config registry:
+        </p>
+        <ul class="check-list">
+          <li><strong>SMS_API_KEY / SMS_SENDER_ID:</strong> Verify keys are securely configured under the application server profile configurations to prevent dispatch failures.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. COMPLIANCE AUDITING -->
+    <div class="card">
+      <h2>4. Security Logs & Compliance Auditing</h2>
+      <p class="step-desc" style="margin-bottom: 20px;">
+        Audit identity release transactions and verify security trail compliance on the **Auth Logs** page (`/admin/logs`).
+      </p>
+
+      <div class="step-box">
+        <div class="step-title">Annex E Evidence Trail Inspections</div>
+        <p class="step-desc">
+          Review the real-time paginated table of transaction logs populated directly from the `audit_evidence_records` database table. Ensure that:
+        </p>
+        <ul class="check-list">
+          <li>Each record carries a unique **Reference ID** and **Correlation ID** linked to WSO2.</li>
+          <li>The **Verification Status** reads `VERIFIED_HIGH_ASSURANCE` for WebAuthn passkey handshakes.</li>
+          <li>The **Payload Hash** displays the SHA-256 cryptographic digest of the released claims, proving that no plaintext PII is written to the audit log.</li>
+        </ul>
+      </div>
+
+      <div class="security-note">
+        <h4>🚨 NIST & eIDAS Security Standards</h4>
+        Under NIST SP 800-63B and eIDAS High Assurance guidelines, audit logs are read-only and immutable. Deletion or modification of rows in the `audit_evidence_records` registry table is strictly prohibited and audited by the National Security Agency.
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
