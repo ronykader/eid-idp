@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Architecture Guide: Sint Maarten eID & WSO2 IS Federated SSO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070b12;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --accent-wso2: #ff7300;
+            --accent-eid: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+            --border-color: #1e293b;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            background-image: radial-gradient(circle at 5% 5%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                              radial-gradient(circle at 95% 95%, rgba(255, 115, 0, 0.08) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3.5rem 2rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-eid), var(--accent-wso2));
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #60a5fa, #3b82f6, #ff7300);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        header p {
+            color: var(--text-main);
+            opacity: 0.8;
+            font-size: 1.25rem;
+            font-weight: 350;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Sections Layout */
+        .section-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s;
+        }
+
+        .section-box:hover {
+            border-color: #334155;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        p {
+            color: #cbd5e1;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Grid Columns */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Styled lists */
+        ul.custom-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        ul.custom-list li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            color: #cbd5e1;
+        }
+
+        ul.custom-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 900;
+            font-size: 1.1rem;
+        }
+
+        ul.custom-list.wso2 li::before {
+            color: var(--accent-wso2);
+        }
+
+        /* Matrix Table */
+        table.matrix {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        table.matrix th, table.matrix td {
+            padding: 1.1rem 1.25rem;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+
+        table.matrix th {
+            background-color: #1e293b;
+            color: var(--text-main);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.matrix tr:nth-child(even) {
+            background-color: rgba(30, 41, 59, 0.3);
+        }
+
+        .highlight-wso2 {
+            color: var(--accent-wso2);
+            font-weight: 600;
+        }
+
+        .highlight-eid {
+            color: var(--accent-eid);
+            font-weight: 600;
+        }
+
+        /* Info boxes */
+        .info-card {
+            background-color: rgba(59, 130, 246, 0.04);
+            border: 1px dashed rgba(59, 130, 246, 0.3);
+            border-radius: 14px;
+            padding: 1.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-card.wso2 {
+            background-color: rgba(255, 115, 0, 0.04);
+            border-color: rgba(255, 115, 0, 0.3);
+        }
+
+        .info-title {
+            font-weight: 800;
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Sequence diagram styles */
+        .diagram-container {
+            background-color: #030712;
+            border: 1px solid #1f2937;
+            border-radius: 14px;
+            padding: 2.2rem;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            overflow-x: auto;
+            color: #38bdf8;
+            margin-top: 1.5rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        .diagram-line {
+            white-space: pre;
+            margin-bottom: 0.3rem;
+        }
+
+        .standard-tag {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-green);
+            color: #34d399;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        /* Requirements Box Details */
+        .req-box {
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: rgba(15, 23, 42, 0.4);
+        }
+
+        .req-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+
+        .req-tag.mfa { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .req-tag.eidas { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .req-tag.privacy { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <header>
+            <h1>🇸🇽 Federated eID & WSO2 IS Architectural Blueprint</h1>
+            <p>A Comprehensive Technical Explainer on Boundaries, Security Protocols, and Compliance Standards for the Sint Maarten Government Cloud</p>
+        </header>
+
+        <!-- Executive Summary -->
+        <div class="section-box">
+            <h2>🏛️ Executive Summary & Federation Topology</h2>
+            <p>
+                This document serves as the official technical architecture guide detailing the integration between **WSO2 Identity Server (IS) 7.x** and the **Sint Maarten National eID Platform (.NET 8)**.
+            </p>
+            <p>
+                Our architecture implements the **Federated Identity Brokerage Pattern (OIDC Federation)**. 
+                Under this design, WSO2 IS serves as the central SSO Broker and API Gateway for all relying portals (MyGov, Tax, Health, etc.), while the eID Platform serves as the **Authoritative Identity Provider (IdP)**.
+            </p>
+            <div class="info-card">
+                <div class="info-title" style="color: #60a5fa;">💡 Key Architectural Concept: Delegated Identity Authentication</div>
+                <p style="color: #cbd5e1; font-size: 0.95rem;">
+                    Instead of validating user passwords or OTPs directly, WSO2 IS delegates the authentication step to the eID Platform via OpenID Connect (OIDC). The eID Platform checks the user's factors (password, SMS OTP, or biometric passkey) and issues a signed cryptographically verifiable assertions token (JWT) to WSO2 IS. WSO2 IS then propagates the SSO session across all target portals.
+                </p>
+            </div>
+        </div>
+
+        <!-- BOUNDARY OF RESPONSIBILITY RESOLUTION -->
+        <div class="section-box" style="border-color: var(--accent-wso2);">
+            <h2>⚖️ Resolution of Requirements Ambiguity: Why MFA Belongs to eID</h2>
+            <p>
+                During initial requirements gathering, a technical ambiguity arose regarding where the Multi-Factor Authentication (MFA) engine should be hosted: <strong>within the WSO2 IS Broker or inside the eID Platform?</strong>
+            </p>
+            <p>
+                Strictly routing the MFA verification through WSO2 IS introduces architectural conflicts that compromise security, data privacy, and international compliance. The table below highlights the conflicts of the naive approach vs. the security of our implemented solution:
+            </p>
+
+            <div class="req-box">
+                <span class="req-tag eidas">eIDAS High Assurance (Level High)</span>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    <strong>The Conflict:</strong> For the eID Platform to sign digital transactions at "Level High" compliance, it must verify multiple factors directly. If WSO2 IS handled the MFA step, the eID platform would only check the user's password, generating a "Low Assurance" token. 
+                    <br><strong>The Solution:</strong> The eID Platform executes the full multi-factor authentication (Password + OTP/Passkey) and signs the assertions, satisfying eIDAS regulations.
+                </p>
+            </div>
+
+            <div class="req-box">
+                <span class="req-tag mfa">FIDO2 / WebAuthn Domain Bindings</span>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    <strong>The Conflict:</strong> WebAuthn/Passkeys are browser-level credentials bound to a specific origin (domain). Because the citizen registers their biometrics on the eID portal domain (`http://localhost:3000`), WSO2 IS (`https://localhost:9443`) cannot verify the cryptographic biometric signature due to browser cross-origin boundaries.
+                    <br><strong>The Solution:</strong> By putting the WebAuthn challenge engine inside the eID Platform, biometrics are checked on the correct origin seamlessly.
+                </p>
+            </div>
+
+            <div class="req-box">
+                <span class="req-tag privacy">GDPR Data Minimization & PII Isolation</span>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    <strong>The Conflict:</strong> If WSO2 IS directly sent SMS/Email OTP codes, it would require access to the master citizen database containing phone numbers and email addresses. This would necessitate replicating sensitive PII database tables into WSO2's repository, creating an audit vulnerability and a wider attack surface.
+                    <br><strong>The Solution:</strong> eID encapsulates the citizen database. WSO2 IS acts under "Zero-Knowledge" of phone numbers/secrets, receiving only a final token mapping the claims.
+                </p>
+            </div>
+        </div>
+
+        <!-- Boundary of Responsibilities Matrix -->
+        <div class="section-box">
+            <h2>⚖️ Architectural Boundary Allocation Matrix</h2>
+            <div class="grid-2">
+                
+                <!-- eID Platform Responsibilities -->
+                <div>
+                    <h3 class="highlight-eid">🛡️ eID Platform (.NET 8 Backend)</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted);">The primary identity verification and cryptography engine:</p>
+                    <ul class="custom-list">
+                        <li><strong>Credential Verification:</strong> Direct validation of passwords (via BCrypt verification) and biometric public keys.</li>
+                        <li><strong>MFA Engine:</strong> Generates and verifies 6-digit Email/SMS OTPs, and houses the RFC 6238 TOTP verification (Google Authenticator) algorithms.</li>
+                        <li><strong>Database Authority:</strong> Serves as the master registry of citizen profiles (UN/CEFACT Compliant).</li>
+                        <li><strong>Cryptographic Evidence Logging:</strong> Generates and writes SHA-256 digital digests of transactions (Annex E Logging) in DB.</li>
+                    </ul>
+                </div>
+
+                <!-- WSO2 IS Responsibilities -->
+                <div>
+                    <h3 class="highlight-wso2">⚙️ WSO2 Identity Server (SSO Broker)</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted);">The primary access control policy and protocol mediator:</p>
+                    <ul class="custom-list wso2">
+                        <li><strong>Access Policy Enforcement:</strong> Decides which portals require multi-factor verification (MFA step-up) based on risk tier.</li>
+                        <li><strong>Protocol Translation:</strong> Mediates SAML 2.0 / WS-Fed / OIDC callbacks between client portals and eID.</li>
+                        <li><strong>SSO Session Management:</strong> Maintains global session cookies, single-logout redirects, and tokens lifecycle.</li>
+                        <li><strong>Shadow Profiles & Claims Filtering:</strong> Filters and releases only the claims authorized for a specific portal, keeping other profile attributes private.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Protocol Flow Diagram -->
+        <div class="section-box">
+            <h2>🔄 End-to-End Federated Authentication Sequence</h2>
+            <p style="color: var(--text-muted);">This diagram details how the OIDC authorization code flow behaves, incorporating eID-side MFA step-up validation:</p>
+            
+            <div class="diagram-container">
+<div class="diagram-line">Citizen            Portal (MyGov)        WSO2 IS Broker      eID Platform (.NET)</div>
+<div class="diagram-line">  |                      |                      |                     |</div>
+<div class="diagram-line">  |--- Click Login ----->|                      |                     |</div>
+<div class="diagram-line">  |                      |--- Redirect OIDC --->|                     |</div>
+<div class="diagram-line">  |                      |    Authorize         |                     |</div>
+<div class="diagram-line">  |                      |                      |--- Redirect eID --->|</div>
+<div class="diagram-line">  |                      |                      |    Authorize        |</div>
+<div class="diagram-line">  |<--------------------- Render eID Login Page ----------------------|</div>
+<div class="diagram-line">  |                      |                      |                     |</div>
+<div class="diagram-line">  |--- Enter Credentials (NID/Pass) --------------------------------->|</div>
+<div class="diagram-line">  |                      |                      |                     | [Verify Password hash]</div>
+<div class="diagram-line">  |                      |                      |                     | [Generate 6-digit OTP]</div>
+<div class="diagram-line">  |<--------------------- Prompt for 2FA OTP Challenge --------------| [mfa_required: true]</div>
+<div class="diagram-line">  |                      |                      |                     |</div>
+<div class="diagram-line">  |--- Submits OTP -------------------------------------------------->|</div>
+<div class="diagram-line">  |                      |                      |                     | [Validate OTP code]</div>
+<div class="diagram-line">  |                      |                      |                     | [Save Auth Code & Nonce]</div>
+<div class="diagram-line">  |<--------------------- Redirect with Auth Code ---------------------| [https://localhost:9443/commonauth?code=...]</div>
+<div class="diagram-line">  |                      |                      |                     |</div>
+<div class="diagram-line">  |                      |                      |--- POST /token ---->| [Exchange Code]</div>
+<div class="diagram-line">  |                      |                      |<-- Access/ID Token -| [Return claims & Annex E LogRef]</div>
+<div class="diagram-line">  |                      |                      |                     |</div>
+<div class="diagram-line">  |                      |<-- Redirect callback |                     |</div>
+<div class="diagram-line">  |<-- Logged in Dashboard -|                  |                     |</div>
+            </div>
+        </div>
+
+        <!-- Compliance Matrix -->
+        <div class="section-box">
+            <h2>📊 Standards and Regulations Compliance Matrix</h2>
+            <table class="matrix">
+                <thead>
+                    <tr>
+                        <th>Standard / Specification</th>
+                        <th>Implementation Details</th>
+                        <th>Assurance Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>eIDAS High Assurance</strong> (EU 910/2014)</td>
+                        <td>Multi-factor verification (something you know: Password, and something you have: OTP/Passkey) executed entirely in a secure enclave (eID core).</td>
+                        <td>Matches the highest trust levels for European cross-border digital identity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FIDO2 / W3C WebAuthn</strong></td>
+                        <td>Cryptographic passwordless authentication bypassing credential leaks. Fingerprint/Face templates remain encrypted inside local secure elements.</td>
+                        <td>Phishing-resistant authentication.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RFC 6238 (TOTP)</strong></td>
+                        <td>Time-Based One-Time Password algorithm with HMAC-SHA1 and 30-second skew tolerance. Compatible with Google Authenticator and Microsoft Authenticator.</td>
+                        <td>Secure offline second-factor verification.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OIDC Core 1.0 & OAuth 2.0</strong></td>
+                        <td>Authorization Code Flow with PKCE, custom JWT ID tokens signed with RS256, and secure JWKS public key endpoint resolution.</td>
+                        <td>Secure API and user delegation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Annex E Audit Compliance</strong></td>
+                        <td>Cryptographic proof logs mapping transaction digests to Citizen UINs, protecting citizen actions against retro-active alteration.</td>
+                        <td>Irrefutable transaction tracking.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
