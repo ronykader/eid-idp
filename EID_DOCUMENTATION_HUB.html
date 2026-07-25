@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sint Maarten eID — National Documentation Hub</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #070b19;
+      --panel-bg: #0e1635;
+      --panel-hover: #17224f;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --code-bg: #040815;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
+
+    /* Flag Accent Band */
+    .flag-band {
+      background: linear-gradient(to right, #ef4444 33%, #ffffff 33%, #ffffff 66%, #2563eb 66%);
+      height: 6px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Top Government Header */
+    .top-header {
+      background-color: #0c122c;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-size: 22px;
+    }
+
+    .brand-title {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--accent-emerald);
+      color: var(--accent-emerald);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-badge::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    /* Hero / Search Section */
+    .hero-section {
+      max-width: 1200px;
+      margin: 50px auto 30px auto;
+      padding: 0 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-section h1 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 60%, var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .hero-section p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      font-weight: 500;
+    }
+
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--panel-bg);
+      border: 1.5px solid var(--border-color);
+      color: #ffffff;
+      padding: 16px 24px 16px 52px;
+      border-radius: 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 30px -8px rgba(59, 130, 246, 0.25);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Main Grid View */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .category-section {
+      margin-top: 50px;
+      scroll-margin-top: 20px;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .category-icon {
+      font-size: 24px;
+    }
+
+    .category-title {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Card Item Style */
+    .guide-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 240px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 15px 30px -10px rgba(59, 130, 246, 0.15);
+      background-color: var(--panel-hover);
+    }
+
+    .card-top {
+      space-y: 10px;
+    }
+
+    .card-badge {
+      align-self: flex-start;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .badge-sso { background-color: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+    .badge-spec { background-color: rgba(251, 191, 36, 0.1); border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+    .badge-ops { background-color: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-emerald); color: var(--accent-emerald); }
+    .badge-deploy { background-color: rgba(239, 68, 68, 0.1); border: 1px solid var(--accent-red); color: var(--accent-red); }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-top: 6px;
+    }
+
+    .card-description {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 14px;
+      margin-top: 16px;
+    }
+
+    .card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent-gold);
+    }
+
+    .card-action-text {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-action-text::after {
+      content: '➔';
+      font-size: 9px;
+      transition: transform 0.2s ease;
+    }
+
+    .guide-card:hover .card-action-text::after {
+      transform: translateX(3px);
+    }
+
+    /* Empty state */
+    .empty-search {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      margin-top: 40px;
+    }
+
+    .empty-search.active {
+      display: block;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flag Band -->
+  <div class="flag-band"></div>
+
+  <!-- Header -->
+  <header class="top-header">
+    <div class="brand-meta">
+      <span class="brand-logo">🇸🇽</span>
+      <span class="brand-title">Land Sint Maarten • National eID Hub</span>
+    </div>
+    <div class="status-badge">System Core Complete</div>
+  </header>
+
+  <!-- Hero & Search -->
+  <section class="hero-section">
+    <h1>National eID Documentation Hub</h1>
+    <p>Access technical specifications, multi-agency onboarding playbooks, and local deployment blueprints for the Sint Maarten Identity Platform.</p>
+    <div class="search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search manuals by title, scope, or framework (e.g. WSO2, WebAuthn)..." onkeyup="filterCards()">
+    </div>
+  </section>
+
+  <!-- Main Catalog -->
+  <main class="container">
+
+    <!-- Category 1: SSO & WSO2 Integration -->
+    <section id="cat-sso" class="category-section">
+      <div class="category-header">
+        <span class="category-icon">🔗</span>
+        <h2 class="category-title">SSO & WSO2 Federation</h2>
+      </div>
+      <div class="category-grid">
+        
+        <a href="WSO2_APPLICATION_ONBOARDING_MANUAL.html" class="guide-card" data-tags="wso2 sso mygov onboarding integration laravel client id">
+          <div class="card-top">
+            <span class="card-badge badge-sso">Onboarding Manual</span>
+            <h3 class="card-title">WSO2 Application Onboarding</h3>
+            <p class="card-description">Step-by-step setup guides for registering Service Providers, defining PKCE attributes, and obtaining oauth client keys inside WSO2.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#carbon-console</span>
+            <span class="card-action-text">Read Playbook</span>
+          </div>
+        </a>
+
+        <a href="WSO2_EID_BRIDGE_CONFIGURATION_MANUAL.html" class="guide-card" data-tags="wso2 integration bridge federation user store jit mapping">
+          <div class="card-top">
+            <span class="card-badge badge-sso">Bridge Playbook</span>
+            <h3 class="card-title">WSO2 & eID Bridge Setup</h3>
+            <p class="card-description">Establish federation mapping between WSO2 IS and the secure eID biometric login core, including claims mapping and JIT provisioning.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#trust-handshake</span>
+            <span class="card-action-text">Read Playbook</span>
+          </div>
+        </a>
+
+        <a href="EID_ONBOARDING_INTEGRATION_GUIDE.html" class="guide-card" data-tags="sso nextjs php laravel dotnet code integration callback scopes">
+          <div class="card-top">
+            <span class="card-badge badge-sso">Integration Guide</span>
+            <h3 class="card-title">Multi-Agency SSO Integration</h3>
+            <p class="card-description">Code Samples for Next.js, PHP, and .NET Core to resolve unified citizen tokens and user assertions.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#integration-code</span>
+            <span class="card-action-text">Read Guide</span>
+          </div>
+        </a>
+
+        <a href="EID_WSO2_ARCHITECTURE_EXPLAINER.html" class="guide-card" data-tags="architecture wso2 broker topology security">
+          <div class="card-top">
+            <span class="card-badge badge-sso">Architecture Explainer</span>
+            <h3 class="card-title">eID & WSO2 Topology</h3>
+            <p class="card-description">Explains why WSO2 IS is used as a federated identity broker between client apps and passwordless authentication engines.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#hub-broker</span>
+            <span class="card-action-text">View Explainer</span>
+          </div>
+        </a>
+
+        <a href="WSO2_IS_CONFIGURATION_REPORT.html" class="guide-card" data-tags="wso2 configuration report certs logs admin">
+          <div class="card-top">
+            <span class="card-badge badge-sso">Audit Report</span>
+            <h3 class="card-title">WSO2 IS Configuration Report</h3>
+            <p class="card-description">Technical baseline registry validation, certificates mappings, and token signature properties audit report.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#sysadmin-audit</span>
+            <span class="card-action-text">Read Report</span>
+          </div>
+        </a>
+
+        <a href="requirements-doc/wso2_vs_eid_responsibilities.html" class="guide-card" data-tags="responsibilities matrix matrix wso2 boundaries security">
+          <div class="card-top">
+            <span class="card-badge badge-sso">Responsibility Matrix</span>
+            <h3 class="card-title">WSO2 vs eID Matrix</h3>
+            <p class="card-description">Division of operational boundaries, session handshakes, authentication paths, and data scopes between the Broker and IdP.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#role-division</span>
+            <span class="card-action-text">View Matrix</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Category 2: eID Core Specifications -->
+    <section id="cat-core" class="category-section">
+      <div class="category-header">
+        <span class="category-icon">🔑</span>
+        <h2 class="category-title">eID Core Technical Specifications</h2>
+      </div>
+      <div class="category-grid">
+        
+        <a href="EID_WEBAUTHN_FIDO2_GUIDE.html" class="guide-card" data-tags="webauthn fido2 biometric passwordless security credentials">
+          <div class="card-top">
+            <span class="card-badge badge-spec">Technical Spec</span>
+            <h3 class="card-title">FIDO2 WebAuthn Integration</h3>
+            <p class="card-description">How secure passport passwordless biometric keys are registered, validated, and signed using resident cryptographic keypairs.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#fido2-biometrics</span>
+            <span class="card-action-text">Read Spec</span>
+          </div>
+        </a>
+
+        <a href="EID_HYBRID_ONBOARDING_AND_OFFLINE_SPEC.html" class="guide-card" data-tags="offline verification hybrid onboarding qr scan epassport nfc signature">
+          <div class="card-top">
+            <span class="card-badge badge-spec">Technical Spec</span>
+            <h3 class="card-title">Hybrid Onboarding & Offline</h3>
+            <p class="card-description">Cryptographic envelope signature specification for offline identity verification via scanned QR and ePassport NFC handshakes.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#offline-verify</span>
+            <span class="card-action-text">Read Spec</span>
+          </div>
+        </a>
+
+        <a href="EID_CIVIL_REGISTRY_INTEGRATION_SPEC.html" class="guide-card" data-tags="civil registry api database sync integration bsn uin">
+          <div class="card-top">
+            <span class="card-badge badge-spec">Technical Spec</span>
+            <h3 class="card-title">Civil Registry Integration</h3>
+            <p class="card-description">Details the data schemas, batch sync channels, and secure API boundaries connecting the national database to the eID engine.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#registry-spec</span>
+            <span class="card-action-text">Read Spec</span>
+          </div>
+        </a>
+
+        <a href="CIVIL_REGISTRY_SANDBOX.html" class="guide-card" data-tags="sandbox emulator test data sync api admin">
+          <div class="card-top">
+            <span class="card-badge badge-spec">Testing Tool</span>
+            <h3 class="card-title">Civil Registry Sandbox</h3>
+            <p class="card-description">Interactive emulator console to generate test identities, simulate database integrations, and trigger sync logs.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#identity-mock</span>
+            <span class="card-action-text">Open Sandbox</span>
+          </div>
+        </a>
+
+        <a href="EID_AUDIT_TRAIL_PRESENTATION.html" class="guide-card" data-tags="audit logs gdpr compliance annex e presentation slide">
+          <div class="card-top">
+            <span class="card-badge badge-spec">Audit Spec</span>
+            <h3 class="card-title">eID Logs & Annex E Evidence</h3>
+            <p class="card-description">Visual Slide explainer on audit trails, GDPR user consent parameters, and unified tracking of attribute transfers.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#annex-e</span>
+            <span class="card-action-text">View Slide</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Category 3: User & Operator Manuals -->
+    <section id="cat-manuals" class="category-section">
+      <div class="category-header">
+        <span class="category-icon">📖</span>
+        <h2 class="category-title">User & Operator Manuals</h2>
+      </div>
+      <div class="category-grid">
+        
+        <a href="EID_USER_MANUAL_CITIZEN.html" class="guide-card" data-tags="user manual citizen profile totp passkeys sms">
+          <div class="card-top">
+            <span class="card-badge badge-ops">User Manual</span>
+            <h3 class="card-title">Citizen Portal User Guide</h3>
+            <p class="card-description">Explains citizen features: registering security keys, configuring multi-factor TOTP/SMS validation, and tracking active portals.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#citizen-guide</span>
+            <span class="card-action-text">Read Manual</span>
+          </div>
+        </a>
+
+        <a href="EID_USER_MANUAL_MODERATOR.html" class="guide-card" data-tags="user manual moderator operator psc desk scan scanner epassport">
+          <div class="card-top">
+            <span class="card-badge badge-ops">Operator Guide</span>
+            <h3 class="card-title">Moderator PSC Desk Console</h3>
+            <p class="card-description">Guide for public desk operators: verifying documents, scanning passports, and manually promoting high assurance tiers.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#moderator-guide</span>
+            <span class="card-action-text">Read Manual</span>
+          </div>
+        </a>
+
+        <a href="EID_USER_MANUAL_ADMIN.html" class="guide-card" data-tags="user manual admin controls audit developers onboarding config">
+          <div class="card-top">
+            <span class="card-badge badge-ops">Operator Guide</span>
+            <h3 class="card-title">Admin Controls & Console</h3>
+            <p class="card-description">Full reference guide for superadministrators: audit trace searches, promoting citizen roles, and client application lifecycle management.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#admin-guide</span>
+            <span class="card-action-text">Read Manual</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Category 4: Deployment & Status -->
+    <section id="cat-deploy" class="category-section">
+      <div class="category-header">
+        <span class="category-icon">🚀</span>
+        <h2 class="category-title">Deployments & Status Reports</h2>
+      </div>
+      <div class="category-grid">
+        
+        <a href="EID_DEPLOYMENT_GUIDE.html" class="guide-card" data-tags="deployment docker dotnet mysql compile run sysadmin">
+          <div class="card-top">
+            <span class="card-badge badge-deploy">Deployment Spec</span>
+            <h3 class="card-title">National Platform Deployment</h3>
+            <p class="card-description">Blueprints for container configurations, databases seed files, SSL certificates mappings, and scaling parameters.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#sysops-blueprint</span>
+            <span class="card-action-text">Read Blueprint</span>
+          </div>
+        </a>
+
+        <a href="EID_RP_DEVELOPER_PORTAL.html" class="guide-card" data-tags="relying party developer portal sso clients client credentials">
+          <div class="card-top">
+            <span class="card-badge badge-deploy">Developer Portal</span>
+            <h3 class="card-title">SSO Relying Party Portal</h3>
+            <p class="card-description">Interactive UI portal preview showing onboarding clients list, secret tokens rotation, and callbacks definitions.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#rp-developer</span>
+            <span class="card-action-text">Open Portal</span>
+          </div>
+        </a>
+
+        <a href="EID_DELIVERABLES_CHECKLIST.html" class="guide-card" data-tags="deliverables status checklist sprint milestones logs">
+          <div class="card-top">
+            <span class="card-badge badge-deploy">Status Report</span>
+            <h3 class="card-title">Sprint Deliverables Status</h3>
+            <p class="card-description">Checklist tracker for eID platform milestones, including core services builds, GDPR trace audits, and integrations.</p>
+          </div>
+          <div class="card-footer">
+            <span class="card-tag">#project-milestones</span>
+            <span class="card-action-text">View Status</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Empty Search Results -->
+    <div id="emptySearch" class="empty-search">
+      <h4 class="empty-title">No matching guides found</h4>
+      <p class="empty-desc">Try searching for other terms like 'WSO2', 'WebAuthn', 'UIN', or 'Laravel'.</p>
+    </div>
+
+  </main>
+
+  <!-- Script for client-side search logic -->
+  <script>
+    function filterCards() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.guide-card');
+      let matchCount = 0;
+
+      cards.forEach(card => {
+        const title = card.querySelector('.card-title').innerText.toLowerCase();
+        const description = card.querySelector('.card-description').innerText.toLowerCase();
+        const tags = card.getAttribute('data-tags').toLowerCase();
+        
+        const isMatch = title.includes(query) || description.includes(query) || tags.includes(query);
+
+        if (isMatch) {
+          card.style.display = 'flex';
+          matchCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Handle category visibility
+      const categories = document.querySelectorAll('.category-section');
+      categories.forEach(cat => {
+        const visibleCards = cat.querySelectorAll('.guide-card[style="display: flex;"]');
+        if (visibleCards.length === 0 && query !== '') {
+          cat.style.display = 'none';
+        } else {
+          cat.style.display = 'block';
+        }
+      });
+
+      // Show empty state if no matches
+      const emptyState = document.getElementById('emptySearch');
+      if (matchCount === 0) {
+        emptyState.classList.add('active');
+      } else {
+        emptyState.classList.remove('active');
+      }
+    }
+  </script>
+
+</body>
+</html>
