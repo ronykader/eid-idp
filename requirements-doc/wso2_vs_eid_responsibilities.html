@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Responsibilities: WSO2 IS vs. National eID Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #111827;
+            --bg-card-hover: #1f2937;
+            --accent-wso2: #ff7300;
+            --accent-eid: #0052cc;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: rgba(255, 115, 0, 0.15);
+            border: 1px solid var(--accent-wso2);
+            border-radius: 9999px;
+            color: var(--accent-wso2);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Split Architecture Layout */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .split-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .column-card.wso2 {
+            border-top: 6px solid var(--accent-wso2);
+        }
+
+        .column-card.eid {
+            border-top: 6px solid var(--accent-eid);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .icon-box {
+            width: 54 h-54;
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .wso2 .icon-box {
+            background: rgba(255, 115, 0, 0.15);
+            border: 1px solid var(--accent-wso2);
+            color: var(--accent-wso2);
+        }
+
+        .eid .icon-box {
+            background: rgba(0, 82, 204, 0.15);
+            border: 1px solid var(--accent-eid);
+            color: #60a5fa;
+        }
+
+        .card-header h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .card-header span.role-title {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-col;
+            gap: 1rem;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .feature-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wso2 .feature-title {
+            color: var(--accent-wso2);
+        }
+
+        .eid .feature-title {
+            color: #60a5fa;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Comparison Table Section */
+        .section-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-box h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        table.matrix {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        table.matrix th, table.matrix td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.matrix th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.matrix tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tag-wso2 {
+            color: var(--accent-wso2);
+            font-weight: 700;
+        }
+
+        .tag-eid {
+            color: #60a5fa;
+            font-weight: 700;
+        }
+
+        .status-check {
+            color: var(--accent-green);
+            font-weight: 800;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="badge">🇸🇽 Government of Sint Maarten • Kingdom of the Netherlands</div>
+        <h1>WSO2 Identity Server vs. Sint Maarten eID Platform</h1>
+        <p class="subtitle">
+            A comprehensive breakdown of duties between the <strong>WSO2 Enterprise SSO Gateway</strong> and the <strong>Sint Maarten National eID Verification Vault</strong>.
+        </p>
+    </header>
+
+    <!-- Side-by-Side Responsibilities -->
+    <div class="split-grid">
+
+        <!-- WSO2 COLUMN -->
+        <div class="column-card wso2">
+            <div class="card-header">
+                <div class="icon-box">🌐</div>
+                <div>
+                    <h2>WSO2 Identity Server</h2>
+                    <span class="role-title">Enterprise Access & Gateway Layer</span>
+                </div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-title">🔗 1. Centralized Single Sign-On (SSO)</div>
+                    <div class="feature-desc">
+                        Acts as the primary SSO entry portal for all 6 ecosystem projects (<code>mygov</code>, <code>upsheba</code>, <code>fintech</code>, <code>health</code>, <code>passport</code>, <code>tax</code>). Citizens log in once to access all services.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">🔄 2. Protocol Mediation & Translation</div>
+                    <div class="feature-desc">
+                        Bridging different industry standards. Accepts OIDC, SAML2, WS-Federation, or OAuth2 from external apps and translates them into a single federation flow.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">🔐 3. Service Provider (SP) Access Control</div>
+                    <div class="feature-desc">
+                        Manages OAuth client keys, redirect URIs, token lifetimes, and role-based access policies for third-party government applications.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">🗺️ 4. Claim Mapping & Attribute Dialects</div>
+                    <div class="feature-desc">
+                        Filters and transforms claims (e.g. mapping eID <code>uin</code> to WSO2 <code>http://wso2.org/claims/userid</code>) before passing them to application scope.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">⚡ 5. Identity Brokering & JIT Provisioning</div>
+                    <div class="feature-desc">
+                        Delegates authentication to National eID Platform as a Federated IDP, creating local user shadow profiles dynamically via Just-In-Time (JIT) provisioning.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EID COLUMN -->
+        <div class="column-card eid">
+            <div class="card-header">
+                <div class="icon-box">🪪</div>
+                <div>
+                    <h2>National eID Platform</h2>
+                    <span class="role-title">Core Identity Vault & Verification Engine</span>
+                </div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-title">🏛️ 1. Citizen Registry & UIN / eID Generation</div>
+                    <div class="feature-desc">
+                        Master database of national identity. Assigns Unique Identification Numbers (UIN) and Electronic IDs (eID) with international UN/CEFACT compliance.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">📱 2. Multi-Factor Authentication (MFA / 2FA)</div>
+                    <div class="feature-desc">
+                        Executes 6-digit SMS/Email OTP verification and standard RFC 6238 Time-Based One-Time Password (TOTP) for Google/Microsoft Authenticator apps.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">🔑 3. Passwordless Biometrics & Passkeys</div>
+                    <div class="feature-desc">
+                        Handles W3C WebAuthn / FIDO2 Passkeys (Touch ID, Face ID, Windows Hello) and hardware fingerprint scanner template verification.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">✨ 4. Passwordless Magic Link Engine</div>
+                    <div class="feature-desc">
+                        Generates single-use 10-minute encrypted tokens for email magic link sign-in.
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-title">🖊️ 5. 3rd-Party eSignature / PKI REST API Bridge</div>
+                    <div class="feature-desc">
+                        Connects via REST API to external PKI / eSignature providers to hash, sign, and verify electronic documents on behalf of citizens.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Executive Comparison Matrix Table -->
+    <div class="section-box">
+        <h2>📊 Quick Responsibility Comparison Matrix</h2>
+        <table class="matrix">
+            <thead>
+                <tr>
+                    <th>Core Responsibility Domain</th>
+                    <th>Handled By WSO2 IS</th>
+                    <th>Handled By eID Platform</th>
+                    <th>Standards / Protocols Used</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SSO Gateway for 6 Projects</strong></td>
+                    <td class="status-check">✔ YES (Primary Gateway)</td>
+                    <td>❌ Delegates to WSO2</td>
+                    <td>OIDC / SAML2 / OAuth2</td>
+                </tr>
+                <tr>
+                    <td><strong>Master Citizen Demographic Registry</strong></td>
+                    <td>❌ Shadow Profiles Only</td>
+                    <td class="status-check">✔ YES (Master Database)</td>
+                    <td>UN/CEFACT Identity Schema</td>
+                </tr>
+                <tr>
+                    <td><strong>UIN / eID Number Issuance</strong></td>
+                    <td>❌ No</td>
+                    <td class="status-check">✔ YES (Auto & Admin Approved)</td>
+                    <td>National Standard Generator</td>
+                </tr>
+                <tr>
+                    <td><strong>2FA (SMS OTP & Google Authenticator)</strong></td>
+                    <td>❌ Delegates to eID</td>
+                    <td class="status-check">✔ YES (Engine Built-in)</td>
+                    <td>RFC 6238 (TOTP) / SMS API</td>
+                </tr>
+                <tr>
+                    <td><strong>Passkeys (Touch ID / Face ID)</strong></td>
+                    <td>❌ Delegates to eID</td>
+                    <td class="status-check">✔ YES (WebAuthn / FIDO2)</td>
+                    <td>W3C WebAuthn / FIDO2</td>
+                </tr>
+                <tr>
+                    <td><strong>Passwordless Magic Link Engine</strong></td>
+                    <td>❌ No</td>
+                    <td class="status-check">✔ YES (Token Service)</td>
+                    <td>Hex Encrypted Tokens</td>
+                </tr>
+                <tr>
+                    <td><strong>3rd-Party eSignature Integration</strong></td>
+                    <td>❌ No</td>
+                    <td class="status-check">✔ YES (API Bridge)</td>
+                    <td>REST API / PKI Gateway</td>
+                </tr>
+                <tr>
+                    <td><strong>Protocol Mediation (SAML to OIDC)</strong></td>
+                    <td class="status-check">✔ YES (Mediation Hub)</td>
+                    <td>❌ OIDC Standard Only</td>
+                    <td>SAML 2.0 / OAuth 2.0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>National eID Platform & Enterprise Ecosystem • Technical Architecture & Division of Responsibilities</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
