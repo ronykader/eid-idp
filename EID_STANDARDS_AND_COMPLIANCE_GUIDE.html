@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eID Identity Standards & eIDAS Compliance Guide</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #070b19;
+      --panel-bg: #0e1635;
+      --panel-hover: #17224f;
+      --accent-blue: #3b82f6;
+      --accent-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --code-bg: #040815;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 60px;
+    }
+
+    /* Flag Accent Band */
+    .flag-band {
+      background: linear-gradient(to right, #ef4444 33%, #ffffff 33%, #ffffff 66%, #2563eb 66%);
+      height: 6px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Header Banner */
+    .top-header {
+      background-color: #0c122c;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      font-size: 20px;
+    }
+
+    .brand-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--accent-blue);
+      color: var(--accent-blue);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Container Grid */
+    .main-layout {
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media (min-width: 1024px) {
+      .main-layout {
+        grid-template-columns: 280px 1fr;
+      }
+    }
+
+    /* Floating Index Sidebar */
+    .sidebar-index {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 30px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .index-title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-blue);
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .index-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .index-item a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .index-item a:hover {
+      background-color: var(--panel-hover);
+      color: #ffffff;
+      transform: translateX(4px);
+    }
+
+    .index-item.active a {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    /* Content Area */
+    .content-area {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .chapter-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
+      scroll-margin-top: 40px;
+    }
+
+    .chapter-header {
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .chapter-tag {
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .chapter-title {
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+    }
+
+    .paragraph {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    .paragraph strong {
+      color: #ffffff;
+    }
+
+    /* Bullet List */
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 24px;
+      font-size: 14.5px;
+      color: var(--text-muted);
+    }
+
+    .bullet-list li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+      top: 2px;
+      font-size: 12px;
+      color: var(--accent-gold);
+    }
+
+    /* Table styles */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin: 25px 0;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+    }
+
+    .claims-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+
+    .claims-table th {
+      background-color: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-blue);
+    }
+
+    .claims-table td {
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 18px;
+      color: var(--text-muted);
+    }
+
+    .claims-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .claims-table code {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      color: var(--accent-gold);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Highlight boxes */
+    .alert-info {
+      background-color: rgba(59, 130, 246, 0.05);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 0 12px 12px 0;
+      padding: 22px;
+      margin: 25px 0;
+    }
+
+    .alert-info h5 {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .alert-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flag Accent strip -->
+  <div class="flag-band"></div>
+
+  <!-- Header -->
+  <header class="top-header">
+    <div class="brand-meta">
+      <span class="brand-logo">🇸🇽</span>
+      <span class="brand-title">Land Sint Maarten • Identity Frameworks</span>
+    </div>
+    <span class="badge">Standards & Compliance Spec</span>
+  </header>
+
+  <!-- Container layout -->
+  <div class="main-layout">
+
+    <!-- Sidebar navigation -->
+    <aside class="sidebar-index">
+      <div class="index-title">Specification Chapters</div>
+      <ul class="index-list">
+        <li class="index-item active"><a href="#ch1">1. OAuth 2.0</a></li>
+        <li class="index-item"><a href="#ch2">2. OpenID Connect</a></li>
+        <li class="index-item"><a href="#ch3">3. EU eIDAS</a></li>
+        <li class="index-item"><a href="#ch4">4. Matrix</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content Sections -->
+    <main class="content-area">
+
+      <!-- CHAPTER 1: OAuth 2.0 -->
+      <section id="ch1" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 01</span>
+          <h2 class="chapter-title">OAuth 2.0 Framework</h2>
+        </div>
+        <p class="paragraph">
+          <strong>OAuth 2.0</strong> is an industry-standard delegated authorization framework. It specifies protocol flows that enable third-party client applications (Relying Parties) to obtain scoped, limited access to user resources hosted on HTTP services, without requiring the user to disclose their primary password credentials.
+        </p>
+
+        <div class="alert-info">
+          <h5>Why it is used in Sint Maarten eID</h5>
+          <p>
+            OAuth 2.0 is used to secure API resources (such as backend databases and user profile attributes). By separating authentication from authorization, client applications (like MyGov) request access to resources by exchanging authorization codes for short-lived, cryptographically-signed **Access Tokens** and **Refresh Tokens**. This prevents client portals from ever obtaining or storing raw user credentials.
+          </p>
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 800; text-transform: uppercase; color: #ffffff; margin-top: 25px;">Core Principles of OAuth 2.0:</h3>
+        <ul class="bullet-list">
+          <li><strong>Role Separation:</strong> Splits identity interactions into four logical roles: Resource Owner (Citizen), Client (Relying Party Portal), Resource Server (API database), and Authorization Server (WSO2 / eID engine).</li>
+          <li><strong>Consent-Based Access:</strong> Users must explicitly authorize scopes before tokens are generated.</li>
+          <li><strong>Token Cryptographic Scopes:</strong> Access scopes (e.g. <code>profile</code>, <code>email</code>) restrict the bearer token's access boundaries.</li>
+        </ul>
+      </section>
+
+      <!-- CHAPTER 2: OpenID Connect -->
+      <section id="ch2" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 02</span>
+          <h2 class="chapter-title">OpenID Connect (OIDC)</h2>
+        </div>
+        <p class="paragraph">
+          <strong>OpenID Connect (OIDC)</strong> is a lightweight identity layer built directly on top of the OAuth 2.0 framework. It extends OAuth 2.0 to provide a standardized mechanism for federated user authentication, introducing a verifiable **ID Token** formatted as a JSON Web Token (JWT).
+        </p>
+
+        <div class="alert-info">
+          <h5>Why it is used in Sint Maarten eID</h5>
+          <p>
+            While OAuth 2.0 handles authorization, **OIDC** handles federated user authentication (Single Sign-On). It standardizes the identity attributes (Claims) shared between WSO2 IS Broker and relying party applications. Because eID issues standard OIDC claims, any software stack supporting OpenID Connect can immediately configure eID SSO without custom, proprietary adapters.
+          </p>
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 800; text-transform: uppercase; color: #ffffff; margin-top: 25px;">Core Principles of OpenID Connect:</h3>
+        <ul class="bullet-list">
+          <li><strong>Verifiable ID Token:</strong> A signed JWT containing identity assertions (such as sub, email, family_name, given_name, uin).</li>
+          <li><strong>Standard UserInfo Endpoint:</strong> Exposes a standardized GET endpoint to query profile attributes using bearer tokens.</li>
+          <li><strong>Well-Known Discovery:</strong> Publishes configuration endpoints (at <code>.well-known/openid-configuration</code>) so relying party plugins can auto-discover URLs, key signing endpoints (JWKS), and supported scopes.</li>
+        </ul>
+      </section>
+
+      <!-- CHAPTER 3: EU eIDAS Regulation -->
+      <section id="ch3" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 03</span>
+          <h2 class="chapter-title">EU eIDAS Regulation</h2>
+        </div>
+        <p class="paragraph">
+          The **eIDAS Regulation (Regulation (EU) No 910/2014)** is a European Union legal framework governing electronic identification and trust services for electronic transactions. It establishes standard criteria to ensure that electronic signatures, seals, time stamps, and identity documents are legally recognized across national borders.
+        </p>
+
+        <div class="alert-info">
+          <h5>Why it is used in Sint Maarten eID</h5>
+          <p>
+            As a territory within the Kingdom of the Netherlands, Sint Maarten aligns its national digital infrastructure with eIDAS standards. The platform implements **Levels of Assurance (LoA)** (Low, Substantial, and High) defined under eIDAS:
+          </p>
+          <ul class="bullet-list" style="margin-top: 10px;">
+            <li><strong>Low:</strong> Multi-factor SMS/Email validation (suitable for basic portals).</li>
+            <li><strong>Substantial:</strong> Authenticator TOTP or verified mobile signatures.</li>
+            <li><strong>High:</strong> Passkey WebAuthn (FIDO2) biometric validation linked to passport chips verified by counter clerks.</li>
+          </ul>
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 800; text-transform: uppercase; color: #ffffff; margin-top: 25px;">Key Tenets of eIDAS in eID:</h3>
+        <ul class="bullet-list">
+          <li><strong>Mutual Recognition:</strong> Assures that eID credentials issued to Sint Maarten citizens can eventually interoperate with European digital service gateways.</li>
+          <li><strong>Legal Integrity:</strong> Enforces strong non-repudiation of transactions by auditing biometric handshakes.</li>
+          <li><strong>Security Controls:</strong> Mandates hardware-backed key storage (Secure Enclave, WebAuthn) for high-assurance identity validation.</li>
+        </ul>
+      </section>
+
+      <!-- CHAPTER 4: Comparison & Interoperability Matrix -->
+      <section id="ch4" class="chapter-card">
+        <div class="chapter-header">
+          <span class="chapter-tag">Chapter 04</span>
+          <h2 class="chapter-title">Comparison Matrix</h2>
+        </div>
+        <p class="paragraph">
+          The table below highlights the differences and operational focus of each standard integrated inside the Sint Maarten eID architecture:
+        </p>
+
+        <div class="table-container">
+          <table class="claims-table">
+            <thead>
+              <tr>
+                <th>Standard</th>
+                <th>Primary Focus</th>
+                <th>Key Artifacts</th>
+                <th>Role in eID Architecture</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>OAuth 2.0</strong></td>
+                <td>Delegated Authorization</td>
+                <td>Access & Refresh Tokens</td>
+                <td>Secures API access scopes for client applications.</td>
+              </tr>
+              <tr>
+                <td><strong>OpenID Connect</strong></td>
+                <td>User Authentication (SSO)</td>
+                <td>ID Token (JWT), UserInfo Endpoint</td>
+                <td>Standardizes federated login checks and identity attribute transfers.</td>
+              </tr>
+              <tr>
+                <td><strong>eIDAS Regulation</strong></td>
+                <td>Legal Framework & Trust Tiers</td>
+                <td>LoA Levels (Low, Substantial, High)</td>
+                <td>Binds biometric authentication to legal security assurance tiers.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Scroll active indicator listener
+    window.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const id = entry.target.getAttribute('id');
+          if (entry.intersectionRatio > 0.5) {
+            document.querySelectorAll('.index-item').forEach(el => el.classList.remove('active'));
+            const activeItem = document.querySelector(`.index-item a[href="#${id}"]`);
+            if (activeItem) activeItem.parentElement.classList.add('active');
+          }
+        });
+      }, { threshold: [0.1, 0.5, 0.8] });
+
+      document.querySelectorAll('section[id]').forEach((section) => {
+        observer.observe(section);
+      });
+    });
+  </script>
+
+</body>
+</html>
