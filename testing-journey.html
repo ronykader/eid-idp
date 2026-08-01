@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eID Sint Maarten — Integration Testing Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #003399;
+      --secondary: #D52B1E;
+      --accent: #F4A261;
+      --bg-dark: #090d16;
+      --card-dark: #0f172a;
+      --border-dark: #1e293b;
+      --text-dark-primary: #f8fafc;
+      --text-dark-secondary: #94a3b8;
+      
+      --bg-light: #f8fafc;
+      --card-light: #ffffff;
+      --border-light: #e2e8f0;
+      --text-light-primary: #0f172a;
+      --text-light-secondary: #475569;
+      
+      --bg: var(--bg-dark);
+      --card: var(--card-dark);
+      --border: var(--border-dark);
+      --text-primary: var(--text-dark-primary);
+      --text-secondary: var(--text-dark-secondary);
+    }
+
+    body.light {
+      --bg: var(--bg-light);
+      --card: var(--card-light);
+      --border: var(--border-light);
+      --text-primary: var(--text-light-primary);
+      --text-secondary: var(--text-light-secondary);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+    }
+
+    /* Top banner */
+    .gov-banner {
+      background: linear-gradient(90deg, var(--primary) 0%, #002266 50%, var(--secondary) 100%);
+      color: white;
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .gov-flag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1280px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 968px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .nav-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background: rgba(0, 51, 153, 0.08);
+      color: var(--primary);
+    }
+
+    body.light .nav-item:hover {
+      background: rgba(0, 51, 153, 0.05);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 10px 15px -3px rgba(0, 51, 153, 0.3);
+    }
+
+    /* Main Panel */
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .header-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(0, 51, 153, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid transparent;
+      margin-bottom: 12px;
+    }
+
+    .badge-primary {
+      background: rgba(0, 51, 153, 0.15);
+      color: #3b82f6;
+      border-color: rgba(0, 51, 153, 0.25);
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .badge-error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .title {
+      font-size: 32px;
+      margin-top: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 8px;
+      max-width: 600px;
+    }
+
+    /* Content Cards */
+    .scenario-section {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .scenario-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Steps list */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-item {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      background: rgba(15, 23, 42, 0.25);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 12px;
+      align-items: start;
+    }
+
+    body.light .step-item {
+      background: rgba(241, 245, 249, 0.5);
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .step-content h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+    }
+
+    .step-content p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Clipboard Copyable Code Blocks */
+    .code-container {
+      position: relative;
+      margin-top: 12px;
+    }
+
+    .code-block {
+      background: #020617;
+      color: #38bdf8;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 11px;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #1e293b;
+      display: block;
+      white-space: pre;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Table styles */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .data-table th, .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table th {
+      text-transform: uppercase;
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--text-secondary);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Interactive payload builder */
+    .builder-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .builder-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+
+    .form-control {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      outline: none;
+    }
+
+    body.light .form-control {
+      background: white;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-action {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 51, 153, 0.2);
+    }
+
+    .btn-action:hover {
+      background: #002266;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <div class="gov-banner">
+    <div class="gov-flag">
+      <span>🇸🇽</span>
+      <span>Government of Sint Maarten • eID Integration Testing Desk</span>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+  </div>
+
+  <div class="container">
+    
+    <!-- Left Navigation -->
+    <aside class="sidebar">
+      <div class="nav-card">
+        <h3 class="nav-title">Testing Registry</h3>
+        <ul class="nav-list">
+          <li class="nav-item active" onclick="showScenario('sc-overview')">📋 Testing Overview</li>
+          <li class="nav-item" onclick="showScenario('sc-happy')">✅ Scenario 1: Happy Path</li>
+          <li class="nav-item" onclick="showScenario('sc-mismatch')">⚠️ Scenario 2: Demographic Mismatch</li>
+          <li class="nav-item" onclick="showScenario('sc-psc')">🛡️ Scenario 3: PSC Desk Approval</li>
+          <li class="nav-item" onclick="showScenario('sc-deceased')">💀 Scenario 4: Deceased Block</li>
+          <li class="nav-item" onclick="showScenario('sc-lifecycle')">🔄 Scenario 5: Death Event webhook</li>
+          <li class="nav-item" onclick="showScenario('sc-token')">🔐 Scenario 6: UIN Tokenisation</li>
+        </ul>
+      </div>
+
+      <div class="nav-card">
+        <h3 class="nav-title">Authoritative Mock Seeds</h3>
+        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">AUTHORITATIVE CIVIL ARCHIVE RECORDS:</p>
+        <div style="font-size: 10px; font-family: monospace; line-height: 1.4; color: var(--text-secondary);">
+          <strong>John Connor:</strong><br>
+          NID: NID-987654<br>
+          DOB: 1990-05-15<br><br>
+          <strong>Sarah Connor:</strong><br>
+          NID: NID-888888<br>
+          DOB: 1965-11-10<br><br>
+          <strong>Ibrahim Islam:</strong><br>
+          NID: 123456782<br>
+          DOB: 2026-07-06
+        </div>
+      </div>
+
+      <div class="nav-card" style="margin-top: 16px;">
+        <h3 class="nav-title">Administrative Credentials</h3>
+        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">SYSTEM AUTH (Password: <code>Password123!</code>):</p>
+        <div style="font-size: 10px; font-family: monospace; line-height: 1.4; color: var(--text-secondary);">
+          <strong>PSC User (Moderator):</strong><br>
+          Email: <code>moderator@eid.sm</code><br>
+          Role: moderator<br><br>
+          <strong>Admin User:</strong><br>
+          Email: <code>admin@eid.sm</code><br>
+          Role: admin<br><br>
+          <strong>Developer User:</strong><br>
+          Email: <code>developer@eid.sm</code><br>
+          Role: developer
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Panel -->
+    <main class="main-panel">
+      
+      <!-- HEADER HEADER -->
+      <div class="header-card">
+        <span class="badge badge-primary">Release Candidates</span>
+        <h1 class="title">eID Platform Testing Journeys</h1>
+        <p class="subtitle">Complete guide to test the end-to-end user onboarding workflows, mock endpoints, and Civil Registry database connector orchestration in live & mock modes.</p>
+      </div>
+
+      <!-- SCENARIO: OVERVIEW -->
+      <section id="sc-overview" class="scenario-section active">
+        <div class="card">
+          <h3 class="card-title">System Architecture Overview</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+            The Sint Maarten eID platform integrates with the Civil Registry API to check demographic criteria on registration. 
+            The system acts as a secure identity broker with fraud detection capabilities:
+          </p>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>API-Only Validation Verification</h4>
+                <p>Registration matches data directly with the Civil Registry via HTTP endpoints (no direct DB reads). Latencies exceeding 100ms trigger automated telemetry warnings to satisfy SLA targets.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Fraud Detection Holds</h4>
+                <p>Mismatches in name orthography or birthdate block auto-acceptance. The record is flagged as <code>review_pending</code> and locked in the eID database, awaiting physical document verification at the PSC Counter Desk.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Automated Write-Back Sync</h4>
+                <p>Upon registration approval (auto or manual), the eID platform performs a writeback to the Civil Registry table, locking the generated <strong>UIN</strong> and <strong>eID Serial Key</strong> to that citizen dossier.</p>
+              </div>
+            </div>
+          </div>
+
+          <h4 style="font-size: 13px; margin-top: 24px; margin-bottom: 12px; text-transform: uppercase; color: var(--accent); font-weight: 800; letter-spacing: 0.05em;">🛡️ How Fraud & Identity Theft Prevention Works</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+            To prevent malicious actors from registering accounts using arbitrary or stolen CRIB/NID numbers, the eID platform enforces multi-field demographic cross-checking:
+          </p>
+          <div style="background: rgba(244, 162, 97, 0.08); border-left: 4px solid var(--accent); padding: 18px; border-radius: 12px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; margin-bottom: 8px;">
+            <p style="font-size: 12px; color: var(--text-primary); font-weight: 700; text-transform: uppercase; tracking-wider; margin-bottom: 6px;">
+              Phase A: Authoritative Lookup
+            </p>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">
+              The system queries the Civil Registry with the entered ID (e.g., BSN/NID). The API fetches the official citizen dossier (Name: <strong>"John Connor"</strong>, DOB: <strong>"1990-05-15"</strong>).
+            </p>
+            
+            <p style="font-size: 12px; color: var(--text-primary); font-weight: 700; text-transform: uppercase; tracking-wider; margin-bottom: 6px;">
+              Phase B: Demographic Cross-Check
+            </p>
+            <p style="font-size: 12px; color: var(--text-secondary);">
+              The eID platform compares the form inputs. If the user typed <strong>"John Connor Jr."</strong> or input a different birthdate, a mismatch is caught. The user's account registration goes on hold (marked <strong>"Review Pending"</strong>) instead of being auto-activated, preventing unauthorized access.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 1: HAPPY PATH -->
+      <section id="sc-happy" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 1: Happy Path (Authoritative Registration)</span>
+            <span class="badge badge-success">Success Flow</span>
+          </div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Open Onboarding page</h4>
+                <p>Navigate to the registration screen at <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Fill Demographic Form matching Seed values</h4>
+                <p>Input the credentials precisely as registered in the mock database seed:</p>
+                <table class="data-table" style="margin: 12px 0;">
+                  <thead>
+                    <tr>
+                      <th>Form Field</th>
+                      <th>Test Input Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>National ID Number (CRIB)</td><td><code>NID-987654</code></td></tr>
+                    <tr><td>Full Name</td><td><code>John Connor</code></td></tr>
+                    <tr><td>Date of Birth</td><td><code>1990-05-15</code></td></tr>
+                    <tr><td>Email</td><td><code>john.connor@test.sm</code></td></tr>
+                    <tr><td>Phone</td><td><code>+1 721 555-0100</code></td></tr>
+                    <tr><td>Password</td><td><code>SecurePass123!</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Submit & Verify Auto-Acceptance</h4>
+                <p>Click Register. The platform verifies with Civil Registry, returns a successful registration, allocates UIN <code>UN-SXM-26-000001-9</code>, generates an EID key, and logs you into the profile page.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 2: DEMOGRAPHIC MISMATCH -->
+      <section id="sc-mismatch" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 2: Demographic Mismatch Hold (Fraud Detection)</span>
+            <span class="badge badge-warning">Held Flow</span>
+          </div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Open Registration</h4>
+                <p>Navigate to <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Fill Form with Mismatched Name / DOB</h4>
+                <p>Input the authoritative ID number but with a mismatched demographic identifier to trigger the security validation hold:</p>
+                <table class="data-table" style="margin: 12px 0;">
+                  <thead>
+                    <tr>
+                      <th>Form Field</th>
+                      <th>Test Input Value (Trigger Mismatch)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>National ID Number (CRIB)</td><td><code>NID-987654</code></td></tr>
+                    <tr><td>Full Name</td><td><code>John Connor Jr.</code> <em style="color:#ef4444;">(Mismatched suffix)</em></td></tr>
+                    <tr><td>Date of Birth</td><td><code>1990-05-15</code></td></tr>
+                    <tr><td>Email</td><td><code>john.connor.mismatch@test.sm</code></td></tr>
+                    <tr><td>Phone</td><td><code>+1 721 555-0222</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Observe Hold State</h4>
+                <p>Click Register. The registration is accepted on hold. You are logged into the profile dashboard with the status badge marked as <strong>Review Pending</strong> and the EID serial marked as <strong>Pending Assignment</strong>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 3: PSC DESK APPROVAL -->
+      <section id="sc-psc" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 3: PSC Operator Desk Resolution</span>
+            <span class="badge badge-primary">Moderator Flow</span>
+          </div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Log in as PSC Operator / Administrator</h4>
+                <p>Log in as an administrative user or navigate directly to the Citizens Control Center: <a href="http://localhost:3000/admin/citizens" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/admin/citizens</a>.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Locate Mismatched Citizen Record</h4>
+                <p>Select the citizen record that matches <code>John Connor Jr.</code>. Click the <strong>Details</strong> button to open the audit profile.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Observe Mismatch Indicators & Approve</h4>
+                <p>Click the <strong>Generate EID</strong> button. Confirm the authorization prompt after verifying physical credentials. The status updates instantly to <strong>Active</strong>, the permanent UIN is resolved, and EID serialization writeback is triggered.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 4: DECEASED BLOCK -->
+      <section id="sc-deceased" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 4: Deceased Flag Block</span>
+            <span class="badge badge-error">Rejected Flow</span>
+          </div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Open Registration</h4>
+                <p>Navigate to <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Attempt to register Deceased Citizen</h4>
+                <p>Fill the form using the demographic seed representing deceased citizen Sarah Connor:</p>
+                <table class="data-table" style="margin: 12px 0;">
+                  <thead>
+                    <tr>
+                      <th>Form Field</th>
+                      <th>Test Input Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>National ID Number (CRIB)</td><td><code>NID-888888</code></td></tr>
+                    <tr><td>Full Name</td><td><code>Sarah Connor</code></td></tr>
+                    <tr><td>Date of Birth</td><td><code>1965-11-10</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Verify API Rejection Response</h4>
+                <p>Click Register. The platform rejects the request with an error banner: <code>Identity registration blocked. The associated Civil Registry dossier is flagged as DECEASED.</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 5: DEATH LIFECYCLE EVENT WEBHOOK -->
+      <section id="sc-lifecycle" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 5: Death Lifecycle webhook & Idempotency</span>
+            <span class="badge badge-primary">webhook Payload Builder</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+            Simulate a lifecycle event push notification sent by the Civil Registry to the eID webhook. This action suspends the matching eID profile and revokes all active credentials.
+          </p>
+
+          <div class="builder-grid">
+            <div style="background: rgba(0,0,0,0.1); border: 1px solid var(--border); padding: 20px; border-radius: 12px;">
+              <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">1. Configure Webhook Event</h4>
+              
+              <div class="form-group">
+                <label>Event ID (Enforces Idempotency)</label>
+                <input id="in-evt-id" type="text" class="form-control" value="evt-death-john-001">
+              </div>
+              <div class="form-group">
+                <label>Event Type</label>
+                <input id="in-evt-type" type="text" class="form-control" value="DEATH_NOTIFICATION" readonly>
+              </div>
+              <div class="form-group">
+                <label>Target Citizen UIN</label>
+                <input id="in-evt-uin" type="text" class="form-control" value="UN-SXM-26-000001-9">
+              </div>
+
+              <button class="btn-action" onclick="generateWebhookCurl()">Generate webhook Payload</button>
+            </div>
+
+            <div>
+              <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">2. cURL Testing Snippet</h4>
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('lifecycle-curl-block')">Copy</button>
+                <code id="lifecycle-curl-block" class="code-block"></code>
+              </div>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
+                <strong>Idempotency Validation:</strong> Run this cURL twice. The first run suspends the user. The second returns <code>"duplicate": true</code>, avoiding duplicate SQL state writes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 6: UIN TOKENISATION -->
+      <section id="sc-token" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 6: UIN Tokenisation Claims Exchange</span>
+            <span class="badge badge-success">Privacy Isolation</span>
+          </div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Understand the Privacy Design</h4>
+                <p>Relying Parties (RPs) must never receive the raw UIN of a citizen. Instead, the identity broker computes a cryptographic HMAC token unique to each RP using the citizen's UIN and client credentials.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Observe Auth Exchange Claims</h4>
+                <p>Run token exchanges using the different Client IDs. For example, testing the token output format reveals the UIN mapping changes between apps:</p>
+                <table class="data-table" style="margin: 12px 0;">
+                  <thead>
+                    <tr>
+                      <th>Federated Relying Party</th>
+                      <th>Client ID</th>
+                      <th>Returned Tokenised Pseudonym claim</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Sint Maarten MyGov</strong></td>
+                      <td><code>mygov-wso2-sp</code></td>
+                      <td><code style="color: #10b981;">f52e399b1c784910e527db6bc9cf3b...</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Upsheba Service Hub</strong></td>
+                      <td><code>upsheba-service-sp</code></td>
+                      <td><code style="color: #10b981;">8c62b9a71f00b9a67a80b12f73d8a0...</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+    }
+
+    function showScenario(id) {
+      document.querySelectorAll('.scenario-section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function generateWebhookCurl() {
+      const id = document.getElementById('in-evt-id').value;
+      const type = document.getElementById('in-evt-type').value;
+      const uin = document.getElementById('in-evt-uin').value;
+
+      const payload = {
+        eventId: id,
+        eventType: type,
+        uin: uin
+      };
+
+      const curlStr = `curl -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \\
+  -H "Content-Type: application/json" \\
+  -H "X-Correlation-ID: test-correlation-${Math.floor(Math.random() * 1000)}" \\
+  -d '${JSON.stringify(payload, null, 2)}'`;
+
+      document.getElementById('lifecycle-curl-block').innerText = curlStr;
+    }
+
+    function copyCode(id) {
+      const code = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Copied to clipboard!');
+      });
+    }
+
+    // Initialize webhook cURL block
+    generateWebhookCurl();
+  </script>
+</body>
+</html>
