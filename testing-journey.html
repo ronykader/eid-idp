@@ -493,8 +493,14 @@
           <li class="nav-item" onclick="showScenario('sc-mismatch')">⚠️ Scenario 2: Demographic Mismatch</li>
           <li class="nav-item" onclick="showScenario('sc-psc')">🛡️ Scenario 3: PSC Desk Approval</li>
           <li class="nav-item" onclick="showScenario('sc-deceased')">💀 Scenario 4: Deceased Block</li>
-          <li class="nav-item" onclick="showScenario('sc-lifecycle')">🔄 Scenario 5: Death Event webhook</li>
-          <li class="nav-item" onclick="showScenario('sc-token')">🔐 Scenario 6: UIN Tokenisation</li>
+          <li class="nav-item" onclick="showScenario('sc-registered')">❌ Scenario 5: Already Registered</li>
+          <li class="nav-item" onclick="showScenario('sc-lifecycle')">🔄 Scenario 6: Death Event webhook</li>
+          <li class="nav-item" onclick="showScenario('sc-token')">🔐 Scenario 7: UIN Tokenisation</li>
+          <li class="nav-item" onclick="showScenario('sc-sop-training')">📖 Scenario 8: PSC Operator SOP Training</li>
+          <li class="nav-item" style="margin-top: 8px; border-top: 1px solid var(--border); padding-top: 16px; color: #60a5fa; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; pointer-events: none;">─── Module 2 ───</li>
+          <li class="nav-item" onclick="showScenario('sc-recovery')">🔑 Scenario 9: Identity Recovery</li>
+          <li class="nav-item" onclick="showScenario('sc-claims')">🛡️ Scenario 10: Claims Minimisation</li>
+          <li class="nav-item" onclick="showScenario('sc-audit')">📜 Scenario 11: Audit Trail Logs</li>
         </ul>
       </div>
 
@@ -503,14 +509,14 @@
         <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">AUTHORITATIVE CIVIL ARCHIVE RECORDS:</p>
         <div style="font-size: 10px; font-family: monospace; line-height: 1.4; color: var(--text-secondary);">
           <strong>John Connor:</strong><br>
-          NID: NID-987654<br>
-          DOB: 1990-05-15<br><br>
+          BSN: 123456 | NID: NID-987654<br>
+          DOB: 1990-05-15 (Active)<br><br>
           <strong>Sarah Connor:</strong><br>
-          NID: NID-888888<br>
-          DOB: 1965-11-10<br><br>
-          <strong>Ibrahim Islam:</strong><br>
-          NID: 123456782<br>
-          DOB: 2026-07-06
+          BSN: 888888 | NID: NID-888888<br>
+          DOB: 1965-11-10 (Deceased)<br><br>
+          <strong>Baby Connor:</strong><br>
+          BSN: 999999 | NID: NID-000001<br>
+          DOB: 2026-01-01 (Active)
         </div>
       </div>
 
@@ -527,6 +533,24 @@
           <strong>Developer User:</strong><br>
           Email: <code>developer@eid.sm</code><br>
           Role: developer
+        </div>
+      </div>
+
+      <div class="nav-card" style="margin-top: 16px; border-color: rgba(96, 165, 250, 0.3);">
+        <h3 class="nav-title" style="color: #60a5fa;">Module 2 — Recovery Seeds</h3>
+        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">CIVIL REGISTRY MATCH VALUES:</p>
+        <div style="font-size: 10px; font-family: monospace; line-height: 1.6; color: var(--text-secondary);">
+          <strong style="color: var(--text-primary);">moderator@eid.sm</strong><br>
+          BSN: <code>200002</code><br>
+          NID: <code>NID-200002</code><br>
+          DOB: <code>1990-05-15</code><br><br>
+          <strong style="color: var(--text-primary);">admin@eid.sm</strong><br>
+          BSN: <code>300003</code><br>
+          NID: <code>NID-300003</code><br>
+          DOB: <code>1990-05-15</code><br><br>
+          <span style="color: #ef4444; font-weight: 700;">⚠ Fail Test Values:</span><br>
+          BSN: <code>999999</code> (not in registry)<br>
+          Any wrong DOB format
         </div>
       </div>
     </aside>
@@ -623,12 +647,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td>National ID Number (CRIB)</td><td><code>NID-987654</code></td></tr>
-                    <tr><td>Full Name</td><td><code>John Connor</code></td></tr>
-                    <tr><td>Date of Birth</td><td><code>1990-05-15</code></td></tr>
-                    <tr><td>Email</td><td><code>john.connor@test.sm</code></td></tr>
-                    <tr><td>Phone</td><td><code>+1 721 555-0100</code></td></tr>
-                    <tr><td>Password</td><td><code>SecurePass123!</code></td></tr>
+                    <tr><td>BSN / CRIB Number</td><td><code>999999</code></td></tr>
+                    <tr><td>First Name</td><td><code>Baby</code></td></tr>
+                    <tr><td>Last Name</td><td><code>Connor</code></td></tr>
+                    <tr><td>Date of Birth</td><td><code>2026-01-01</code></td></tr>
+                    <tr><td>Email</td><td><code>baby.connor@test.sm</code></td></tr>
+                    <tr><td>Phone</td><td><code>+17215559999</code></td></tr>
+                    <tr><td>Password</td><td><code>Password123!</code></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -637,7 +662,7 @@
               <div class="step-number">3</div>
               <div class="step-content">
                 <h4>Submit & Verify Auto-Acceptance</h4>
-                <p>Click Register. The platform verifies with Civil Registry, returns a successful registration, allocates UIN <code>UN-SXM-26-000001-9</code>, generates an EID key, and logs you into the profile page.</p>
+                <p>Click Register. The platform verifies with Civil Registry, returns a successful registration, allocates a dynamic Sint Maarten UIN (e.g. `UN-SXM-26-...`), generates an EID key, and shows the direct success modal.</p>
               </div>
             </div>
           </div>
@@ -672,11 +697,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td>National ID Number (CRIB)</td><td><code>NID-987654</code></td></tr>
-                    <tr><td>Full Name</td><td><code>John Connor Jr.</code> <em style="color:#ef4444;">(Mismatched suffix)</em></td></tr>
-                    <tr><td>Date of Birth</td><td><code>1990-05-15</code></td></tr>
-                    <tr><td>Email</td><td><code>john.connor.mismatch@test.sm</code></td></tr>
-                    <tr><td>Phone</td><td><code>+1 721 555-0222</code></td></tr>
+                    <tr><td>BSN / CRIB Number</td><td><code>999999</code></td></tr>
+                    <tr><td>First Name</td><td><code>Baby</code></td></tr>
+                    <tr><td>Last Name</td><td><code>Connor Jr.</code> <em style="color:#ef4444;">(Mismatched suffix)</em></td></tr>
+                    <tr><td>Date of Birth</td><td><code>2026-01-01</code></td></tr>
+                    <tr><td>Email</td><td><code>baby.connor.mismatch@test.sm</code></td></tr>
+                    <tr><td>Phone</td><td><code>+17215559922</code></td></tr>
+                    <tr><td>Password</td><td><code>Password123!</code></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -685,7 +712,7 @@
               <div class="step-number">3</div>
               <div class="step-content">
                 <h4>Observe Hold State</h4>
-                <p>Click Register. The registration is accepted on hold. You are logged into the profile dashboard with the status badge marked as <strong>Review Pending</strong> and the EID serial marked as <strong>Pending Assignment</strong>.</p>
+                <p>Click Register. The registration is accepted on hold. A modal popup will explain that your application is under manual review for demographic discrepancy fraud detection.</p>
               </div>
             </div>
           </div>
@@ -771,11 +798,60 @@
         </div>
       </section>
 
-      <!-- SCENARIO 5: DEATH LIFECYCLE EVENT WEBHOOK -->
+      <!-- SCENARIO 5: ALREADY REGISTERED BLOCK -->
+      <section id="sc-registered" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 5: Already Registered Block</span>
+            <span class="badge badge-error">Rejected Flow</span>
+          </div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Open Registration</h4>
+                <p>Navigate to <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Attempt to register with an already registered ID/Email</h4>
+                <p>Input the details corresponding to the already registered John Connor user account:</p>
+                <table class="data-table" style="margin: 12px 0;">
+                  <thead>
+                    <tr>
+                      <th>Form Field</th>
+                      <th>Test Input Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>BSN / CRIB Number</td><td><code>123456</code></td></tr>
+                    <tr><td>First Name</td><td><code>John</code></td></tr>
+                    <tr><td>Last Name</td><td><code>Connor</code></td></tr>
+                    <tr><td>Date of Birth</td><td><code>1990-05-15</code></td></tr>
+                    <tr><td>Email</td><td><code>john.connor@test.sm</code></td></tr>
+                    <tr><td>Password</td><td><code>Password123!</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Verify System Rejection Response</h4>
+                <p>Click Register. The platform rejects the request, displaying an error message stating that the email or identity is already mapped and registered.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 6: DEATH LIFECYCLE EVENT WEBHOOK -->
       <section id="sc-lifecycle" class="scenario-section">
         <div class="card">
           <div class="card-title">
-            <span>Scenario 5: Death Lifecycle webhook & Idempotency</span>
+            <span>Scenario 6: Death Lifecycle webhook & Idempotency</span>
             <span class="badge badge-primary">webhook Payload Builder</span>
           </div>
           <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
@@ -783,23 +859,48 @@
           </p>
 
           <div class="builder-grid">
-            <div style="background: rgba(0,0,0,0.1); border: 1px solid var(--border); padding: 20px; border-radius: 12px;">
-              <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">1. Configure Webhook Event</h4>
+            <div style="background: rgba(0,0,0,0.1); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <h4 style="font-size: 12px; margin-bottom: 4px; text-transform: uppercase;">1. Configure Webhook Event</h4>
               
               <div class="form-group">
-                <label>Event ID (Enforces Idempotency)</label>
-                <input id="in-evt-id" type="text" class="form-control" value="evt-death-john-001">
-              </div>
-              <div class="form-group">
-                <label>Event Type</label>
-                <input id="in-evt-type" type="text" class="form-control" value="DEATH_NOTIFICATION" readonly>
-              </div>
-              <div class="form-group">
-                <label>Target Citizen UIN</label>
-                <input id="in-evt-uin" type="text" class="form-control" value="UN-SXM-26-000001-9">
+                <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Event Type</label>
+                <select id="in-evt-type" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" onchange="handleEventTypeChange()">
+                  <option value="DEATH_NOTIFICATION">💀 DEATH_NOTIFICATION</option>
+                  <option value="BIRTH_PRE_PROVISION">👶 BIRTH_PRE_PROVISION</option>
+                </select>
               </div>
 
-              <button class="btn-action" onclick="generateWebhookCurl()">Generate webhook Payload</button>
+              <div class="form-group">
+                <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Event ID (Enforces Idempotency)</label>
+                <input id="in-evt-id" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="evt-death-john-001">
+              </div>
+
+              <div class="form-group">
+                <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Target UIN</label>
+                <input id="in-evt-uin" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="UN-SXM-26-000001-9">
+              </div>
+
+              <!-- Birth specific fields -->
+              <div id="birth-fields" style="display: none; flex-direction: column; gap: 12px;">
+                <div class="form-group">
+                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Full Name</label>
+                  <input id="in-birth-name" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="Idempotency Test Baby">
+                </div>
+                <div class="form-group">
+                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Date of Birth</label>
+                  <input id="in-birth-dob" type="date" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="2026-08-01">
+                </div>
+                <div class="form-group">
+                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">BSN Number</label>
+                  <input id="in-birth-bsn" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="999111">
+                </div>
+                <div class="form-group">
+                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">National ID Number</label>
+                  <input id="in-birth-nid" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="NID-999111">
+                </div>
+              </div>
+
+              <button class="btn-action" style="padding: 10px; font-weight: bold; text-transform: uppercase; font-size: 11px;" onclick="generateWebhookCurl()">Generate cURL Tool</button>
             </div>
 
             <div>
@@ -809,18 +910,18 @@
                 <code id="lifecycle-curl-block" class="code-block"></code>
               </div>
               <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
-                <strong>Idempotency Validation:</strong> Run this cURL twice. The first run suspends the user. The second returns <code>"duplicate": true</code>, avoiding duplicate SQL state writes.
+                <strong>Idempotency Validation:</strong> Run this cURL twice. The first run logs the event in SQLite. The second delivery returns <code>"duplicate": true</code>, avoiding duplicate SQL state writes.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SCENARIO 6: UIN TOKENISATION -->
+      <!-- SCENARIO 7: UIN TOKENISATION -->
       <section id="sc-token" class="scenario-section">
         <div class="card">
           <div class="card-title">
-            <span>Scenario 6: UIN Tokenisation Claims Exchange</span>
+            <span>Scenario 7: UIN Tokenisation Claims Exchange</span>
             <span class="badge badge-success">Privacy Isolation</span>
           </div>
           <div class="steps">
@@ -848,15 +949,409 @@
                     <tr>
                       <td><strong>Sint Maarten MyGov</strong></td>
                       <td><code>mygov-wso2-sp</code></td>
-                      <td><code style="color: #10b981;">f52e399b1c784910e527db6bc9cf3b...</code></td>
+                      <td><code style="color: #10b981;">TOK-f52e399b1c784910</code></td>
                     </tr>
                     <tr>
                       <td><strong>Upsheba Service Hub</strong></td>
                       <td><code>upsheba-service-sp</code></td>
-                      <td><code style="color: #10b981;">8c62b9a71f00b9a67a80b12f73d8a0...</code></td>
+                      <td><code style="color: #10b981;">TOK-8c62b9a71f00b9a6</code></td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 8: PSC OPERATOR SOP TRAINING & SOP-ALIGNED DECISIONS -->
+      <section id="sc-sop-training" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 8: PSC Operator SOP Training & Decisions</span>
+            <span class="badge badge-success">Assurance Level High</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+            Under the Sint Maarten national identity protocol (Assurance Level High), PSC operators must follow strict Standard Operating Procedures (SOP) to approve, escalate, or reject enrolments.
+          </p>
+
+          <div style="background: rgba(0,0,0,0.1); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+            <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">Standard Operating Procedures (SOP) Reference Card</h4>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Decision</th>
+                  <th>SOP Code</th>
+                  <th>SOP Description & Trigger Criteria</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="color: #10b981; font-weight: bold;">🟢 APPROVE</td>
+                  <td><code>SOP-APP-01</code></td>
+                  <td>Demographics verified against Civil Registry, biometric face match checks out, and passport/CRIB document scanned as authentic.</td>
+                </tr>
+                <tr>
+                  <td style="color: #ef4444; font-weight: bold;">🔴 REJECT</td>
+                  <td><code>SOP-REJ-01</code></td>
+                  <td>Discrepancies in demographic parameters (Name, DOB, Gender) remain unresolved.</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><code>SOP-REJ-02</code></td>
+                  <td>Biometric baseline face capture yields match confidence below acceptable threshold (Fake/Liveness failure).</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><code>SOP-REJ-03</code></td>
+                  <td>Authoritative dossier status in Civil Registry is flagged as Deceased.</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><code>SOP-REJ-04</code></td>
+                  <td>Physical or electronic document is suspected to be fraudulent, manipulated, or expired.</td>
+                </tr>
+                <tr>
+                  <td style="color: #f59e0b; font-weight: bold;">🟠 ESCALATE</td>
+                  <td><code>SOP-ESC-01</code></td>
+                  <td>Unresolved demographic discrepancy requires manual director override/investigation.</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><code>SOP-ESC-02</code></td>
+                  <td>Security features on physical passport do not match, or chip signature failed validation check.</td>
+                </tr>
+                <tr>
+                  <td style="color: #3b82f6; font-weight: bold;">🔵 REQUEST INFO</td>
+                  <td><code>SOP-REQ-01</code></td>
+                  <td>Missing physical proof of residency/address in Sint Maarten district.</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><code>SOP-REQ-02</code></td>
+                  <td>Missing original CRIB tax number card.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Biometric Capture & Audit Trail Logging</h4>
+                <p>Open <a href="http://localhost:3000/admin/psc-assisted" target="_blank" style="color: var(--primary); font-weight: 700;">PSC Assisted Portal</a>. Search a citizen, capture their facial biometric baseline, enable the NFC reader simulator to auto-verify integrity, select a decision, select the corresponding SOP Code, write operator notes, and click commit. Confirm in database that logs contain operator email, timestamp, decision, and SOP code.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Simulated Civil Registry Connection Outage</h4>
+                <p>Toggle "Trigger Simulated Outage" in the Connection widget. Remote self-service registration is now blocked. Operators can run read-only offline verifications querying the local cached database. Re-enable connection once outage simulation ends.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Outage Recovery Reconciliation</h4>
+                <p>Once online connection is restored, click "Run Reconciliation Sync Job" on the dashboard. The system replays all offline checks against restored remote APIs and flags conflicts (e.g. if status changed to deceased while offline).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 9: IDENTITY RECOVERY -->
+      <section id="sc-recovery" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 9: Identity Recovery — Lost MFA Factor</span>
+            <span class="badge badge-error">Module 2</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+            When a citizen loses their authenticator app or passkey device, recovery requires stronger evidence than a normal login. The system verifies demographic data against the Civil Registry before resetting credentials and revoking old MFA factors.
+          </p>
+
+          <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase; color: #ef4444; font-weight: 800; letter-spacing: 0.05em;">❌ Fail Case — Invalid Credentials</h4>
+          <div class="steps" style="margin-bottom: 28px;">
+            <div class="step-item">
+              <div class="step-number" style="background: #ef4444;">1</div>
+              <div class="step-content">
+                <h4>Navigate to Recovery Page</h4>
+                <p>Open <a href="http://localhost:3000/recovery" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/recovery</a> — or from the Login page click <strong>"Recover Access"</strong> at the bottom.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number" style="background: #ef4444;">2</div>
+              <div class="step-content">
+                <h4>Submit Unknown Email</h4>
+                <p>Enter <code>ghost@test.sm</code> as the email address with any BSN, NID, or DOB values. Click <strong>"Verify Registry Identity"</strong>.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number" style="background: #ef4444;">3</div>
+              <div class="step-content">
+                <h4>Expected: PSC Redirect Warning</h4>
+                <p>System responds with a <code>404 Not Found</code> error and displays the advisory message: <em>"Visit a Public Service Center (PSC) to verify identity in person."</em></p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number" style="background: #ef4444;">4</div>
+              <div class="step-content">
+                <h4>Test Mismatched Registry Fields</h4>
+                <p>Enter valid email <code>moderator@eid.sm</code> but with wrong BSN e.g. <code>999999</code>. Submit again.</p>
+                <p style="margin-top: 6px;"><strong>Expected:</strong> <code>400 verification_failed</code> — <em>"Demographic verification against Civil Registry failed."</em></p>
+              </div>
+            </div>
+          </div>
+
+          <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase; color: #10b981; font-weight: 800; letter-spacing: 0.05em;">✅ Happy Case — Successful Recovery</h4>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Open Recovery Page &amp; Fill Correct Credentials</h4>
+                <p>Fill in all 4 fields with the seeded values matching the moderator account in the Civil Registry:</p>
+                <table class="data-table" style="margin: 12px 0;">
+                  <thead><tr><th>Field</th><th>Value</th></tr></thead>
+                  <tbody>
+                    <tr><td>Email</td><td><code>moderator@eid.sm</code></td></tr>
+                    <tr><td>BSN / CRIB</td><td><code>200002</code></td></tr>
+                    <tr><td>National ID (NID)</td><td><code>NID-200002</code></td></tr>
+                    <tr><td>Date of Birth</td><td><code>1990-05-15</code> (May 15, 1990)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Submit Identity Verification</h4>
+                <p>Click <strong>"Verify Registry Identity"</strong>. The form advances to Step 2 — password reset. A pre-filled recovery token is shown. Note it for API testing.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Set New Password</h4>
+                <p>Enter a new password (e.g. <code>Password999!</code>), confirm it, and click <strong>"Revoke MFA &amp; Reset Password"</strong>.</p>
+                <p style="margin-top: 6px;"><strong>Expected:</strong> Success banner — <em>"Old MFA factors have been invalidated. Please log in to configure a new MFA device."</em></p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Login with New Password</h4>
+                <p>Navigate to <a href="http://localhost:3000/login" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/login</a>. Use <code>moderator@eid.sm</code> / <code>Password999!</code>.</p>
+                <p style="margin-top: 6px;"><strong>Expected:</strong> Successful login → redirect to <code>/admin/dashboard</code>.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">API cURL — Initiate Recovery</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('recovery-init-curl')">Copy</button>
+              <code id="recovery-init-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/initiate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "moderator@eid.sm",
+    "bsn_number": "200002",
+    "national_id_number": "NID-200002",
+    "dob": "1990-05-15"
+  }'</code>
+            </div>
+            <h4 style="font-size: 12px; margin-top: 20px; margin-bottom: 12px; text-transform: uppercase;">API cURL — Complete Recovery (replace TOKEN)</h4>
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode('recovery-complete-curl')">Copy</button>
+              <code id="recovery-complete-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/complete \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "moderator@eid.sm",
+    "recovery_token": "REC-XXXXXXXXXXXXXXXX",
+    "new_password": "Password999!"
+  }'</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 10: CLAIMS MINIMISATION -->
+      <section id="sc-claims" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 10: Claims Minimisation &amp; UIN Pseudonymisation</span>
+            <span class="badge badge-success">Module 2</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+            Relying Parties only receive claims that are explicitly allowed in their <code>allowed_claims</code> configuration. The citizen's raw UIN and eID are never exposed — instead a pairwise pseudonymous subject token (<code>TOK-xxxxxxxx</code>) is used in all ID Tokens.
+          </p>
+
+          <div style="background: rgba(16,185,129,0.06); border-left: 4px solid #10b981; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+            <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #10b981; margin-bottom: 6px;">WSO2 Broker Client Configuration</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-family: monospace; color: var(--text-secondary);">
+              <div><strong>Client ID:</strong> <code>eid-wso2-broker-client-id</code></div>
+              <div><strong>Secret:</strong> <code>eid-wso2-broker-client-secret-key-2026</code></div>
+              <div><strong>Allowed Claims:</strong> <code>email, full_name, dob</code></div>
+              <div><strong>Approved Raw:</strong> <code>email</code> only</div>
+            </div>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Step 1 — Initiate OIDC Authorization</h4>
+                <p>This cURL simulates WSO2 initiating an authorization request. Run it and capture the <code>code</code> from the returned <code>redirect_url</code>.</p>
+                <div class="code-container" style="margin-top: 10px;">
+                  <button class="copy-btn" onclick="copyCode('claims-auth-curl')">Copy</button>
+                  <code id="claims-auth-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/oauth/authorize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "eid-wso2-broker-client-id",
+    "redirect_uri": "https://localhost:9443/commonauth",
+    "state": "xyz123",
+    "nonce": "nonce-abc",
+    "email": "moderator@eid.sm",
+    "password": "Password123!",
+    "auth_method": "PASSWORD"
+  }'</code>
+                </div>
+                <p style="margin-top: 8px; font-size: 11px; color: var(--text-secondary);">If the response contains <code>"mfa_required": true</code>, re-run the same cURL adding <code>"otp": "123456"</code> to the body to bypass the MFA challenge.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Step 2 — Exchange Code for Tokens</h4>
+                <p>Copy the <code>code</code> value from the <code>redirect_url</code> query string and replace <code>CODE_HERE</code> below:</p>
+                <div class="code-container" style="margin-top: 10px;">
+                  <button class="copy-btn" onclick="copyCode('claims-token-curl')">Copy</button>
+                  <code id="claims-token-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/oauth/token \
+  -H "Authorization: Basic ZWlkLXdzbzItYnJva2VyLWNsaWVudC1pZDplaWQtd3NvMi1icm9rZXItY2xpZW50LXNlY3JldC1rZXktMjAyNg==" \
+  -d "grant_type=authorization_code&code=CODE_HERE&redirect_uri=https://localhost:9443/commonauth"</code>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Step 3 — Decode &amp; Inspect the ID Token</h4>
+                <p>Copy the <code>id_token</code> value from the response. Decode its middle segment (base64url) to inspect the JWT payload claims. Use this shell command:</p>
+                <div class="code-container" style="margin-top: 10px;">
+                  <button class="copy-btn" onclick="copyCode('claims-decode-curl')">Copy</button>
+                  <code id="claims-decode-curl" class="code-block">echo 'PASTE_ID_TOKEN_HERE' | cut -d'.' -f2 | tr '_-' '/+' | base64 -d | python3 -m json.tool</code>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Step 4 — Verify Assertions</h4>
+                <p>In the decoded payload, verify the following:</p>
+                <table class="data-table" style="margin-top: 10px;">
+                  <thead><tr><th>Check</th><th>Expected</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><code>sub</code> field</td>
+                      <td>Starts with <code>TOK-</code> (pairwise pseudonym)</td>
+                      <td style="color: #10b981; font-weight: 700;">✅ Must NOT be raw UIN</td>
+                    </tr>
+                    <tr>
+                      <td><code>email</code> field</td>
+                      <td><code>moderator@eid.sm</code> (in approved raw releases)</td>
+                      <td style="color: #10b981; font-weight: 700;">✅ Allowed</td>
+                    </tr>
+                    <tr>
+                      <td><code>electronic_id</code> field</td>
+                      <td>Completely absent from payload</td>
+                      <td style="color: #10b981; font-weight: 700;">✅ Must be ABSENT</td>
+                    </tr>
+                    <tr>
+                      <td><code>uin</code> field</td>
+                      <td>Completely absent (raw UIN blocked)</td>
+                      <td style="color: #10b981; font-weight: 700;">✅ Must be ABSENT</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENARIO 11: AUDIT TRAIL LOGS -->
+      <section id="sc-audit" class="scenario-section">
+        <div class="card">
+          <div class="card-title">
+            <span>Scenario 11: Authentication Audit Trail</span>
+            <span class="badge badge-primary">Module 2</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+            Every authentication event (login, MFA, recovery, token issuance) is logged to <code>authentication_audit_logs</code> with no raw credentials ever appearing in any log entry. Auditors can retrieve a subject's complete chronological history using the admin query API.
+          </p>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Get a Subject UUID</h4>
+                <p>First, login to obtain the moderator's UUID. Run this and copy the <code>uuid</code> from the <code>citizen</code> object in the response:</p>
+                <div class="code-container" style="margin-top: 10px;">
+                  <button class="copy-btn" onclick="copyCode('audit-login-curl')">Copy</button>
+                  <code id="audit-login-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "moderator@eid.sm", "password": "Password123!"}'
+
+# → Copy the "uuid" and "access_token" values from the response</code>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Query Audit Logs by Subject UUID</h4>
+                <p>Replace <code>TOKEN</code> with the <code>access_token</code> and <code>UUID</code> with the <code>uuid</code> from Step 1:</p>
+                <div class="code-container" style="margin-top: 10px;">
+                  <button class="copy-btn" onclick="copyCode('audit-query-curl')">Copy</button>
+                  <code id="audit-query-curl" class="code-block">curl -s \
+  -H "Authorization: Bearer TOKEN" \
+  "http://localhost:8082/api/v1/admin/audit-logs?subject=UUID"</code>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Verify Expected Audit Events Are Present</h4>
+                <p>The JSON array response should contain at minimum the following action types logged in chronological order:</p>
+                <table class="data-table" style="margin-top: 10px;">
+                  <thead><tr><th>Action</th><th>Outcome</th><th>Trigger</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>LOGIN</code></td><td><code>SUCCESS</code></td><td>Successful password verification</td></tr>
+                    <tr><td><code>LOGIN</code></td><td><code>FAILED_PASSWORD</code></td><td>Wrong password attempt</td></tr>
+                    <tr><td><code>MFA_SEND</code></td><td><code>SUCCESS</code></td><td>OTP challenge triggered</td></tr>
+                    <tr><td><code>MFA_VERIFY</code></td><td><code>SUCCESS / FAILED_OTP</code></td><td>OTP check result</td></tr>
+                    <tr><td><code>TOKEN_ISSUANCE</code></td><td><code>SUCCESS</code></td><td>OIDC code exchange</td></tr>
+                    <tr><td><code>RECOVERY_INIT</code></td><td><code>SUCCESS / FAILED_DEMOGRAPHIC_VERIFICATION</code></td><td>Recovery flow start</td></tr>
+                    <tr><td><code>RECOVERY_COMPLETE</code></td><td><code>SUCCESS</code></td><td>Password &amp; MFA reset</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Verify No Raw Credentials Appear</h4>
+                <p>Inspect every log entry in the response. Confirm the <code>details</code> field contains <strong>only descriptive text</strong> — never a raw password hash, OTP code, or token value.</p>
+                <p style="margin-top: 6px; color: #10b981; font-weight: 700;">✅ Audit trail is clean and credential-safe.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <h4>View Logs in Admin Dashboard</h4>
+                <p>Login as admin and navigate to <a href="http://localhost:3000/admin/logs" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/admin/logs</a> to view the audit log table in the UI.</p>
               </div>
             </div>
           </div>
@@ -882,16 +1377,38 @@
       event.target.classList.add('active');
     }
 
+    function handleEventTypeChange() {
+      const type = document.getElementById('in-evt-type').value;
+      const birthFields = document.getElementById('birth-fields');
+      if (type === 'BIRTH_PRE_PROVISION') {
+        birthFields.style.display = 'flex';
+        document.getElementById('in-evt-id').value = 'evt-birth-baby-9999';
+        document.getElementById('in-evt-uin').value = 'UN-SXM-26-999111-2';
+      } else {
+        birthFields.style.display = 'none';
+        document.getElementById('in-evt-id').value = 'evt-death-john-001';
+        document.getElementById('in-evt-uin').value = 'UN-SXM-26-000001-9';
+      }
+      generateWebhookCurl();
+    }
+
     function generateWebhookCurl() {
       const id = document.getElementById('in-evt-id').value;
       const type = document.getElementById('in-evt-type').value;
       const uin = document.getElementById('in-evt-uin').value;
 
       const payload = {
-        eventId: id,
-        eventType: type,
+        event_id: id,
+        event_type: type,
         uin: uin
       };
+
+      if (type === 'BIRTH_PRE_PROVISION') {
+        payload.full_name = document.getElementById('in-birth-name').value;
+        payload.dob = document.getElementById('in-birth-dob').value;
+        payload.bsn_number = document.getElementById('in-birth-bsn').value;
+        payload.national_id_number = document.getElementById('in-birth-nid').value;
+      }
 
       const curlStr = `curl -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \\
   -H "Content-Type: application/json" \\
