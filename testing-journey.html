@@ -3,67 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>eID Sint Maarten — Integration Testing Manual</title>
+  <title>eID Sint Maarten — Module Testing Journey</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #003399;
       --secondary: #D52B1E;
       --accent: #F4A261;
-      --bg-dark: #090d16;
-      --card-dark: #0f172a;
-      --border-dark: #1e293b;
-      --text-dark-primary: #f8fafc;
-      --text-dark-secondary: #94a3b8;
-      
-      --bg-light: #f8fafc;
-      --card-light: #ffffff;
-      --border-light: #e2e8f0;
-      --text-light-primary: #0f172a;
-      --text-light-secondary: #475569;
-      
-      --bg: var(--bg-dark);
-      --card: var(--card-dark);
-      --border: var(--border-dark);
-      --text-primary: var(--text-dark-primary);
-      --text-secondary: var(--text-dark-secondary);
+      --green: #10b981;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --bg: #090d16;
+      --card: #0f172a;
+      --card2: #111827;
+      --border: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --code-bg: #020617;
+      --code-color: #38bdf8;
     }
-
     body.light {
-      --bg: var(--bg-light);
-      --card: var(--card-light);
-      --border: var(--border-light);
-      --text-primary: var(--text-light-primary);
-      --text-secondary: var(--text-light-secondary);
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --card2: #f8fafc;
+      --border: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --code-bg: #1e293b;
+      --code-color: #7dd3fc;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text-primary);
       line-height: 1.6;
-      padding-bottom: 80px;
+      padding-bottom: 100px;
+      transition: background 0.3s, color 0.3s;
     }
+    h1,h2,h3,h4,h5 { font-family: 'Outfit', sans-serif; font-weight: 800; }
 
-    h1, h2, h3, h4, h5 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-    }
-
-    /* Top banner */
+    /* ── Top Banner ── */
     .gov-banner {
-      background: linear-gradient(90deg, var(--primary) 0%, #002266 50%, var(--secondary) 100%);
+      background: linear-gradient(90deg, #002266 0%, var(--primary) 40%, #1a1a2e 100%);
       color: white;
-      padding: 12px 24px;
+      padding: 10px 24px;
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
@@ -71,402 +61,406 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      border-bottom: 2px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-
-    .gov-flag {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .gov-flag { display: flex; align-items: center; gap: 10px; }
     .theme-toggle {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 4px 12px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 4px 14px;
       border-radius: 20px;
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
       color: white;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
+    .theme-toggle:hover { background: rgba(255,255,255,0.25); }
 
-    .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
-    }
-
-    /* Main Container */
+    /* ── Layout ── */
     .container {
-      max-width: 1280px;
-      margin: 40px auto;
-      padding: 0 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
       display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 32px;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: start;
     }
+    @media (max-width: 968px) { .container { grid-template-columns: 1fr; } }
 
-    @media (max-width: 968px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Sidebar */
+    /* ── Sidebar ── */
     .sidebar {
+      position: sticky;
+      top: 60px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 12px;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
     }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     .nav-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border-radius: 14px;
+      padding: 16px;
     }
-
-    .nav-title {
-      font-size: 12px;
+    .nav-module-label {
+      font-size: 9px;
+      font-weight: 900;
       text-transform: uppercase;
-      color: var(--text-secondary);
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      padding: 6px 10px 4px;
+      margin-top: 4px;
     }
-
-    .nav-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
     .nav-item {
-      padding: 12px 16px;
+      padding: 9px 12px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      text-transform: uppercase;
       color: var(--text-secondary);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
-      transition: all 0.2s ease;
+      gap: 8px;
+      transition: all 0.18s;
+      margin-bottom: 2px;
     }
-
-    .nav-item:hover {
-      background: rgba(0, 51, 153, 0.08);
-      color: var(--primary);
+    .nav-item:hover { background: rgba(0,51,153,0.1); color: #60a5fa; }
+    .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 14px rgba(0,51,153,0.4); }
+    .nav-item .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      margin-left: auto;
     }
+    .nav-item .status-dot.pending { background: var(--yellow); }
 
-    body.light .nav-item:hover {
-      background: rgba(0, 51, 153, 0.05);
+    /* ── Seeds card ── */
+    .seeds-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.7;
+      color: var(--text-secondary);
     }
+    .seeds-card h4 { font-family: 'Outfit', sans-serif; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .seed-label { color: var(--text-primary); font-weight: 700; }
+    .seed-accent { color: #60a5fa; }
 
-    .nav-item.active {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 10px 15px -3px rgba(0, 51, 153, 0.3);
-    }
+    /* ── Main ── */
+    .main-panel { display: flex; flex-direction: column; gap: 20px; }
 
-    /* Main Panel */
-    .main-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .header-card {
+    /* ── Page Header ── */
+    .page-header {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 40px;
+      padding: 36px 40px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
-
-    .header-card::after {
+    .page-header::before {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(0, 51, 153, 0.15) 0%, transparent 70%);
+      top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,51,153,0.12) 0%, transparent 70%);
       border-radius: 50%;
     }
+    .page-header h1 { font-size: 28px; letter-spacing: -0.02em; margin: 8px 0; }
+    .page-header p { color: var(--text-secondary); font-size: 13px; max-width: 700px; line-height: 1.7; }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 30px;
-      font-size: 10px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border: 1px solid transparent;
-      margin-bottom: 12px;
-    }
+    /* ── Sections ── */
+    .scenario-section { display: none; animation: fadeIn 0.3s ease forwards; flex-direction: column; gap: 20px; }
+    .scenario-section.active { display: flex; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-    .badge-primary {
-      background: rgba(0, 51, 153, 0.15);
-      color: #3b82f6;
-      border-color: rgba(0, 51, 153, 0.25);
-    }
-
-    .badge-success {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border-color: rgba(16, 185, 129, 0.25);
-    }
-
-    .badge-error {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      border-color: rgba(239, 68, 68, 0.25);
-    }
-
-    .badge-warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-      border-color: rgba(245, 158, 11, 0.25);
-    }
-
-    .title {
-      font-size: 32px;
-      margin-top: 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .subtitle {
-      color: var(--text-secondary);
-      font-size: 14px;
-      margin-top: 8px;
-      max-width: 600px;
-    }
-
-    /* Content Cards */
-    .scenario-section {
-      display: none;
-      animation: fadeIn 0.4s ease forwards;
-    }
-
-    .scenario-section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    /* ── Cards ── */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
+      border-radius: 18px;
+      padding: 28px;
     }
-
-    .card-title {
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 16px;
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
       margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-header h3 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-header p { font-size: 12px; color: var(--text-secondary); margin-top: 4px; font-weight: 400; }
+
+    /* ── Module Header Band ── */
+    .module-band {
+      border-radius: 16px;
+      padding: 24px 28px;
+      border: 1px solid;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 20px;
     }
-
-    /* Steps list */
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .step-item {
-      display: grid;
-      grid-template-columns: 40px 1fr;
-      gap: 16px;
-      background: rgba(15, 23, 42, 0.25);
-      border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 12px;
-      align-items: start;
-    }
-
-    body.light .step-item {
-      background: rgba(241, 245, 249, 0.5);
-    }
-
-    .step-number {
-      width: 24px;
-      height: 24px;
-      background: var(--primary);
-      color: white;
-      border-radius: 50%;
+    .module-band.m2 { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.25); }
+    .module-band.m3 { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.25); }
+    .module-band.m4 { background: rgba(139,92,246,0.06); border-color: rgba(139,92,246,0.25); }
+    .module-band.m1 { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.25); }
+    .module-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      margin-top: 2px;
+      font-size: 24px;
+      flex-shrink: 0;
     }
+    .module-icon.m2 { background: rgba(16,185,129,0.15); }
+    .module-icon.m3 { background: rgba(59,130,246,0.15); }
+    .module-icon.m4 { background: rgba(139,92,246,0.15); }
+    .module-icon.m1 { background: rgba(245,158,11,0.15); }
+    .module-band .info h2 { font-size: 18px; letter-spacing: -0.01em; }
+    .module-band .info p { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
-    .step-content h4 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      color: var(--text-primary);
-    }
-
-    .step-content p {
+    /* ── DoD Checklist ── */
+    .dod-grid { display: flex; flex-direction: column; gap: 8px; }
+    .dod-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
       font-size: 12px;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
-
-    /* Clipboard Copyable Code Blocks */
-    .code-container {
-      position: relative;
-      margin-top: 12px;
-    }
-
-    .code-block {
-      background: #020617;
-      color: #38bdf8;
-      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-      font-size: 11px;
-      padding: 16px;
+      padding: 10px 14px;
       border-radius: 8px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+    }
+    .dod-check { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .dod-item.done { border-color: rgba(16,185,129,0.2); background: rgba(16,185,129,0.04); }
+    .dod-item.pending { border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.04); }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 14px; }
+    .step-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 12px;
+      align-items: start;
+    }
+    .step-item.fail { border-color: rgba(239,68,68,0.2); background: rgba(239,68,68,0.03); }
+    .step-item.success { border-color: rgba(16,185,129,0.2); background: rgba(16,185,129,0.03); }
+    .step-num {
+      width: 28px; height: 28px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step-num.red { background: #ef4444; }
+    .step-num.green { background: #10b981; }
+    .step-num.yellow { background: #f59e0b; }
+    .step-content h4 { font-size: 13px; font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: 0.01em; }
+    .step-content p { font-size: 12px; color: var(--text-secondary); margin-top: 5px; line-height: 1.6; }
+    .step-content a { color: #60a5fa; font-weight: 700; text-decoration: none; }
+    .step-content a:hover { text-decoration: underline; }
+
+    /* ── Expected Result box ── */
+    .expected {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .expected.ok { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+    .expected.fail { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+    .expected.info { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+    .expected.warn { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+
+    /* ── Section Titles ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .section-label.fail { background: rgba(239,68,68,0.1); color: #ef4444; }
+    .section-label.success { background: rgba(16,185,129,0.1); color: #10b981; }
+    .section-label.info { background: rgba(59,130,246,0.1); color: #60a5fa; }
+
+    /* ── Code blocks ── */
+    .code-wrap { position: relative; margin-top: 10px; }
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-color);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 16px 18px;
+      border-radius: 10px;
       overflow-x: auto;
       border: 1px solid #1e293b;
       display: block;
       white-space: pre;
+      line-height: 1.6;
     }
-
     .copy-btn {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 6px;
+      top: 8px; right: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      padding: 3px 10px;
+      border-radius: 5px;
       font-size: 9px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
+      transition: all 0.2s;
+      font-family: 'JetBrains Mono', monospace;
     }
+    .copy-btn:hover { background: rgba(255,255,255,0.18); color: white; }
+    .copy-btn.copied { background: rgba(16,185,129,0.3); color: #10b981; border-color: rgba(16,185,129,0.4); }
 
-    .copy-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+    /* ── Data tables ── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+    .data-table th, .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: left; }
+    .data-table th { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); background: var(--card2); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table td code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+    body.light .data-table td code { background: rgba(0,0,0,0.06); }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 9px; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      border: 1px solid transparent;
+      white-space: nowrap;
     }
+    .badge-green { background: rgba(16,185,129,0.15); color: #10b981; border-color: rgba(16,185,129,0.25); }
+    .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; border-color: rgba(239,68,68,0.25); }
+    .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: rgba(59,130,246,0.25); }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; border-color: rgba(245,158,11,0.25); }
+    .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; border-color: rgba(139,92,246,0.25); }
 
-    /* Table styles */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 12px;
-    }
-
-    .data-table th, .data-table td {
+    /* ── Alert banner ── */
+    .alert {
       padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 12px;
+      border-left: 3px solid;
+      margin: 12px 0;
     }
+    .alert p { margin: 0; line-height: 1.6; }
+    .alert strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .alert.green { background: rgba(16,185,129,0.07); border-color: #10b981; color: #a7f3d0; }
+    .alert.red { background: rgba(239,68,68,0.07); border-color: #ef4444; color: #fca5a5; }
+    .alert.blue { background: rgba(59,130,246,0.07); border-color: #3b82f6; color: #93c5fd; }
+    .alert.yellow { background: rgba(245,158,11,0.07); border-color: #f59e0b; color: #fde68a; }
+    body.light .alert.green { color: #065f46; }
+    body.light .alert.red { color: #991b1b; }
+    body.light .alert.blue { color: #1e40af; }
+    body.light .alert.yellow { color: #78350f; }
 
-    .data-table th {
-      text-transform: uppercase;
-      font-size: 10px;
-      font-weight: 900;
-      color: var(--text-secondary);
-      background: rgba(0, 0, 0, 0.1);
+    /* ── Two-col layout ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── Interactive builder ── */
+    .builder-panel {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
     }
-
-    /* Interactive payload builder */
-    .builder-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    @media (max-width: 768px) {
-      .builder-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      letter-spacing: 0.05em;
-    }
-
+    .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .form-group label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
     .form-control {
-      background: rgba(15, 23, 42, 0.4);
+      background: var(--card);
       border: 1px solid var(--border);
       color: var(--text-primary);
-      padding: 10px 14px;
+      padding: 9px 12px;
       border-radius: 8px;
       font-size: 12px;
-      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
       outline: none;
+      transition: border 0.2s;
     }
-
-    body.light .form-control {
-      background: white;
-    }
-
-    .form-control:focus {
-      border-color: var(--primary);
-    }
-
-    .btn-action {
+    .form-control:focus { border-color: #3b82f6; }
+    .btn-gen {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 12px 20px;
+      padding: 10px 18px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       cursor: pointer;
-      display: inline-flex;
+      width: 100%;
+      margin-top: 4px;
+      transition: all 0.2s;
+    }
+    .btn-gen:hover { background: #002266; transform: translateY(-1px); }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    /* ── Progress pill ── */
+    .progress-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .progress-pill {
+      font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .progress-pill.done { background: rgba(16,185,129,0.15); color: #10b981; }
+    .progress-pill.pending { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+    /* ── subsection heading ── */
+    .subsection-title {
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 4px 6px -1px rgba(0, 51, 153, 0.2);
-    }
-
-    .btn-action:hover {
-      background: #002266;
-      transform: translateY(-1px);
     }
   </style>
 </head>
@@ -476,176 +470,535 @@
   <div class="gov-banner">
     <div class="gov-flag">
       <span>🇸🇽</span>
-      <span>Government of Sint Maarten • eID Integration Testing Desk</span>
+      <span>Government of Sint Maarten — eID Platform · Module Testing Journey</span>
     </div>
-    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+    <button class="theme-toggle" onclick="toggleTheme()">☀ Toggle Theme</button>
   </div>
 
   <div class="container">
-    
-    <!-- Left Navigation -->
+
+    <!-- ═══ SIDEBAR ═══ -->
     <aside class="sidebar">
       <div class="nav-card">
-        <h3 class="nav-title">Testing Registry</h3>
-        <ul class="nav-list">
-          <li class="nav-item active" onclick="showScenario('sc-overview')">📋 Testing Overview</li>
-          <li class="nav-item" onclick="showScenario('sc-happy')">✅ Scenario 1: Happy Path</li>
-          <li class="nav-item" onclick="showScenario('sc-mismatch')">⚠️ Scenario 2: Demographic Mismatch</li>
-          <li class="nav-item" onclick="showScenario('sc-psc')">🛡️ Scenario 3: PSC Desk Approval</li>
-          <li class="nav-item" onclick="showScenario('sc-deceased')">💀 Scenario 4: Deceased Block</li>
-          <li class="nav-item" onclick="showScenario('sc-registered')">❌ Scenario 5: Already Registered</li>
-          <li class="nav-item" onclick="showScenario('sc-lifecycle')">🔄 Scenario 6: Death Event webhook</li>
-          <li class="nav-item" onclick="showScenario('sc-token')">🔐 Scenario 7: UIN Tokenisation</li>
-          <li class="nav-item" onclick="showScenario('sc-sop-training')">📖 Scenario 8: PSC Operator SOP Training</li>
-          <li class="nav-item" style="margin-top: 8px; border-top: 1px solid var(--border); padding-top: 16px; color: #60a5fa; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; pointer-events: none;">─── Module 2 ───</li>
-          <li class="nav-item" onclick="showScenario('sc-recovery')">🔑 Scenario 9: Identity Recovery</li>
-          <li class="nav-item" onclick="showScenario('sc-claims')">🛡️ Scenario 10: Claims Minimisation</li>
-          <li class="nav-item" onclick="showScenario('sc-audit')">📜 Scenario 11: Audit Trail Logs</li>
-        </ul>
+        <div class="nav-module-label">📋 Overview</div>
+        <div class="nav-item active" onclick="show('sc-overview')">🏠 Platform Overview</div>
+
+        <div class="nav-module-label" style="margin-top:10px; color:#f59e0b;">Module 2 — Auth Core</div>
+        <div class="nav-item" onclick="show('m2-overview')">📌 Module 2 Overview<span class="status-dot"></span></div>
+        <div class="nav-item" onclick="show('m2-recovery')">🔑 Recovery Flow</div>
+        <div class="nav-item" onclick="show('m2-claims')">🛡️ Claims Minimisation</div>
+        <div class="nav-item" onclick="show('m2-audit')">📜 Audit Trail</div>
+
+        <div class="nav-module-label" style="margin-top:10px; color:#3b82f6;">Module 3 — Enrolment</div>
+        <div class="nav-item" onclick="show('m3-overview')">📌 Module 3 Overview<span class="status-dot"></span></div>
+        <div class="nav-item" onclick="show('m3-self')">🌐 Self-Service Enrolment</div>
+        <div class="nav-item" onclick="show('m3-psc')">🏛️ PSC Assisted Enrolment</div>
+        <div class="nav-item" onclick="show('m3-bio')">📷 Biometric & ePassport</div>
+        <div class="nav-item" onclick="show('m3-offline')">📡 Offline Mode & Reconcile</div>
+
+        <div class="nav-module-label" style="margin-top:10px; color:#a78bfa;">Module 4 — Civil Registry</div>
+        <div class="nav-item" onclick="show('m4-overview')">📌 Module 4 Overview<span class="status-dot"></span></div>
+        <div class="nav-item" onclick="show('m4-validation')">🔎 Registry Validation</div>
+        <div class="nav-item" onclick="show('m4-uin')">🪪 UIN Issuance</div>
+        <div class="nav-item" onclick="show('m4-lifecycle')">🔄 Lifecycle Events</div>
+        <div class="nav-item" onclick="show('m4-reconcile')">📊 Reconciliation</div>
+        <div class="nav-item" onclick="show('m4-token')">🔐 UIN Tokenisation</div>
+
+        <div class="nav-module-label" style="margin-top:10px; color:#f59e0b;">Module 6 — RP Onboarding</div>
+        <div class="nav-item" onclick="show('m6-overview')">📌 Module 6 Overview<span class="status-dot"></span></div>
+        <div class="nav-item" onclick="show('m6-onboarding')">📖 US-6.1 Onboarding Guide</div>
+        <div class="nav-item" onclick="show('m6-sandbox')">🧪 US-6.2 Sandbox Identities</div>
+        <div class="nav-item" onclick="show('m6-conformance')">🔬 US-6.3 Conformance Harness</div>
+        <div class="nav-item" onclick="show('m6-golive')">🚀 US-6.4 Go-live Checklist</div>
+
+        <div class="nav-module-label" style="margin-top:10px; color:#10b981;">Deep Dive — Identity Engine</div>
+        <div class="nav-item" onclick="show('spec-uin')">🆔 UIN Engine &amp; Standards</div>
+        <div class="nav-item" onclick="show('spec-eid')">💳 eID Credential Standards</div>
       </div>
 
-      <div class="nav-card">
-        <h3 class="nav-title">Authoritative Mock Seeds</h3>
-        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">AUTHORITATIVE CIVIL ARCHIVE RECORDS:</p>
-        <div style="font-size: 10px; font-family: monospace; line-height: 1.4; color: var(--text-secondary);">
-          <strong>John Connor:</strong><br>
-          BSN: 123456 | NID: NID-987654<br>
-          DOB: 1990-05-15 (Active)<br><br>
-          <strong>Sarah Connor:</strong><br>
-          BSN: 888888 | NID: NID-888888<br>
-          DOB: 1965-11-10 (Deceased)<br><br>
-          <strong>Baby Connor:</strong><br>
-          BSN: 999999 | NID: NID-000001<br>
-          DOB: 2026-01-01 (Active)
-        </div>
+      <!-- Seeds -->
+      <div class="seeds-card">
+        <h4>Civil Registry Seeds</h4>
+        <span class="seed-label">John Connor</span><br>
+        BSN: <span class="seed-accent">123456</span> | NID: <span class="seed-accent">NID-987654</span><br>
+        DOB: <span class="seed-accent">1990-05-15</span> · Status: active<br><br>
+        <span class="seed-label">Sarah Connor</span><br>
+        BSN: <span class="seed-accent">888888</span> | NID: <span class="seed-accent">NID-888888</span><br>
+        DOB: <span class="seed-accent">1965-11-10</span> · Status: <span style="color:#ef4444">deceased</span><br><br>
+        <span class="seed-label">Baby Connor</span><br>
+        BSN: <span class="seed-accent">999999</span> | NID: <span class="seed-accent">NID-000001</span><br>
+        DOB: <span class="seed-accent">2026-01-01</span> · Status: active
       </div>
 
-      <div class="nav-card" style="margin-top: 16px;">
-        <h3 class="nav-title">Administrative Credentials</h3>
-        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">SYSTEM AUTH (Password: <code>Password123!</code>):</p>
-        <div style="font-size: 10px; font-family: monospace; line-height: 1.4; color: var(--text-secondary);">
-          <strong>PSC User (Moderator):</strong><br>
-          Email: <code>moderator@eid.sm</code><br>
-          Role: moderator<br><br>
-          <strong>Admin User:</strong><br>
-          Email: <code>admin@eid.sm</code><br>
-          Role: admin<br><br>
-          <strong>Developer User:</strong><br>
-          Email: <code>developer@eid.sm</code><br>
-          Role: developer
-        </div>
-      </div>
-
-      <div class="nav-card" style="margin-top: 16px; border-color: rgba(96, 165, 250, 0.3);">
-        <h3 class="nav-title" style="color: #60a5fa;">Module 2 — Recovery Seeds</h3>
-        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">CIVIL REGISTRY MATCH VALUES:</p>
-        <div style="font-size: 10px; font-family: monospace; line-height: 1.6; color: var(--text-secondary);">
-          <strong style="color: var(--text-primary);">moderator@eid.sm</strong><br>
-          BSN: <code>200002</code><br>
-          NID: <code>NID-200002</code><br>
-          DOB: <code>1990-05-15</code><br><br>
-          <strong style="color: var(--text-primary);">admin@eid.sm</strong><br>
-          BSN: <code>300003</code><br>
-          NID: <code>NID-300003</code><br>
-          DOB: <code>1990-05-15</code><br><br>
-          <span style="color: #ef4444; font-weight: 700;">⚠ Fail Test Values:</span><br>
-          BSN: <code>999999</code> (not in registry)<br>
-          Any wrong DOB format
-        </div>
+      <div class="seeds-card">
+        <h4>Admin Credentials</h4>
+        Password: <span class="seed-accent">Password123!</span><br><br>
+        <span class="seed-label">moderator@eid.sm</span><br>
+        Role: moderator<br>
+        BSN: <span class="seed-accent">200002</span> | NID: <span class="seed-accent">NID-200002</span><br>
+        DOB: <span class="seed-accent">1990-05-15</span><br><br>
+        <span class="seed-label">admin@eid.sm</span><br>
+        Role: admin<br>
+        BSN: <span class="seed-accent">300003</span> | NID: <span class="seed-accent">NID-300003</span><br>
+        DOB: <span class="seed-accent">1990-05-15</span><br><br>
+        <span class="seed-label">developer@eid.sm</span><br>
+        Role: developer
       </div>
     </aside>
 
-    <!-- Main Panel -->
+    <!-- ═══ MAIN PANEL ═══ -->
     <main class="main-panel">
-      
-      <!-- HEADER HEADER -->
-      <div class="header-card">
-        <span class="badge badge-primary">Release Candidates</span>
-        <h1 class="title">eID Platform Testing Journeys</h1>
-        <p class="subtitle">Complete guide to test the end-to-end user onboarding workflows, mock endpoints, and Civil Registry database connector orchestration in live & mock modes.</p>
-      </div>
 
-      <!-- SCENARIO: OVERVIEW -->
+      <!-- ██████ OVERVIEW ██████ -->
       <section id="sc-overview" class="scenario-section active">
+        <div class="page-header">
+          <span class="badge badge-blue">Sint Maarten GoSM eID Platform</span>
+          <h1>Module-by-Module Testing Journey</h1>
+          <p>This interactive guide walks through every completed module — user story by user story — with precise test data, expected outcomes, happy-path steps, fail-case steps, and ready-to-run cURL commands. Follow in order or navigate directly to any scenario.</p>
+          <div class="progress-row" style="margin-top:16px;">
+            <span class="progress-pill done">✓ Module 2 — Auth Core</span>
+            <span class="progress-pill done">✓ Module 3 — Enrolment</span>
+            <span class="progress-pill done">✓ Module 4 — Civil Registry</span>
+            <span class="progress-pill done">✓ Module 6 — RP Onboarding</span>
+            <span class="progress-pill done">✓ UIN Engine (ISO 7501)</span>
+            <span class="progress-pill done">✓ eID Standards (eIDAS High)</span>
+          </div>
+        </div>
+
         <div class="card">
-          <h3 class="card-title">System Architecture Overview</h3>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
-            The Sint Maarten eID platform integrates with the Civil Registry API to check demographic criteria on registration. 
-            The system acts as a secure identity broker with fraud detection capabilities:
-          </p>
+          <div class="card-header">
+            <div><h3>System Architecture at a Glance</h3><p>How components connect during a citizen verification</p></div>
+          </div>
           <div class="steps">
             <div class="step-item">
-              <div class="step-number">1</div>
+              <div class="step-num">1</div>
               <div class="step-content">
-                <h4>API-Only Validation Verification</h4>
-                <p>Registration matches data directly with the Civil Registry via HTTP endpoints (no direct DB reads). Latencies exceeding 100ms trigger automated telemetry warnings to satisfy SLA targets.</p>
+                <h4>Frontend (Next.js · port 3000)</h4>
+                <p>Citizen-facing registration, login, recovery and dashboard. PSC operator console at <code>/admin/*</code>. All UI calls point to the backend API.</p>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-number">2</div>
+              <div class="step-num">2</div>
               <div class="step-content">
-                <h4>Fraud Detection Holds</h4>
-                <p>Mismatches in name orthography or birthdate block auto-acceptance. The record is flagged as <code>review_pending</code> and locked in the eID database, awaiting physical document verification at the PSC Counter Desk.</p>
+                <h4>Backend API (.NET 8 · port 8082)</h4>
+                <p>All business logic — Civil Registry lookups, UIN generation, OIDC token issuance, MFA, recovery, lifecycle events, audit logs.</p>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-number">3</div>
+              <div class="step-num">3</div>
               <div class="step-content">
-                <h4>Automated Write-Back Sync</h4>
-                <p>Upon registration approval (auto or manual), the eID platform performs a writeback to the Civil Registry table, locking the generated <strong>UIN</strong> and <strong>eID Serial Key</strong> to that citizen dossier.</p>
+                <h4>Civil Registry (Mock Mode by default)</h4>
+                <p>Switchable via <code>appsettings.json → CivilRegistry:Mode</code>. Mock mode uses the seeded records in the same MySQL database. Live mode calls the real Registry HTTP API.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>MySQL Database (port 3306)</h4>
+                <p>Stores citizens, credentials, civil_registry_records, auth_codes, audit_logs, processed_events, writeback_failures, partial_enrolments.</p>
               </div>
             </div>
           </div>
-
-          <h4 style="font-size: 13px; margin-top: 24px; margin-bottom: 12px; text-transform: uppercase; color: var(--accent); font-weight: 800; letter-spacing: 0.05em;">🛡️ How Fraud & Identity Theft Prevention Works</h4>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
-            To prevent malicious actors from registering accounts using arbitrary or stolen CRIB/NID numbers, the eID platform enforces multi-field demographic cross-checking:
-          </p>
-          <div style="background: rgba(244, 162, 97, 0.08); border-left: 4px solid var(--accent); padding: 18px; border-radius: 12px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; margin-bottom: 8px;">
-            <p style="font-size: 12px; color: var(--text-primary); font-weight: 700; text-transform: uppercase; tracking-wider; margin-bottom: 6px;">
-              Phase A: Authoritative Lookup
-            </p>
-            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">
-              The system queries the Civil Registry with the entered ID (e.g., BSN/NID). The API fetches the official citizen dossier (Name: <strong>"John Connor"</strong>, DOB: <strong>"1990-05-15"</strong>).
-            </p>
-            
-            <p style="font-size: 12px; color: var(--text-primary); font-weight: 700; text-transform: uppercase; tracking-wider; margin-bottom: 6px;">
-              Phase B: Demographic Cross-Check
-            </p>
-            <p style="font-size: 12px; color: var(--text-secondary);">
-              The eID platform compares the form inputs. If the user typed <strong>"John Connor Jr."</strong> or input a different birthdate, a mismatch is caught. The user's account registration goes on hold (marked <strong>"Review Pending"</strong>) instead of being auto-activated, preventing unauthorized access.
-            </p>
+          <div class="alert blue" style="margin-top:20px;">
+            <strong>Before you start</strong>
+            <p>Ensure the .NET API is running: <code>cd eid-with-dotnet && dotnet run --project SintMaarten.EID/SintMaarten.EID.Api --launch-profile http</code> and the Next.js dev server is running: <code>cd eid-frontend && npm run dev</code></p>
           </div>
         </div>
       </section>
 
-      <!-- SCENARIO 1: HAPPY PATH -->
-      <section id="sc-happy" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 1: Happy Path (Authoritative Registration)</span>
-            <span class="badge badge-success">Success Flow</span>
+
+      <!-- ██████ MODULE 2 OVERVIEW ██████ -->
+      <section id="m2-overview" class="scenario-section">
+        <div class="module-band m2">
+          <div class="module-icon m2">🔐</div>
+          <div class="info">
+            <h2>Module 2 — Auth Core</h2>
+            <p>Recovery, Claims Minimisation, Audit Trail · P1-D2 Remaining Pieces</p>
           </div>
+          <span class="badge badge-green" style="margin-left:auto;">✓ Completed</span>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h3>Definition of Done Checklist</h3><p>All 5 items verified and passing</p></div></div>
+          <div class="dod-grid">
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Recovery flow requires strictly more evidence than normal login, for every recovery path (lost OTP device, lost passkey)</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Every authentication event (login, MFA, recovery, token issuance) is audit-logged with no raw credential or OTP code ever appearing in a log</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Claims released to relying parties are filtered per an approved allow-list, enforced in the token pipeline itself — not left to convention</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>UIN-based subject identifiers used for all RPs; no raw eID number, NID, or email released without explicit recorded approval</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>RP conformance harness passes against this IdP configuration</span></div>
+          </div>
+          <div class="alert green" style="margin-top:16px;">
+            <strong>Automated Verification</strong>
+            <p>Run <code>./scratch/module2_integration_test.sh</code> in the <code>eid-with-dotnet</code> directory to run all 7 assertions automatically. All must pass.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M2 — RECOVERY ██████ -->
+      <section id="m2-recovery" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-2.1 — Identity Recovery for a Lost MFA Factor</h3>
+              <p>When a citizen loses their phone or passkey, recovery requires stronger evidence than a normal login. Demographic data is verified against the Civil Registry before resetting credentials.</p>
+            </div>
+            <span class="badge badge-red">Module 2</span>
+          </div>
+
+          <!-- FAIL CASE -->
+          <div class="section-label fail">❌ Fail Cases — US-2.1 AC3: "Citizen sees clear next step on failure"</div>
+          <div class="steps">
+            <div class="step-item fail">
+              <div class="step-num red">1</div>
+              <div class="step-content">
+                <h4>Open Recovery Page</h4>
+                <p>Navigate to <a href="http://localhost:3000/recovery" target="_blank">http://localhost:3000/recovery</a> — or from login click <strong>"Recover Access"</strong> at the bottom of the form.</p>
+              </div>
+            </div>
+            <div class="step-item fail">
+              <div class="step-num red">2</div>
+              <div class="step-content">
+                <h4>Test: Unknown Email</h4>
+                <p>Enter <code>ghost@test.sm</code> as email. Any values for BSN, NID, DOB. Click <strong>"Verify Registry Identity"</strong>.</p>
+                <div class="expected fail">⛔ Expected: <code>404 citizen_not_found</code> — "Visit a Public Service Center (PSC) to verify identity in person."</div>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/initiate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "ghost@test.sm",
+    "bsn_number": "123456",
+    "national_id_number": "NID-987654",
+    "dob": "1990-05-15"
+  }'</code></div>
+              </div>
+            </div>
+            <div class="step-item fail">
+              <div class="step-num red">3</div>
+              <div class="step-content">
+                <h4>Test: Valid Email but Wrong Registry Fields</h4>
+                <p>Enter <code>moderator@eid.sm</code> with incorrect BSN <code>999999</code> (not registered to that account). Click submit.</p>
+                <div class="expected fail">⛔ Expected: <code>400 verification_failed</code> — "Demographic verification against Civil Registry failed."</div>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/initiate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "moderator@eid.sm",
+    "bsn_number": "999999",
+    "national_id_number": "NID-000001",
+    "dob": "2026-01-01"
+  }'</code></div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <!-- HAPPY CASE -->
+          <div class="section-label success">✅ Happy Case — US-2.1 AC1+AC2: Successful Recovery & MFA Revocation</div>
+          <div class="steps">
+            <div class="step-item success">
+              <div class="step-num green">1</div>
+              <div class="step-content">
+                <h4>Fill in Correct Civil Registry Credentials</h4>
+                <p>At <a href="http://localhost:3000/recovery" target="_blank">http://localhost:3000/recovery</a>, enter the moderator's exact registry details:</p>
+                <table class="data-table">
+                  <thead><tr><th>Field</th><th>Value</th><th>Source</th></tr></thead>
+                  <tbody>
+                    <tr><td>Email</td><td><code>moderator@eid.sm</code></td><td>Citizen account email</td></tr>
+                    <tr><td>BSN / CRIB</td><td><code>200002</code></td><td>Civil Registry record</td></tr>
+                    <tr><td>National ID</td><td><code>NID-200002</code></td><td>Civil Registry record</td></tr>
+                    <tr><td>Date of Birth</td><td><code>1990-05-15</code> (May 15, 1990)</td><td>Civil Registry record</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item success">
+              <div class="step-num green">2</div>
+              <div class="step-content">
+                <h4>Step 1: Initiate Recovery — API Call</h4>
+                <p>Click <strong>"Verify Registry Identity"</strong>. The form advances to Step 2. A recovery token (<code>REC-XXXXXXXXXXXXXXXX</code>) is returned and pre-filled.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/initiate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "moderator@eid.sm",
+    "bsn_number": "200002",
+    "national_id_number": "NID-200002",
+    "dob": "1990-05-15"
+  }'
+
+# Expected: {"success":true,"recovery_token":"REC-XXXXXXXXXXXXXXXX"}</code></div>
+              </div>
+            </div>
+            <div class="step-item success">
+              <div class="step-num green">3</div>
+              <div class="step-content">
+                <h4>Step 2: Set New Password — API Call</h4>
+                <p>In the form, enter new password <code>Password999!</code> and confirm it. Click <strong>"Revoke MFA & Reset Password"</strong>. Replace <code>REC-TOKEN</code> with your actual token.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/complete \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "moderator@eid.sm",
+    "recovery_token": "REC-TOKEN",
+    "new_password": "Password999!"
+  }'
+
+# Expected: {"success":true,"message":"Account recovered successfully. Old MFA factors have been invalidated..."}</code></div>
+                <div class="expected ok">✅ Expected: Success banner displayed. Old TOTP/passkey credentials removed from database.</div>
+              </div>
+            </div>
+            <div class="step-item success">
+              <div class="step-num green">4</div>
+              <div class="step-content">
+                <h4>Step 3: Verify Login with New Password</h4>
+                <p>Navigate to <a href="http://localhost:3000/login" target="_blank">http://localhost:3000/login</a>. Enter <code>moderator@eid.sm</code> / <code>Password999!</code>.</p>
+                <div class="expected ok">✅ Expected: Successful login → redirect to <code>/admin/dashboard</code>. MFA prompt will appear for new device setup.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M2 — CLAIMS ██████ -->
+      <section id="m2-claims" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-2.2 — Claims Minimisation Enforced in the Token Pipeline</h3>
+              <p>Relying Parties only receive the claims they're explicitly approved for. Unapproved claims are absent — not empty. Subject identifiers are pairwise pseudonyms.</p>
+            </div>
+            <span class="badge badge-green">Module 2</span>
+          </div>
+
+          <div class="alert blue">
+            <strong>WSO2 Broker Client — Test Configuration</strong>
+            <p>Client ID: <code>eid-wso2-broker-client-id</code> | Secret: <code>eid-wso2-broker-client-secret-key-2026</code><br>
+            Allowed Claims: <code>email, full_name, dob</code> | Approved Raw Releases: <code>email</code> only<br>
+            Basic Auth Header: <code>ZWlkLXdzbzItYnJva2VyLWNsaWVudC1pZDplaWQtd3NvMi1icm9rZXItY2xpZW50LXNlY3JldC1rZXktMjAyNg==</code></p>
+          </div>
+
+          <div class="subsection-title">Step 1 — Get an Authorization Code</div>
           <div class="steps">
             <div class="step-item">
-              <div class="step-number">1</div>
+              <div class="step-num">1</div>
               <div class="step-content">
-                <h4>Open Onboarding page</h4>
-                <p>Navigate to the registration screen at <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
+                <h4>Trigger OIDC Authorization (with MFA)</h4>
+                <p>This simulates WSO2 initiating a broker login. Run step A, check if MFA is required, then run step B if needed.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block"># Step A — Initial auth request (no OTP)
+curl -s -X POST http://localhost:8082/api/v1/oauth/authorize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "eid-wso2-broker-client-id",
+    "redirect_uri": "https://localhost:9443/commonauth",
+    "state": "xyz123",
+    "nonce": "nonce-abc",
+    "email": "moderator@eid.sm",
+    "password": "Password123!",
+    "auth_method": "PASSWORD"
+  }'</code></div>
+                <div class="expected info">ℹ If response contains <code>"mfa_required": true</code>, note the <code>demo_otp</code> value and run Step B.</div>
+                <div class="code-wrap" style="margin-top:10px;"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block"># Step B — Re-submit with OTP (use demo_otp from Step A response)
+curl -s -X POST http://localhost:8082/api/v1/oauth/authorize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "eid-wso2-broker-client-id",
+    "redirect_uri": "https://localhost:9443/commonauth",
+    "state": "xyz123",
+    "nonce": "nonce-abc",
+    "email": "moderator@eid.sm",
+    "password": "Password123!",
+    "auth_method": "PASSWORD",
+    "otp": "123456"
+  }'
+
+# From the response, extract the "code" value from redirect_url query string</code></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection-title">Step 2 — Exchange Code for Tokens</div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Token Exchange (replace CODE_HERE)</h4>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/oauth/token \
+  -H "Authorization: Basic ZWlkLXdzbzItYnJva2VyLWNsaWVudC1pZDplaWQtd3NvMi1icm9rZXItY2xpZW50LXNlY3JldC1rZXktMjAyNg==" \
+  -d "grant_type=authorization_code&code=CODE_HERE&redirect_uri=https://localhost:9443/commonauth"
+
+# From the response, copy the "id_token" value</code></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection-title">Step 3 — Decode & Assert ID Token Claims</div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Decode the JWT Payload</h4>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">echo 'PASTE_ID_TOKEN_HERE' | cut -d'.' -f2 | tr '_-' '/+' | base64 -d | python3 -m json.tool</code></div>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-number">2</div>
+              <div class="step-num">4</div>
               <div class="step-content">
-                <h4>Fill Demographic Form matching Seed values</h4>
-                <p>Input the credentials precisely as registered in the mock database seed:</p>
-                <table class="data-table" style="margin: 12px 0;">
-                  <thead>
-                    <tr>
-                      <th>Form Field</th>
-                      <th>Test Input Value</th>
-                    </tr>
-                  </thead>
+                <h4>Verify These Assertions in the Decoded Payload</h4>
+                <table class="data-table">
+                  <thead><tr><th>Field</th><th>Expected</th><th>AC Reference</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>sub</code></td><td>Starts with <code>TOK-</code> (pairwise pseudonym, NOT raw UIN)</td><td>AC: no raw UIN to RP</td></tr>
+                    <tr><td><code>email</code></td><td><code>moderator@eid.sm</code> — present (approved raw release)</td><td>AC: allowed raw</td></tr>
+                    <tr><td><code>electronic_id</code></td><td><strong>Completely absent</strong> from payload</td><td>AC: absent if not allowed</td></tr>
+                    <tr><td><code>uin</code></td><td><strong>Completely absent</strong> from payload</td><td>AC: no raw UIN</td></tr>
+                    <tr><td><code>iss</code></td><td><code>http://localhost:8082</code></td><td>Standard OIDC</td></tr>
+                    <tr><td><code>aud</code></td><td><code>eid-wso2-broker-client-id</code></td><td>Standard OIDC</td></tr>
+                  </tbody>
+                </table>
+                <div class="expected ok">✅ AC: "Token contains exactly those claims and no others." Verified — electronic_id, uin, phone are absent.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M2 — AUDIT ██████ -->
+      <section id="m2-audit" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-2.3 — Audit Trail for Every Authentication Event</h3>
+              <p>Every auth event writes a record with actor, timestamp, action, and outcome. No raw passwords or OTP codes ever appear. Auditors can query by subject.</p>
+            </div>
+            <span class="badge badge-blue">Module 2</span>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Login to Capture Access Token & UUID</h4>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "moderator@eid.sm", "password": "Password123!"}'
+
+# Capture: access_token, citizen.uuid from the response</code></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Query Audit Logs by Subject UUID</h4>
+                <p>Replace <code>TOKEN</code> and <code>UUID</code> with values from Step 1.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s \
+  -H "Authorization: Bearer TOKEN" \
+  "http://localhost:8082/api/v1/admin/audit-logs?subject=UUID"</code></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Verify All Expected Event Types Are Present</h4>
+                <table class="data-table">
+                  <thead><tr><th>Action</th><th>Outcome Values</th><th>Trigger</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>LOGIN</code></td><td><code>SUCCESS</code> or <code>FAILED_PASSWORD</code></td><td>Any login attempt</td></tr>
+                    <tr><td><code>MFA_SEND</code></td><td><code>SUCCESS</code></td><td>OTP challenge dispatched</td></tr>
+                    <tr><td><code>MFA_VERIFY</code></td><td><code>SUCCESS</code> or <code>FAILED_OTP</code></td><td>OTP code checked</td></tr>
+                    <tr><td><code>TOKEN_ISSUANCE</code></td><td><code>SUCCESS</code></td><td>OIDC code exchanged for tokens</td></tr>
+                    <tr><td><code>RECOVERY_INIT</code></td><td><code>SUCCESS</code> or <code>FAILED_DEMOGRAPHIC_VERIFICATION</code></td><td>Recovery started</td></tr>
+                    <tr><td><code>RECOVERY_COMPLETE</code></td><td><code>SUCCESS</code></td><td>MFA revoked, password reset</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>Verify No Raw Credentials Appear in Any Log Entry</h4>
+                <p>Inspect every <code>details</code> field. Confirm it contains <strong>only descriptive text</strong> — never a password, hash, OTP code, or token.</p>
+                <div class="expected ok">✅ AC: "log entry includes actor, timestamp, action, and outcome — never a raw password or OTP code." Verified.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">5</div>
+              <div class="step-content">
+                <h4>Test Wrong Password Produces Audit Log</h4>
+                <p>Attempt login with wrong password, then re-query audit logs. Confirm a <code>LOGIN / FAILED_PASSWORD</code> entry appears.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "moderator@eid.sm", "password": "WrongPassword!"}'
+
+# Then re-run the audit-logs query — should see FAILED_PASSWORD entry</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ MODULE 3 OVERVIEW ██████ -->
+      <section id="m3-overview" class="scenario-section">
+        <div class="module-band m3">
+          <div class="module-icon m3">🏛️</div>
+          <div class="info">
+            <h2>Module 3 — Hybrid Enrolment & Assisted Workflows</h2>
+            <p>Remote self-service, PSC desk operations, biometrics, ePassport chip, offline mode · P1-D3</p>
+          </div>
+          <span class="badge badge-green" style="margin-left:auto;">✓ Completed</span>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h3>Definition of Done Checklist</h3><p>All 6 items verified and passing</p></div></div>
+          <div class="dod-grid">
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Remote self-service enrolment is live and supports save-and-resume</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Assisted enrolment tooling is live for PSC operators, with SOP-aligned decisioning and a full audit trail of every operator decision</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Biometric baseline (face capture) is captured for every assisted enrolment</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>ePassport chip-read works where hardware supports it, with documentary fallback (Pattern B) when it doesn't</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Offline Verification Mode works read-only during a simulated Civil Registry outage, with reconciliation proven against a real outage-then-recovery test</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>PSC operator training materials are published and at least one PSC has been trained</span></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M3 — SELF SERVICE ██████ -->
+      <section id="m3-self" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-3.1 — Remote Self-Service Enrolment with Save-and-Resume</h3>
+              <p>Citizens start online, save progress, and resume later using a reference code.</p>
+            </div>
+            <span class="badge badge-blue">Module 3</span>
+          </div>
+
+          <div class="section-label success">✅ Happy Case — New Citizen Auto-Accepted</div>
+          <div class="steps">
+            <div class="step-item success">
+              <div class="step-num green">1</div>
+              <div class="step-content">
+                <h4>Navigate to Registration</h4>
+                <p>Open <a href="http://localhost:3000/register" target="_blank">http://localhost:3000/register</a></p>
+              </div>
+            </div>
+            <div class="step-item success">
+              <div class="step-num green">2</div>
+              <div class="step-content">
+                <h4>Fill All Fields with Matching Civil Registry Values (Baby Connor)</h4>
+                <table class="data-table">
+                  <thead><tr><th>Field</th><th>Value</th></tr></thead>
                   <tbody>
                     <tr><td>BSN / CRIB Number</td><td><code>999999</code></td></tr>
                     <tr><td>First Name</td><td><code>Baby</code></td></tr>
@@ -656,776 +1009,1385 @@
                     <tr><td>Password</td><td><code>Password123!</code></td></tr>
                   </tbody>
                 </table>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Submit & Verify Auto-Acceptance</h4>
-                <p>Click Register. The platform verifies with Civil Registry, returns a successful registration, allocates a dynamic Sint Maarten UIN (e.g. `UN-SXM-26-...`), generates an EID key, and shows the direct success modal.</p>
+                <div class="expected ok">✅ Expected: Auto-accepted. A UIN (<code>UN-SXM-26-XXXXXX-X</code>) and eID serial (<code>EID-SXM-26-XXXXXX-X</code>) are assigned. Status: <code>active</code>.</div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- SCENARIO 2: DEMOGRAPHIC MISMATCH -->
-      <section id="sc-mismatch" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 2: Demographic Mismatch Hold (Fraud Detection)</span>
-            <span class="badge badge-warning">Held Flow</span>
-          </div>
+          <hr class="divider">
+
+          <div class="section-label fail">❌ Fail Case — Demographic Mismatch Hold</div>
           <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
+            <div class="step-item fail">
+              <div class="step-num red">1</div>
               <div class="step-content">
-                <h4>Open Registration</h4>
-                <p>Navigate to <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Fill Form with Mismatched Name / DOB</h4>
-                <p>Input the authoritative ID number but with a mismatched demographic identifier to trigger the security validation hold:</p>
-                <table class="data-table" style="margin: 12px 0;">
-                  <thead>
-                    <tr>
-                      <th>Form Field</th>
-                      <th>Test Input Value (Trigger Mismatch)</th>
-                    </tr>
-                  </thead>
+                <h4>Register with Mismatched Last Name</h4>
+                <table class="data-table">
+                  <thead><tr><th>Field</th><th>Value</th></tr></thead>
                   <tbody>
-                    <tr><td>BSN / CRIB Number</td><td><code>999999</code></td></tr>
+                    <tr><td>BSN</td><td><code>999999</code></td></tr>
                     <tr><td>First Name</td><td><code>Baby</code></td></tr>
-                    <tr><td>Last Name</td><td><code>Connor Jr.</code> <em style="color:#ef4444;">(Mismatched suffix)</em></td></tr>
+                    <tr><td>Last Name</td><td><code>Connor Jr.</code> <em style="color:#ef4444">(suffix mismatch)</em></td></tr>
                     <tr><td>Date of Birth</td><td><code>2026-01-01</code></td></tr>
                     <tr><td>Email</td><td><code>baby.connor.mismatch@test.sm</code></td></tr>
-                    <tr><td>Phone</td><td><code>+17215559922</code></td></tr>
                     <tr><td>Password</td><td><code>Password123!</code></td></tr>
                   </tbody>
                 </table>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Observe Hold State</h4>
-                <p>Click Register. The registration is accepted on hold. A modal popup will explain that your application is under manual review for demographic discrepancy fraud detection.</p>
+                <div class="expected warn">⚠ Expected: Account created but held in <code>review_pending</code> status. No UIN assigned yet. Citizen sees "Application under manual review" message.</div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- SCENARIO 3: PSC DESK APPROVAL -->
-      <section id="sc-psc" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 3: PSC Operator Desk Resolution</span>
-            <span class="badge badge-primary">Moderator Flow</span>
-          </div>
-          <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4>Log in as PSC Operator / Administrator</h4>
-                <p>Log in as an administrative user or navigate directly to the Citizens Control Center: <a href="http://localhost:3000/admin/citizens" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/admin/citizens</a>.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Locate Mismatched Citizen Record</h4>
-                <p>Select the citizen record that matches <code>John Connor Jr.</code>. Click the <strong>Details</strong> button to open the audit profile.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Observe Mismatch Indicators & Approve</h4>
-                <p>Click the <strong>Generate EID</strong> button. Confirm the authorization prompt after verifying physical credentials. The status updates instantly to <strong>Active</strong>, the permanent UIN is resolved, and EID serialization writeback is triggered.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <hr class="divider">
 
-      <!-- SCENARIO 4: DECEASED BLOCK -->
-      <section id="sc-deceased" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 4: Deceased Flag Block</span>
-            <span class="badge badge-error">Rejected Flow</span>
-          </div>
+          <div class="section-label fail">❌ Fail Case — Deceased Person Block</div>
           <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
+            <div class="step-item fail">
+              <div class="step-num red">1</div>
               <div class="step-content">
-                <h4>Open Registration</h4>
-                <p>Navigate to <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Attempt to register Deceased Citizen</h4>
-                <p>Fill the form using the demographic seed representing deceased citizen Sarah Connor:</p>
-                <table class="data-table" style="margin: 12px 0;">
-                  <thead>
-                    <tr>
-                      <th>Form Field</th>
-                      <th>Test Input Value</th>
-                    </tr>
-                  </thead>
+                <h4>Attempt to Register Sarah Connor (Deceased)</h4>
+                <table class="data-table">
+                  <thead><tr><th>Field</th><th>Value</th></tr></thead>
                   <tbody>
-                    <tr><td>National ID Number (CRIB)</td><td><code>NID-888888</code></td></tr>
-                    <tr><td>Full Name</td><td><code>Sarah Connor</code></td></tr>
-                    <tr><td>Date of Birth</td><td><code>1965-11-10</code></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Verify API Rejection Response</h4>
-                <p>Click Register. The platform rejects the request with an error banner: <code>Identity registration blocked. The associated Civil Registry dossier is flagged as DECEASED.</code></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SCENARIO 5: ALREADY REGISTERED BLOCK -->
-      <section id="sc-registered" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 5: Already Registered Block</span>
-            <span class="badge badge-error">Rejected Flow</span>
-          </div>
-          <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4>Open Registration</h4>
-                <p>Navigate to <a href="http://localhost:3000/register" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/register</a>.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Attempt to register with an already registered ID/Email</h4>
-                <p>Input the details corresponding to the already registered John Connor user account:</p>
-                <table class="data-table" style="margin: 12px 0;">
-                  <thead>
-                    <tr>
-                      <th>Form Field</th>
-                      <th>Test Input Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>BSN / CRIB Number</td><td><code>123456</code></td></tr>
-                    <tr><td>First Name</td><td><code>John</code></td></tr>
+                    <tr><td>BSN</td><td><code>888888</code></td></tr>
+                    <tr><td>First Name</td><td><code>Sarah</code></td></tr>
                     <tr><td>Last Name</td><td><code>Connor</code></td></tr>
-                    <tr><td>Date of Birth</td><td><code>1990-05-15</code></td></tr>
-                    <tr><td>Email</td><td><code>john.connor@test.sm</code></td></tr>
+                    <tr><td>Date of Birth</td><td><code>1965-11-10</code></td></tr>
+                    <tr><td>Email</td><td><code>sarah.test@test.sm</code></td></tr>
                     <tr><td>Password</td><td><code>Password123!</code></td></tr>
                   </tbody>
                 </table>
+                <div class="expected fail">⛔ Expected: Registration blocked — "Identity registration blocked. The associated Civil Registry dossier is flagged as DECEASED."</div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="section-label info">💾 Save-and-Resume — US-3.1 AC1+AC2</div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Start Registration, Fill Partial Data, Click "Save Draft"</h4>
+                <p>Open <a href="http://localhost:3000/register" target="_blank">http://localhost:3000/register</a>. Fill Step 1 fields only. Click <strong>"Save Draft"</strong>. Note the <strong>Reference Code</strong> displayed.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/enrolment/save \
+  -H "Content-Type: application/json" \
+  -d '{
+    "step": 1,
+    "data": {
+      "bsn_number": "123456",
+      "first_name": "John",
+      "last_name": "Connor",
+      "dob": "1990-05-15",
+      "email": "john.test.save@test.sm",
+      "phone": "+17215550001"
+    }
+  }'
+
+# Returns: {"reference": "REF-XXXXXXXX", "expires_at": "..."}</code></div>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-number">3</div>
+              <div class="step-num">2</div>
               <div class="step-content">
-                <h4>Verify System Rejection Response</h4>
-                <p>Click Register. The platform rejects the request, displaying an error message stating that the email or identity is already mapped and registered.</p>
+                <h4>Resume Using the Reference Code</h4>
+                <p>Close the browser. Reopen and click <strong>"Resume Draft"</strong>. Enter your reference code. All Step 1 fields should re-populate.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/enrolment/resume/REF-XXXXXXXX
+
+# Returns: All previously submitted data for that draft</code></div>
+                <div class="expected ok">✅ AC: "All previously submitted data is still there" — verified.</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SCENARIO 6: DEATH LIFECYCLE EVENT WEBHOOK -->
-      <section id="sc-lifecycle" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 6: Death Lifecycle webhook & Idempotency</span>
-            <span class="badge badge-primary">webhook Payload Builder</span>
-          </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-            Simulate a lifecycle event push notification sent by the Civil Registry to the eID webhook. This action suspends the matching eID profile and revokes all active credentials.
-          </p>
 
-          <div class="builder-grid">
-            <div style="background: rgba(0,0,0,0.1); border: 1px solid var(--border); padding: 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
-              <h4 style="font-size: 12px; margin-bottom: 4px; text-transform: uppercase;">1. Configure Webhook Event</h4>
-              
+      <!-- ██████ M3 — PSC ASSISTED ██████ -->
+      <section id="m3-psc" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-3.2 — Assisted Enrolment with SOP-Aligned Decisioning</h3>
+              <p>PSC operators use a guided tool. Every decision is logged with operator identity, timestamp, decision, and SOP reason code.</p>
+            </div>
+            <span class="badge badge-blue">Module 3</span>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Login as PSC Operator</h4>
+                <p>Navigate to <a href="http://localhost:3000/login" target="_blank">http://localhost:3000/login</a>. Credentials: <code>moderator@eid.sm</code> / <code>Password123!</code></p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Open PSC Assisted Enrolment Console</h4>
+                <p>Navigate to <a href="http://localhost:3000/admin/psc-assisted" target="_blank">http://localhost:3000/admin/psc-assisted</a>. Search for the mismatch citizen: <code>baby.connor.mismatch@test.sm</code></p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Use SOP Decision Dropdowns — NOT Free Text</h4>
+                <p>Select a decision from the dropdown. Confirm the tool presents only SOP-defined options:</p>
+                <table class="data-table">
+                  <thead><tr><th>Decision</th><th>SOP Code</th><th>Criteria</th></tr></thead>
+                  <tbody>
+                    <tr><td style="color:#10b981;font-weight:700;">🟢 APPROVE</td><td><code>SOP-APP-01</code></td><td>Demographics verified, biometric face match OK, passport scanned authentic</td></tr>
+                    <tr><td style="color:#ef4444;font-weight:700;">🔴 REJECT</td><td><code>SOP-REJ-01</code></td><td>Demographic discrepancies unresolved</td></tr>
+                    <tr><td></td><td><code>SOP-REJ-02</code></td><td>Biometric face match confidence below threshold</td></tr>
+                    <tr><td></td><td><code>SOP-REJ-03</code></td><td>Civil Registry dossier flagged as Deceased</td></tr>
+                    <tr><td></td><td><code>SOP-REJ-04</code></td><td>Suspected fraudulent or expired document</td></tr>
+                    <tr><td style="color:#f59e0b;font-weight:700;">🟠 ESCALATE</td><td><code>SOP-ESC-01</code></td><td>Requires director override</td></tr>
+                    <tr><td></td><td><code>SOP-ESC-02</code></td><td>Chip signature validation failed</td></tr>
+                    <tr><td style="color:#3b82f6;font-weight:700;">🔵 REQUEST INFO</td><td><code>SOP-REQ-01</code></td><td>Missing proof of residency</td></tr>
+                    <tr><td></td><td><code>SOP-REQ-02</code></td><td>Missing CRIB tax number card</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>Select SOP-APP-01 (Approve) and Commit</h4>
+                <p>Add operator notes and click <strong>"Commit SOP Action"</strong>.</p>
+                <div class="expected ok">✅ AC: "audit entry includes operator's identity, timestamp, decision, and SOP reason code" — verify in admin logs.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">5</div>
+              <div class="step-content">
+                <h4>Verify Citizen Now Active with UIN Assigned</h4>
+                <p>Go to <a href="http://localhost:3000/admin/citizens" target="_blank">http://localhost:3000/admin/citizens</a>. Find the citizen — status should now be <code>active</code> with a valid UIN.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block"># Login as admin to get a token, then check citizen status
+curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@eid.sm", "password": "Password123!"}' | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); print(d['access_token'])"</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M3 — BIOMETRIC ██████ -->
+      <section id="m3-bio" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-3.3 — Biometric Capture & ePassport Chip-Read with Fallback</h3>
+              <p>Face capture stored as biometric baseline. ePassport NFC chip verified where hardware is available. Documentary fallback (Pattern B) when chip read fails.</p>
+            </div>
+            <span class="badge badge-blue">Module 3</span>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Open Biometric Enroller in PSC Console</h4>
+                <p>Go to <a href="http://localhost:3000/admin/psc-assisted" target="_blank">http://localhost:3000/admin/psc-assisted</a>. Search a citizen. Scroll to the <strong>Biometric Enroller</strong> panel.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Capture Face Photo (Webcam)</h4>
+                <p>Click <strong>"Start Camera"</strong>. Allow browser webcam access. Click <strong>"Capture Snapshot"</strong>. The live frame is rendered to a canvas and a base64 template is sent to the backend.</p>
+                <div class="expected ok">✅ AC: "face capture stored as biometric baseline for that eID record." Verified — check <code>biometric_baseline</code> column in the citizens table.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>ePassport NFC Chip Simulator</h4>
+                <p>Toggle <strong>"Enable NFC Reader Simulator"</strong>. Select a document from the dropdown. The simulator reads chip data and compares to entered fields.</p>
+                <div class="expected ok">✅ AC: chip data cross-checked against manually entered fields, mismatches flagged for operator review.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>Test Pattern B: Documentary Fallback</h4>
+                <p>Toggle <strong>"Disable NFC Reader"</strong>. The system should automatically switch to documentary verification flow (Pattern B) without blocking the citizen.</p>
+                <div class="expected ok">✅ AC: "falls through to documentary verification (Pattern B) without blocking the citizen" — verified when NFC is unavailable.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M3 — OFFLINE ██████ -->
+      <section id="m3-offline" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-3.4 — Offline Verification Mode During Civil Registry Outage</h3>
+              <p>During outages, PSC operators do read-only verification from cached data. Actions are locally logged for reconciliation when connectivity is restored.</p>
+            </div>
+            <span class="badge badge-yellow">Module 3</span>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Trigger Simulated Outage</h4>
+                <p>Login as admin. Go to <a href="http://localhost:3000/admin/dashboard" target="_blank">http://localhost:3000/admin/dashboard</a>. Find the <strong>Civil Registry Connection</strong> card. Click <strong>"Trigger Simulated Outage"</strong>.</p>
+                <div class="expected warn">⚠ Expected: Online status flips to OFFLINE. Remote self-service registration attempts are now blocked.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Attempt Read-Only Citizen Lookup (Offline Mode)</h4>
+                <p>Go to <a href="http://localhost:3000/admin/psc-assisted" target="_blank">PSC Assisted Portal</a>. Search for a citizen. Lookup should succeed using local cached data.</p>
+                <div class="expected ok">✅ AC: "checks only against the locally cached data subset and never attempts a write."</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Verify Offline Actions Are Locally Logged</h4>
+                <p>Any verification done in offline mode should create a local log entry with enough detail for later reconciliation.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/civil-registry/offline-mode-status
+
+# Returns current mode: {"mode": "OFFLINE", "cached_since": "...", "pending_actions": 3}</code></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>Restore Connectivity & Run Reconciliation</h4>
+                <p>Toggle outage OFF. Click <strong>"Run Reconciliation Sync Job"</strong> on the dashboard. Offline actions are replayed against the authoritative system. Any conflicts are flagged.</p>
+                <div class="expected ok">✅ AC: "every offline-mode action is replayed against the authoritative system and any conflict is flagged, not silently resolved."</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ MODULE 4 OVERVIEW ██████ -->
+      <section id="m4-overview" class="scenario-section">
+        <div class="module-band m4">
+          <div class="module-icon m4">🪪</div>
+          <div class="info">
+            <h2>Module 4 — Civil Registry Connector & UIN Orchestration</h2>
+            <p>Registry integration, UIN issuance, write-backs, lifecycle events, reconciliation, tokenisation · P1-D4</p>
+          </div>
+          <span class="badge badge-green" style="margin-left:auto;">✓ Completed</span>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h3>Definition of Done Checklist</h3><p>All 7 items verified and passing</p></div></div>
+          <div class="dod-grid">
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Connector runs identically in mock and live mode, switchable by configuration only</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>SLA monitoring and alerting is active on the live connector (>100ms triggers [SLA_ALERT] warning)</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Lifecycle event consumer is idempotent — proven with duplicate-event test (same event_id returns duplicate:true)</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>UIN issuance is fully automated — no manual "generate" step in the normal path</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>UIN write-back includes retry/backoff (Polly, 3 attempts) and a manual-intervention queue for persistent failures</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>Reconciliation tooling correctly detects a deliberately seeded UIN/write-back mismatch</span></div>
+            <div class="dod-item done"><span class="dod-check">✅</span><span>UIN tokenisation is live — no relying party receives a raw UIN (pairwise pseudonym TOK-xxxxxxxx)</span></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M4 — VALIDATION ██████ -->
+      <section id="m4-validation" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-4.1 — NID/Citizen ID Validation via Civil Registry API</h3>
+              <p>Platform validates identity via API call only (no direct DB access). Civil Registry retains control of its data.</p>
+            </div>
+            <span class="badge badge-purple">Module 4</span>
+          </div>
+
+          <div class="steps">
+            <div class="step-item success">
+              <div class="step-num green">1</div>
+              <div class="step-content">
+                <h4>Lookup Citizen via Civil Registry API</h4>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s "http://localhost:8082/api/v1/civil-registry/lookup?bsn=123456"
+
+# Expected: match: true, citizen_name, status: active</code></div>
+                <div class="expected ok">✅ AC: "Receives match/no-match result without ever querying a database directly."</div>
+              </div>
+            </div>
+            <div class="step-item fail">
+              <div class="step-num red">2</div>
+              <div class="step-content">
+                <h4>Test: Lookup a Deceased Citizen</h4>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s "http://localhost:8082/api/v1/civil-registry/lookup?bsn=888888"
+
+# Expected: match: true, status: deceased (triggers registration block)</code></div>
+                <div class="expected fail">⛔ Expected: Registration blocks when status = deceased.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Verify Mock vs Live Mode Switch</h4>
+                <p>Open <code>SintMaarten.EID/SintMaarten.EID.Api/appsettings.json</code>. Change <code>CivilRegistry:Mode</code> from <code>mock</code> to <code>live</code>. Restart server. All validation calls now route to the live registry endpoint. Change back to <code>mock</code> for testing.</p>
+                <div class="expected ok">✅ DoD: "Connector runs identically in mock and live mode, switchable by configuration only."</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M4 — UIN ██████ -->
+      <section id="m4-uin" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-4.2 & 4.3 — Automated UIN Issuance & Write-Back</h3>
+              <p>UIN generated automatically after Civil Registry validation. Written back with retry/backoff. Failed write-backs land in intervention queue.</p>
+            </div>
+            <span class="badge badge-purple">Module 4</span>
+          </div>
+
+          <div class="steps">
+            <div class="step-item success">
+              <div class="step-num green">1</div>
+              <div class="step-content">
+                <h4>Register Baby Connor (Triggers Auto UIN Generation)</h4>
+                <p>Complete a successful registration for Baby Connor (BSN: <code>999999</code>). No "generate UIN" button — it happens automatically after validation.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bsn_number": "999999",
+    "national_id_number": "NID-000001",
+    "first_name": "Baby",
+    "last_name": "Connor",
+    "dob": "2026-01-01",
+    "email": "baby.new@test.sm",
+    "phone": "+17215551234",
+    "password": "Password123!"
+  }'
+
+# Expected: UIN: "UN-SXM-26-XXXXXX-X" assigned automatically, status: active</code></div>
+                <div class="expected ok">✅ DoD: "No manual generate step in the normal path."</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Verify UIN Write-Back to Civil Registry</h4>
+                <p>After UIN is generated, check the civil_registry_records table — the <code>linked_uin</code> and <code>linked_eid</code> fields should be populated.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s "http://localhost:8082/api/v1/civil-registry/lookup?bsn=999999"
+
+# linked_uin and linked_eid should now be filled after write-back</code></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Check Write-Back Failure Queue</h4>
+                <p>View any failed write-back attempts in the intervention queue (admin view).</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block"># Login as admin first, then:
+curl -s \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  http://localhost:8082/api/v1/admin/writeback-failures
+
+# Returns list of UINs that failed write-back after Polly retries (3 attempts + backoff)</code></div>
+                <div class="expected ok">✅ DoD: "UIN write-back includes retry/backoff and a manual-intervention queue for persistent failures."</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M4 — LIFECYCLE ██████ -->
+      <section id="m4-lifecycle" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-4.4 — Lifecycle Event Handling (Death & Birth)</h3>
+              <p>Platform reacts to Civil Registry events. Death suspends eID. Duplicate events are idempotent — no duplicate state changes.</p>
+            </div>
+            <span class="badge badge-purple">Module 4</span>
+          </div>
+
+          <div class="two-col">
+            <div class="builder-panel">
+              <h4 style="font-size:12px; text-transform:uppercase; margin-bottom:14px;">Configure Webhook Event</h4>
               <div class="form-group">
-                <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Event Type</label>
-                <select id="in-evt-type" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" onchange="handleEventTypeChange()">
+                <label>Event Type</label>
+                <select id="in-evt-type" class="form-control" onchange="handleEventTypeChange()">
                   <option value="DEATH_NOTIFICATION">💀 DEATH_NOTIFICATION</option>
                   <option value="BIRTH_PRE_PROVISION">👶 BIRTH_PRE_PROVISION</option>
                 </select>
               </div>
-
               <div class="form-group">
-                <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Event ID (Enforces Idempotency)</label>
-                <input id="in-evt-id" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="evt-death-john-001">
+                <label>Event ID (Idempotency Key)</label>
+                <input id="in-evt-id" type="text" class="form-control" value="evt-death-001">
               </div>
-
               <div class="form-group">
-                <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Target UIN</label>
-                <input id="in-evt-uin" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="UN-SXM-26-000001-9">
+                <label>Target UIN</label>
+                <input id="in-evt-uin" type="text" class="form-control" value="UN-SXM-26-000001-9">
               </div>
-
-              <!-- Birth specific fields -->
-              <div id="birth-fields" style="display: none; flex-direction: column; gap: 12px;">
+              <div id="birth-fields" style="display:none;">
                 <div class="form-group">
-                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Full Name</label>
-                  <input id="in-birth-name" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="Idempotency Test Baby">
+                  <label>Full Name</label>
+                  <input id="in-birth-name" type="text" class="form-control" value="New Baby Test">
                 </div>
                 <div class="form-group">
-                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">Date of Birth</label>
-                  <input id="in-birth-dob" type="date" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="2026-08-01">
+                  <label>Date of Birth</label>
+                  <input id="in-birth-dob" type="date" class="form-control" value="2026-08-01">
                 </div>
                 <div class="form-group">
-                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">BSN Number</label>
-                  <input id="in-birth-bsn" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="999111">
+                  <label>BSN Number</label>
+                  <input id="in-birth-bsn" type="text" class="form-control" value="777001">
                 </div>
                 <div class="form-group">
-                  <label style="display: block; font-size: 10px; font-weight: bold; margin-bottom: 4px;">National ID Number</label>
-                  <input id="in-birth-nid" type="text" class="form-control" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border);" value="NID-999111">
+                  <label>National ID</label>
+                  <input id="in-birth-nid" type="text" class="form-control" value="NID-777001">
                 </div>
               </div>
-
-              <button class="btn-action" style="padding: 10px; font-weight: bold; text-transform: uppercase; font-size: 11px;" onclick="generateWebhookCurl()">Generate cURL Tool</button>
+              <button class="btn-gen" onclick="generateWebhookCurl()">⚡ Generate cURL</button>
             </div>
-
             <div>
-              <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">2. cURL Testing Snippet</h4>
-              <div class="code-container">
-                <button class="copy-btn" onclick="copyCode('lifecycle-curl-block')">Copy</button>
+              <h4 style="font-size:12px; text-transform:uppercase; margin-bottom:12px;">Generated cURL</h4>
+              <div class="code-wrap">
+                <button class="copy-btn" onclick="cp(this)">Copy</button>
                 <code id="lifecycle-curl-block" class="code-block"></code>
               </div>
-              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
-                <strong>Idempotency Validation:</strong> Run this cURL twice. The first run logs the event in SQLite. The second delivery returns <code>"duplicate": true</code>, avoiding duplicate SQL state writes.
-              </p>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="subsection-title">Testing Steps</div>
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Send a DEATH_NOTIFICATION Event (First Delivery)</h4>
+                <p>Use the builder above or copy the cURL. Run it. The eID for the matching UIN should be suspended.</p>
+                <div class="expected ok">✅ AC: "eID is automatically suspended and an audit record is created."</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Send the SAME Event Again (Idempotency Test)</h4>
+                <p>Run the identical cURL a second time using the <strong>same event_id</strong>.</p>
+                <div class="expected ok">✅ AC: "no duplicate suspension action or audit entry" — response should contain <code>"duplicate": true</code></div>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block"># Run twice with the SAME event_id — second run returns:
+# {"success": true, "duplicate": true, "message": "Event already processed."}</code></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Send a BIRTH_PRE_PROVISION Event</h4>
+                <p>Select <code>BIRTH_PRE_PROVISION</code> in the builder above. Generate and run the cURL. A pre-provisioned Civil Registry record is created.</p>
+                <div class="expected ok">✅ Expected: <code>201 Created</code> — new civil registry record pre-provisioned without an active eID yet.</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SCENARIO 7: UIN TOKENISATION -->
-      <section id="sc-token" class="scenario-section">
+
+      <!-- ██████ M4 — RECONCILE ██████ -->
+      <section id="m4-reconcile" class="scenario-section">
         <div class="card">
-          <div class="card-title">
-            <span>Scenario 7: UIN Tokenisation Claims Exchange</span>
-            <span class="badge badge-success">Privacy Isolation</span>
+          <div class="card-header">
+            <div>
+              <h3>US-4.3 Part 2 — UIN Reconciliation & Mismatch Detection</h3>
+              <p>Reconciliation job detects UINs that exist on the platform but were never confirmed written back to the Civil Registry.</p>
+            </div>
+            <span class="badge badge-purple">Module 4</span>
           </div>
+
           <div class="steps">
             <div class="step-item">
-              <div class="step-number">1</div>
+              <div class="step-num">1</div>
               <div class="step-content">
-                <h4>Understand the Privacy Design</h4>
-                <p>Relying Parties (RPs) must never receive the raw UIN of a citizen. Instead, the identity broker computes a cryptographic HMAC token unique to each RP using the citizen's UIN and client credentials.</p>
+                <h4>View Reconciliation Stats on Dashboard</h4>
+                <p>Login as admin. Navigate to <a href="http://localhost:3000/admin/dashboard" target="_blank">http://localhost:3000/admin/dashboard</a>. Find the <strong>UIN Reconciliation Sync</strong> card. It shows total records, active eID counts, and any detected mismatches.</p>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-number">2</div>
+              <div class="step-num">2</div>
               <div class="step-content">
-                <h4>Observe Auth Exchange Claims</h4>
-                <p>Run token exchanges using the different Client IDs. For example, testing the token output format reveals the UIN mapping changes between apps:</p>
-                <table class="data-table" style="margin: 12px 0;">
-                  <thead>
-                    <tr>
-                      <th>Federated Relying Party</th>
-                      <th>Client ID</th>
-                      <th>Returned Tokenised Pseudonym claim</th>
-                    </tr>
-                  </thead>
+                <h4>Call the Reconciliation API Directly</h4>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/civil-registry/reconciliation
+
+# Returns:
+# {
+#   "total_registry_records": N,
+#   "total_eid_active": N,
+#   "mismatches": [...],
+#   "missing_writeback": [...],
+#   "run_at": "..."
+# }</code></div>
+                <div class="expected ok">✅ DoD: "Reconciliation tooling correctly detects a deliberately seeded UIN/write-back mismatch."</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Seed a Deliberate Mismatch and Verify Detection</h4>
+                <p>Use the admin panel to set a citizen's eID status to <code>active</code> while keeping their civil registry record without a <code>linked_uin</code>. Run reconciliation — this citizen should appear in the <code>missing_writeback</code> list.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ██████ M4 — TOKENISATION ██████ -->
+      <section id="m4-token" class="scenario-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>US-4.5 — UIN Tokenisation for Relying Parties</h3>
+              <p>RP receives a token derived from the UIN (not the raw UIN). Different RPs get different token values for the same citizen.</p>
+            </div>
+            <span class="badge badge-purple">Module 4</span>
+          </div>
+
+          <div class="alert blue">
+            <strong>How Pairwise Pseudonymisation Works</strong>
+            <p>The platform uses HMAC-SHA256 with a per-client salt to compute <code>TOK-{first16chars}</code>. The same UIN produces different tokens for each OAuth client, preventing RP cross-correlation by default.</p>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Get a Token for WSO2 Broker Client</h4>
+                <p>Follow the steps in <strong>Scenario 10 (Claims Minimisation)</strong> to get an ID Token for <code>eid-wso2-broker-client-id</code>. Decode it and note the <code>sub</code> value.</p>
+                <div class="expected ok">✅ <code>sub</code> should start with <code>TOK-</code> — NOT the raw UIN like <code>UN-SXM-26-000002-8</code></div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Verify Different Sub Values for Different Clients</h4>
+                <p>If a second client is registered, the same citizen's token for that client would produce a different <code>TOK-xxxxxxxx</code> value, preventing correlation.</p>
+                <table class="data-table">
+                  <thead><tr><th>RP Client</th><th>Subject Identifier</th><th>Can correlate?</th></tr></thead>
                   <tbody>
-                    <tr>
-                      <td><strong>Sint Maarten MyGov</strong></td>
-                      <td><code>mygov-wso2-sp</code></td>
-                      <td><code style="color: #10b981;">TOK-f52e399b1c784910</code></td>
-                    </tr>
-                    <tr>
-                      <td><strong>Upsheba Service Hub</strong></td>
-                      <td><code>upsheba-service-sp</code></td>
-                      <td><code style="color: #10b981;">TOK-8c62b9a71f00b9a6</code></td>
-                    </tr>
+                    <tr><td><code>eid-wso2-broker-client-id</code></td><td><code style="color:#10b981;">TOK-30920da7b2ce0aae</code></td><td style="color:#ef4444;">No — different per RP</td></tr>
+                    <tr><td><code>another-rp-client-id</code></td><td><code style="color:#10b981;">TOK-f52e399b1c784910</code></td><td style="color:#ef4444;">No — different value</td></tr>
                   </tbody>
                 </table>
+                <div class="expected ok">✅ DoD: "UIN tokenisation is live — no relying party receives a raw UIN."</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>SLA Monitoring Alert Test</h4>
+                <p>Check the .NET server console output after a Civil Registry call. If the call took >100ms, you should see an <code>[SLA_ALERT]</code> warning entry in the logs.</p>
+                <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block"># The server log should contain entries like:
+# [SLA_ALERT] CivilRegistryClient.GetCitizenByBsn exceeded 100ms target (142ms) for BSN: 123456
+
+# This is emitted automatically when latency exceeds the 100ms SLA threshold</code></div>
+                <div class="expected ok">✅ DoD: "SLA monitoring and alerting is active on the live connector."</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SCENARIO 8: PSC OPERATOR SOP TRAINING & SOP-ALIGNED DECISIONS -->
-      <section id="sc-sop-training" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 8: PSC Operator SOP Training & Decisions</span>
-            <span class="badge badge-success">Assurance Level High</span>
-          </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-            Under the Sint Maarten national identity protocol (Assurance Level High), PSC operators must follow strict Standard Operating Procedures (SOP) to approve, escalate, or reject enrolments.
-          </p>
+  <!-- ██████ MODULE 6 SECTIONS ██████ -->
 
-          <div style="background: rgba(0,0,0,0.1); border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-            <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">Standard Operating Procedures (SOP) Reference Card</h4>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Decision</th>
-                  <th>SOP Code</th>
-                  <th>SOP Description & Trigger Criteria</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="color: #10b981; font-weight: bold;">🟢 APPROVE</td>
-                  <td><code>SOP-APP-01</code></td>
-                  <td>Demographics verified against Civil Registry, biometric face match checks out, and passport/CRIB document scanned as authentic.</td>
-                </tr>
-                <tr>
-                  <td style="color: #ef4444; font-weight: bold;">🔴 REJECT</td>
-                  <td><code>SOP-REJ-01</code></td>
-                  <td>Discrepancies in demographic parameters (Name, DOB, Gender) remain unresolved.</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><code>SOP-REJ-02</code></td>
-                  <td>Biometric baseline face capture yields match confidence below acceptable threshold (Fake/Liveness failure).</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><code>SOP-REJ-03</code></td>
-                  <td>Authoritative dossier status in Civil Registry is flagged as Deceased.</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><code>SOP-REJ-04</code></td>
-                  <td>Physical or electronic document is suspected to be fraudulent, manipulated, or expired.</td>
-                </tr>
-                <tr>
-                  <td style="color: #f59e0b; font-weight: bold;">🟠 ESCALATE</td>
-                  <td><code>SOP-ESC-01</code></td>
-                  <td>Unresolved demographic discrepancy requires manual director override/investigation.</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><code>SOP-ESC-02</code></td>
-                  <td>Security features on physical passport do not match, or chip signature failed validation check.</td>
-                </tr>
-                <tr>
-                  <td style="color: #3b82f6; font-weight: bold;">🔵 REQUEST INFO</td>
-                  <td><code>SOP-REQ-01</code></td>
-                  <td>Missing physical proof of residency/address in Sint Maarten district.</td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td><code>SOP-REQ-02</code></td>
-                  <td>Missing original CRIB tax number card.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <!-- M6 OVERVIEW -->
+  <section id="m6-overview" class="scenario-section">
+    <div class="module-band m1">
+      <div class="module-icon m1">🛠️</div>
+      <div class="info">
+        <h2>Module 6 — RP Onboarding Toolkit, Sandbox &amp; Conformance Harness</h2>
+        <p>Self-service guide, realistic sandbox test identities, automated conformance harness, objective go-live checklist · P1-D6</p>
+      </div>
+      <span class="badge badge-green" style="margin-left:auto;">✓ Completed</span>
+    </div>
 
-          <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4>Biometric Capture & Audit Trail Logging</h4>
-                <p>Open <a href="http://localhost:3000/admin/psc-assisted" target="_blank" style="color: var(--primary); font-weight: 700;">PSC Assisted Portal</a>. Search a citizen, capture their facial biometric baseline, enable the NFC reader simulator to auto-verify integrity, select a decision, select the corresponding SOP Code, write operator notes, and click commit. Confirm in database that logs contain operator email, timestamp, decision, and SOP code.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Simulated Civil Registry Connection Outage</h4>
-                <p>Toggle "Trigger Simulated Outage" in the Connection widget. Remote self-service registration is now blocked. Operators can run read-only offline verifications querying the local cached database. Re-enable connection once outage simulation ends.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Outage Recovery Reconciliation</h4>
-                <p>Once online connection is restored, click "Run Reconciliation Sync Job" on the dashboard. The system replays all offline checks against restored remote APIs and flags conflicts (e.g. if status changed to deceased while offline).</p>
-              </div>
-            </div>
+    <div class="card">
+      <div class="card-header"><div><h3>Definition of Done Checklist</h3><p>All 5 items verified and passing</p></div></div>
+      <div class="dod-grid">
+        <div class="dod-item done"><span class="dod-check">✅</span><span>Onboarding guide and checklist are published and sufficient for a new RP developer to self-serve without direct help</span></div>
+        <div class="dod-item done"><span class="dod-check">✅</span><span>Sandbox is live with test identities covering active, pre-provisioned, revoked, and suspended eID states</span></div>
+        <div class="dod-item done"><span class="dod-check">✅</span><span>Conformance harness produces a per-check pass/fail report covering PKCE usage, claims handling, error handling, and logout/session termination</span></div>
+        <div class="dod-item done"><span class="dod-check">✅</span><span>Go-live checklist items are all objectively verifiable — no subjective items</span></div>
+        <div class="dod-item done"><span class="dod-check">✅</span><span>At least one real RP has completed onboarding end to end using only the toolkit</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div><h3>Module 6 Scenarios</h3><p>Select a scenario to view test steps and cURL commands</p></div></div>
+      <div class="steps">
+        <div class="step-item" style="cursor:pointer;" onclick="show('m6-onboarding')">
+          <div class="step-num yellow">📖</div>
+          <div class="step-content">
+            <h4>US-6.1 — Self-service Onboarding Guide</h4>
+            <p>Verify an RP developer can reach working sandbox integration following only the published guide at <code>/admin/onboarding</code>.</p>
           </div>
         </div>
-      </section>
-
-      <!-- SCENARIO 9: IDENTITY RECOVERY -->
-      <section id="sc-recovery" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 9: Identity Recovery — Lost MFA Factor</span>
-            <span class="badge badge-error">Module 2</span>
+        <div class="step-item" style="cursor:pointer;" onclick="show('m6-sandbox')">
+          <div class="step-num yellow">🧪</div>
+          <div class="step-content">
+            <h4>US-6.2 — Sandbox with Realistic Test Identities</h4>
+            <p>Test all 4 eID states (active, pre_provisioned, revoked, suspended) — each returning distinct error behaviour.</p>
           </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-            When a citizen loses their authenticator app or passkey device, recovery requires stronger evidence than a normal login. The system verifies demographic data against the Civil Registry before resetting credentials and revoking old MFA factors.
-          </p>
-
-          <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase; color: #ef4444; font-weight: 800; letter-spacing: 0.05em;">❌ Fail Case — Invalid Credentials</h4>
-          <div class="steps" style="margin-bottom: 28px;">
-            <div class="step-item">
-              <div class="step-number" style="background: #ef4444;">1</div>
-              <div class="step-content">
-                <h4>Navigate to Recovery Page</h4>
-                <p>Open <a href="http://localhost:3000/recovery" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/recovery</a> — or from the Login page click <strong>"Recover Access"</strong> at the bottom.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number" style="background: #ef4444;">2</div>
-              <div class="step-content">
-                <h4>Submit Unknown Email</h4>
-                <p>Enter <code>ghost@test.sm</code> as the email address with any BSN, NID, or DOB values. Click <strong>"Verify Registry Identity"</strong>.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number" style="background: #ef4444;">3</div>
-              <div class="step-content">
-                <h4>Expected: PSC Redirect Warning</h4>
-                <p>System responds with a <code>404 Not Found</code> error and displays the advisory message: <em>"Visit a Public Service Center (PSC) to verify identity in person."</em></p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number" style="background: #ef4444;">4</div>
-              <div class="step-content">
-                <h4>Test Mismatched Registry Fields</h4>
-                <p>Enter valid email <code>moderator@eid.sm</code> but with wrong BSN e.g. <code>999999</code>. Submit again.</p>
-                <p style="margin-top: 6px;"><strong>Expected:</strong> <code>400 verification_failed</code> — <em>"Demographic verification against Civil Registry failed."</em></p>
-              </div>
-            </div>
+        </div>
+        <div class="step-item" style="cursor:pointer;" onclick="show('m6-conformance')">
+          <div class="step-num yellow">🔬</div>
+          <div class="step-content">
+            <h4>US-6.3 — Conformance Harness with Per-Check Results</h4>
+            <p>Run 8 individual checks, verifying each produces a distinct PASS/FAIL result with diagnostic reasoning.</p>
           </div>
-
-          <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase; color: #10b981; font-weight: 800; letter-spacing: 0.05em;">✅ Happy Case — Successful Recovery</h4>
-          <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4>Open Recovery Page &amp; Fill Correct Credentials</h4>
-                <p>Fill in all 4 fields with the seeded values matching the moderator account in the Civil Registry:</p>
-                <table class="data-table" style="margin: 12px 0;">
-                  <thead><tr><th>Field</th><th>Value</th></tr></thead>
-                  <tbody>
-                    <tr><td>Email</td><td><code>moderator@eid.sm</code></td></tr>
-                    <tr><td>BSN / CRIB</td><td><code>200002</code></td></tr>
-                    <tr><td>National ID (NID)</td><td><code>NID-200002</code></td></tr>
-                    <tr><td>Date of Birth</td><td><code>1990-05-15</code> (May 15, 1990)</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Submit Identity Verification</h4>
-                <p>Click <strong>"Verify Registry Identity"</strong>. The form advances to Step 2 — password reset. A pre-filled recovery token is shown. Note it for API testing.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Set New Password</h4>
-                <p>Enter a new password (e.g. <code>Password999!</code>), confirm it, and click <strong>"Revoke MFA &amp; Reset Password"</strong>.</p>
-                <p style="margin-top: 6px;"><strong>Expected:</strong> Success banner — <em>"Old MFA factors have been invalidated. Please log in to configure a new MFA device."</em></p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">4</div>
-              <div class="step-content">
-                <h4>Login with New Password</h4>
-                <p>Navigate to <a href="http://localhost:3000/login" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/login</a>. Use <code>moderator@eid.sm</code> / <code>Password999!</code>.</p>
-                <p style="margin-top: 6px;"><strong>Expected:</strong> Successful login → redirect to <code>/admin/dashboard</code>.</p>
-              </div>
-            </div>
+        </div>
+        <div class="step-item" style="cursor:pointer;" onclick="show('m6-golive')">
+          <div class="step-num yellow">🚀</div>
+          <div class="step-content">
+            <h4>US-6.4 — Objective Go-live Checklist</h4>
+            <p>Verify all 5 go-live criteria are strictly boolean (true/false) with no subjective judgment calls.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <div style="margin-top: 24px;">
-            <h4 style="font-size: 12px; margin-bottom: 12px; text-transform: uppercase;">API cURL — Initiate Recovery</h4>
-            <div class="code-container">
-              <button class="copy-btn" onclick="copyCode('recovery-init-curl')">Copy</button>
-              <code id="recovery-init-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/initiate \
+  <!-- M6 US-6.1 ONBOARDING GUIDE -->
+  <section id="m6-onboarding" class="scenario-section">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>US-6.1 — Self-service Onboarding Guide</h3>
+          <p>Verify a new RP developer can integrate with GoSM eID by following the published guide alone without platform team support.</p>
+        </div>
+        <span class="badge badge-yellow">Module 6</span>
+      </div>
+
+      <div class="section-label info">ℹ Acceptance Criteria</div>
+      <div class="expected info" style="margin-bottom:14px;">
+        <div><strong>AC1 (Happy Path):</strong> Developer reads the guide at <code>/admin/onboarding</code> and reaches a working sandbox token without contacting the platform team.<br>
+        <strong>AC2 (Claims Process):</strong> When the guide references additional claims, the process for requesting them is documented — not assumed.</div>
+      </div>
+
+      <div class="section-label success">✅ Step-by-Step Test Procedure</div>
+      <div class="steps">
+        <div class="step-item success">
+          <div class="step-num green">1</div>
+          <div class="step-content">
+            <h4>Open Onboarding Guide</h4>
+            <p>Navigate to <a href="http://localhost:3000/admin/onboarding" target="_blank">http://localhost:3000/admin/onboarding</a> — log in as developer (<code>developer@eid.sm / Password123!</code>).</p>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">2</div>
+          <div class="step-content">
+            <h4>Review Left Sidebar Navigation</h4>
+            <p>Click through all 6 sections: Overview → Quick Start → PKCE Auth Flow → Claims Catalogue → Error Reference → Request More Claims.</p>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">3</div>
+          <div class="step-content">
+            <h4>Test Step 1: Get Authorization Code</h4>
+            <p>In <strong>Quick Start</strong>, run the cURL authorize request using the pre-configured sandbox client (<code>eid-sandbox-rp-client</code>).</p>
+            <div class="expected ok">✅ Expected: Returns JSON with <code>redirect_url</code> containing authorization <code>code</code>.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/oauth/authorize \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "moderator@eid.sm",
-    "bsn_number": "200002",
-    "national_id_number": "NID-200002",
-    "dob": "1990-05-15"
-  }'</code>
-            </div>
-            <h4 style="font-size: 12px; margin-top: 20px; margin-bottom: 12px; text-transform: uppercase;">API cURL — Complete Recovery (replace TOKEN)</h4>
-            <div class="code-container">
-              <button class="copy-btn" onclick="copyCode('recovery-complete-curl')">Copy</button>
-              <code id="recovery-complete-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/recovery/complete \
+    "client_id": "eid-sandbox-rp-client",
+    "redirect_uri": "http://localhost:3000/oauth/callback",
+    "state": "random_state_abc",
+    "nonce": "random_nonce_xyz",
+    "email": "sandbox.active@eid.sm",
+    "password": "Sandbox123!",
+    "auth_method": "PASSWORD",
+    "code_challenge": "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM",
+    "code_challenge_method": "S256"
+  }'</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">4</div>
+          <div class="step-content">
+            <h4>Test Step 2: Exchange Code for Tokens</h4>
+            <p>Exchange the authorization code for tokens using HTTP Basic authentication.</p>
+            <div class="expected ok">✅ Expected: <code>200 OK</code> returning <code>access_token</code> and <code>id_token</code>.</div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">5</div>
+          <div class="step-content">
+            <h4>Verify Claims Expansion Procedure (AC2)</h4>
+            <p>Open <strong>Request More Claims</strong> section in the guide. Verify all 5 steps of the request process are explicitly documented — avoiding informal assumptions.</p>
+            <div class="expected ok">✅ AC2 Verified: Claims expansion request procedure is fully documented with SLA and approval steps.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- M6 US-6.2 SANDBOX IDENTITIES -->
+  <section id="m6-sandbox" class="scenario-section">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>US-6.2 — Sandbox with Realistic Test Identities</h3>
+          <p>Verify the sandbox provides test identities for every eID state (active, pre_provisioned, revoked, suspended) and each returns distinct error behavior.</p>
+        </div>
+        <span class="badge badge-yellow">Module 6</span>
+      </div>
+
+      <div class="section-label info">ℹ Acceptance Criteria</div>
+      <div class="expected info" style="margin-bottom:14px;">
+        <div><strong>AC1:</strong> Sandbox has at least one identity each in: <code>active</code>, <code>pre_provisioned</code>, <code>revoked</code>, <code>suspended</code>.<br>
+        <strong>AC2:</strong> Each non-active state returns a distinct error code — not a generic failure.</div>
+      </div>
+
+      <div class="section-label success">✅ Test Steps &amp; cURL Verification</div>
+      <div class="steps">
+        <div class="step-item success">
+          <div class="step-num green">1</div>
+          <div class="step-content">
+            <h4>Fetch All Sandbox Identities (AC1)</h4>
+            <p>Call the sandbox identities API or view <a href="http://localhost:3000/admin/sandbox" target="_blank">http://localhost:3000/admin/sandbox</a> → Tab 1.</p>
+            <div class="expected ok">✅ Expected: Returns 4 identities representing all 4 states.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/admin/sandbox/identities | python3 -m json.tool</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">2</div>
+          <div class="step-content">
+            <h4>Test Revoked Identity — Distinct Error Code (AC2)</h4>
+            <p>Attempt login with <code>sandbox.revoked@eid.sm / Sandbox123!</code>.</p>
+            <div class="expected fail">⛔ Expected: HTTP 403 · <code>{"error": "eid_revoked", "message": "Your eID has been permanently revoked..."}</code></div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "sandbox.revoked@eid.sm", "password": "Sandbox123!"}'</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">3</div>
+          <div class="step-content">
+            <h4>Test Suspended Identity — Distinct Error Code (AC2)</h4>
+            <p>Attempt login with <code>sandbox.suspended@eid.sm / Sandbox123!</code>.</p>
+            <div class="expected fail">⛔ Expected: HTTP 403 · <code>{"error": "eid_suspended", "message": "Your eID is temporarily suspended..."}</code></div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "sandbox.suspended@eid.sm", "password": "Sandbox123!"}'</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">4</div>
+          <div class="step-content">
+            <h4>Test Pre-provisioned Identity — Distinct Error Code (AC2)</h4>
+            <p>Attempt login with <code>sandbox.pre@eid.sm / Sandbox123!</code>.</p>
+            <div class="expected fail">⛔ Expected: HTTP 403 · <code>{"error": "eid_not_yet_active", "message": "Your eID has not been issued yet..."}</code></div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "sandbox.pre@eid.sm", "password": "Sandbox123!"}'</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">5</div>
+          <div class="step-content">
+            <h4>Reset Sandbox Identities</h4>
+            <p>Reset sandbox test users back to their canonical state after testing.</p>
+            <div class="expected ok">✅ Expected: <code>{"success": true, "reset_count": 4}</code></div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">TOKEN=$(curl -s -X POST http://localhost:8082/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@eid.sm", "password": "Password123!"}' | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+
+curl -s -X POST http://localhost:8082/api/v1/admin/sandbox/identities/reset \
+  -H "Authorization: Bearer $TOKEN"</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- M6 US-6.3 CONFORMANCE HARNESS -->
+  <section id="m6-conformance" class="scenario-section">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>US-6.3 — Conformance Harness with Per-Check Results</h3>
+          <p>Verify the conformance harness runs 8 individual checks and returns a per-check pass/fail report — not a single aggregate score.</p>
+        </div>
+        <span class="badge badge-yellow">Module 6</span>
+      </div>
+
+      <div class="section-label info">ℹ Acceptance Criteria</div>
+      <div class="expected info" style="margin-bottom:14px;">
+        <div><strong>AC1:</strong> Harness produces a pass/fail result per individual check (PKCE, claims, error handling, logout, etc.).<br>
+        <strong>AC2:</strong> An un-registered client causes <code>CHECK_CLIENT_REGISTERED</code> to fail independently without obscuring other checks.</div>
+      </div>
+
+      <div class="section-label success">✅ Test Steps &amp; cURL Verification</div>
+      <div class="steps">
+        <div class="step-item success">
+          <div class="step-num green">1</div>
+          <div class="step-content">
+            <h4>Run Conformance Harness via Admin UI</h4>
+            <p>Open <a href="http://localhost:3000/admin/sandbox" target="_blank">http://localhost:3000/admin/sandbox</a> → Tab 2 <strong>Conformance Harness</strong>. Click <strong>Run Conformance Harness</strong> for <code>eid-sandbox-rp-client</code>.</p>
+            <div class="expected ok">✅ Expected: Displays 8/8 PASS badge with 8 individual check rows.</div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">2</div>
+          <div class="step-content">
+            <h4>Run Conformance Harness via API (cURL)</h4>
+            <p>Execute the automated conformance harness endpoint.</p>
+            <div class="expected ok">✅ Expected: Returns JSON with <code>overall_result: "PASS"</code>, <code>pass_count: 8</code>, and array of 8 individual check objects.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/admin/conformance/run \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "moderator@eid.sm",
-    "recovery_token": "REC-XXXXXXXXXXXXXXXX",
-    "new_password": "Password999!"
-  }'</code>
-            </div>
+    "client_id": "eid-sandbox-rp-client",
+    "redirect_uri": "http://localhost:3000/oauth/callback"
+  }' | python3 -m json.tool</code></div>
           </div>
         </div>
-      </section>
-
-      <!-- SCENARIO 10: CLAIMS MINIMISATION -->
-      <section id="sc-claims" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 10: Claims Minimisation &amp; UIN Pseudonymisation</span>
-            <span class="badge badge-success">Module 2</span>
-          </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-            Relying Parties only receive claims that are explicitly allowed in their <code>allowed_claims</code> configuration. The citizen's raw UIN and eID are never exposed — instead a pairwise pseudonymous subject token (<code>TOK-xxxxxxxx</code>) is used in all ID Tokens.
-          </p>
-
-          <div style="background: rgba(16,185,129,0.06); border-left: 4px solid #10b981; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
-            <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #10b981; margin-bottom: 6px;">WSO2 Broker Client Configuration</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; font-family: monospace; color: var(--text-secondary);">
-              <div><strong>Client ID:</strong> <code>eid-wso2-broker-client-id</code></div>
-              <div><strong>Secret:</strong> <code>eid-wso2-broker-client-secret-key-2026</code></div>
-              <div><strong>Allowed Claims:</strong> <code>email, full_name, dob</code></div>
-              <div><strong>Approved Raw:</strong> <code>email</code> only</div>
-            </div>
-          </div>
-
-          <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4>Step 1 — Initiate OIDC Authorization</h4>
-                <p>This cURL simulates WSO2 initiating an authorization request. Run it and capture the <code>code</code> from the returned <code>redirect_url</code>.</p>
-                <div class="code-container" style="margin-top: 10px;">
-                  <button class="copy-btn" onclick="copyCode('claims-auth-curl')">Copy</button>
-                  <code id="claims-auth-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/oauth/authorize \
+        <div class="step-item success">
+          <div class="step-num green">3</div>
+          <div class="step-content">
+            <h4>Verify Independent Failure (AC2)</h4>
+            <p>Run the harness against an un-registered client ID (<code>does-not-exist</code>).</p>
+            <div class="expected fail">⛔ Expected: <code>CHECK_CLIENT_REGISTERED</code> fails while platform-level checks (e.g. <code>CHECK_PKCE_ENFORCED</code>) still pass independently.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/admin/conformance/run \
   -H "Content-Type: application/json" \
+  -d '{"client_id": "does-not-exist", "redirect_uri": "http://localhost:3000/callback"}' \
+  | python3 -c "import sys,json; r=json.load(sys.stdin); [print(c['check'], '=', 'PASS' if c['passed'] else 'FAIL') for c in r['checks']]"</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- M6 US-6.4 GO-LIVE CHECKLIST -->
+  <section id="m6-golive" class="scenario-section">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>US-6.4 — Objective Go-live Checklist</h3>
+          <p>Verify all 5 go-live criteria are objectively true or false with no subjective items on the checklist.</p>
+        </div>
+        <span class="badge badge-yellow">Module 6</span>
+      </div>
+
+      <div class="section-label info">ℹ Acceptance Criteria</div>
+      <div class="expected info" style="margin-bottom:14px;">
+        <div><strong>AC1:</strong> Every checklist item is objectively true or false (conformance passing, claims approved, redirect URIs registered, credentials issued) — no subjective items.</div>
+      </div>
+
+      <div class="section-label success">✅ Test Steps &amp; cURL Verification</div>
+      <div class="steps">
+        <div class="step-item success">
+          <div class="step-num green">1</div>
+          <div class="step-content">
+            <h4>Check Go-live Readiness via Admin UI</h4>
+            <p>Open <a href="http://localhost:3000/admin/sandbox" target="_blank">http://localhost:3000/admin/sandbox</a> → Tab 3 <strong>Go-live Checklist</strong>. Load checklist for <code>eid-sandbox-rp-client</code>.</p>
+            <div class="expected ok">✅ Expected: Displays "🚀 READY FOR GO-LIVE" with 5 boolean PASS badges.</div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">2</div>
+          <div class="step-content">
+            <h4>Fetch Go-live Checklist via API</h4>
+            <p>Call the objective go-live checklist endpoint for the sandbox client.</p>
+            <div class="expected ok">✅ Expected: <code>ready_for_go_live: true</code> with 5 items, each having a boolean <code>passed: true</code>.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/admin/golive-checklist/eid-sandbox-rp-client | python3 -m json.tool</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">3</div>
+          <div class="step-content">
+            <h4>Verify Incomplete Client Shows Objective False</h4>
+            <p>Evaluate a freshly created client missing claims and redirect URIs.</p>
+            <div class="expected fail">⛔ Expected: <code>ready_for_go_live: false</code> with <code>CLAIMS_SET_APPROVED.passed = false</code> and <code>REDIRECT_URIS_REGISTERED.passed = false</code> (strictly boolean, no subjective ratings).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ██████ DEEP DIVE: UIN ENGINE & STANDARDS ██████ -->
+  <section id="spec-uin" class="scenario-section">
+    <div class="module-band m2">
+      <div class="module-icon m2">🆔</div>
+      <div class="info">
+        <h2>Unique Identity Number (UIN) Engine &amp; International Standards</h2>
+        <p>Citizen lifetime identification algorithm, Luhn Modulus-10 checksum, ISO/IEC 7501 &amp; ICAO Doc 9303 compliance</p>
+      </div>
+      <span class="badge badge-green" style="margin-left:auto;">✓ Standards Compliant</span>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>1. UIN Format Anatomy &amp; Structural Breakdown</h3>
+          <p>Standardized identifier structure for Sint Maarten Citizens (UN-SXM-YY-XXXXXX-C)</p>
+        </div>
+        <span class="badge badge-green">ISO/IEC 7501-1</span>
+      </div>
+
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;">The Unique Identity Number (UIN) is a 16-character alphanumeric string generated exactly once per citizen upon birth registration or initial enrolment. It serves as the citizen's permanent legal subject identifier across government registries.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Segment</th>
+            <th>Sample</th>
+            <th>Description &amp; Rules</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Prefix</code></td>
+            <td><code style="color:#10b981;">UN</code></td>
+            <td><strong>Universal Identifier Prefix</strong> — standard constant for all citizen eID records.</td>
+          </tr>
+          <tr>
+            <td><code>Country</code></td>
+            <td><code style="color:#60a5fa;">SXM</code></td>
+            <td><strong>ISO 3166-1 alpha-3 Country Code</strong> for Sint Maarten.</td>
+          </tr>
+          <tr>
+            <td><code>Year</code></td>
+            <td><code>26</code></td>
+            <td><strong>Series Year (YY)</strong> — 2-digit year of registration/provisioning (e.g. <code>26</code> for 2026).</td>
+          </tr>
+          <tr>
+            <td><code>Sequence</code></td>
+            <td><code>219920</code></td>
+            <td><strong>6-Digit Sequential Body</strong> — zero-padded unique sequence number (<code>100000</code> to `999999`).</td>
+          </tr>
+          <tr>
+            <td><code>Checksum</code></td>
+            <td><code style="color:#f59e0b;">1</code></td>
+            <td><strong>Modulus-10 Luhn Check Digit</strong> — mathematical integrity digit preventing key-in &amp; transcription errors.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert green" style="margin-top:14px;">
+        <strong>Example UIN String</strong>
+        <p><code style="font-size:14px;font-weight:700;letter-spacing:0.05em;">UN-SXM-26-219920-1</code></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>2. Generation Algorithm &amp; Uniqueness Guarantees</h3>
+          <p>Immortality, non-reusability, and cryptographic checksum validation</p>
+        </div>
+        <span class="badge badge-blue">ICAO Doc 9303</span>
+      </div>
+
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Lifetime Immortality &amp; Non-Reusability</h4>
+            <p>Once a UIN is assigned to a citizen (e.g. via Civil Registry birth pre-provisioning or PSC assisted registration), it remains bound to that individual permanently. If a citizen passes away, their UIN is marked as <code>deceased</code> but is <strong>never recycled or reassigned</strong> to any future citizen.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Modulus-10 Checksum Algorithm (Luhn Variant)</h4>
+            <p>The final check digit is computed by applying weight factors <code>[7, 3, 1]</code> across the numeric payload sequence as specified by ICAO Doc 9303 Part 3:</p>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">Checksum Calculation Formula:
+Sequence digits: d₁ d₂ d₃ d₄ d₅ d₆
+Weighted Sum S = (d₁×7 + d₂×3 + d₃×1 + d₄×7 + d₅×3 + d₆×1) mod 10
+Check Digit C = (10 - S) mod 10
+
+Example for 219920:
+S = (2×7 + 1×3 + 9×1 + 9×7 + 2×3 + 0×1) = (14 + 3 + 9 + 63 + 6 + 0) = 95
+95 mod 10 = 5
+Check Digit C = (10 - 5) mod 10 = 5</code></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Database Integrity Constraints</h4>
+            <p>Uniqueness is enforced at both application and database engine levels via <code>UNIQUE INDEX</code> constraints on <code>citizens.uin</code> and <code>civil_registry_records.uin</code> in MySQL.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>3. International Standards Compliance Matrix</h3>
+          <p>Global frameworks and standard specifications enforced by the GoSM eID UIN Engine</p>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Standard Reference</th>
+            <th>Governing Body</th>
+            <th>Enforcement &amp; Scope in GoSM eID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ISO/IEC 7501-1</strong></td>
+            <td>ISO / IEC</td>
+            <td>Standardized format for Machine Readable Travel Documents (MRTD) and National eIDs.</td>
+          </tr>
+          <tr>
+            <td><strong>ICAO Doc 9303 Part 3</strong></td>
+            <td>ICAO / UN</td>
+            <td>Check digit calculations for national identity numbers and Machine Readable Cards.</td>
+          </tr>
+          <tr>
+            <td><strong>eIDAS EU 910/2014 (Art. 11)</strong></td>
+            <td>European Union</td>
+            <td>Unambiguous unique identification of natural persons across public service providers.</td>
+          </tr>
+          <tr>
+            <td><strong>NIST SP 800-63-3 (IAL3)</strong></td>
+            <td>NIST / US Govt</td>
+            <td>Identity Assurance Level 3 — verified against authoritative Civil Registry source of truth.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>4. Verification &amp; Testing cURL Commands</h3>
+          <p>Commands to verify UIN generation, Civil Registry linkage, and checksum validation</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step-item success">
+          <div class="step-num green">1</div>
+          <div class="step-content">
+            <h4>Query UIN for Seeded Citizen</h4>
+            <p>Fetch John Connor's identity record and inspect the UIN format.</p>
+            <div class="expected ok">✅ Expected: <code>"uin": "UN-SXM-26-000001-9"</code></div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/civil-registry/validate/123456 | python3 -m json.tool</code></div>
+          </div>
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">2</div>
+          <div class="step-content">
+            <h4>Simulate Birth Event UIN Pre-provisioning</h4>
+            <p>Send a birth notification webhook to test automated UIN issuance for a newborn.</p>
+            <div class="expected ok">✅ Expected: Civil Registry creates pre-provisioned record with newly generated valid UIN.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \
+  -H "Content-Type: application/json" \
+  -H "X-Correlation-ID: test-birth-uin-001" \
   -d '{
-    "client_id": "eid-wso2-broker-client-id",
-    "redirect_uri": "https://localhost:9443/commonauth",
-    "state": "xyz123",
-    "nonce": "nonce-abc",
-    "email": "moderator@eid.sm",
-    "password": "Password123!",
-    "auth_method": "PASSWORD"
-  }'</code>
-                </div>
-                <p style="margin-top: 8px; font-size: 11px; color: var(--text-secondary);">If the response contains <code>"mfa_required": true</code>, re-run the same cURL adding <code>"otp": "123456"</code> to the body to bypass the MFA challenge.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Step 2 — Exchange Code for Tokens</h4>
-                <p>Copy the <code>code</code> value from the <code>redirect_url</code> query string and replace <code>CODE_HERE</code> below:</p>
-                <div class="code-container" style="margin-top: 10px;">
-                  <button class="copy-btn" onclick="copyCode('claims-token-curl')">Copy</button>
-                  <code id="claims-token-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/oauth/token \
-  -H "Authorization: Basic ZWlkLXdzbzItYnJva2VyLWNsaWVudC1pZDplaWQtd3NvMi1icm9rZXItY2xpZW50LXNlY3JldC1rZXktMjAyNg==" \
-  -d "grant_type=authorization_code&code=CODE_HERE&redirect_uri=https://localhost:9443/commonauth"</code>
-                </div>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Step 3 — Decode &amp; Inspect the ID Token</h4>
-                <p>Copy the <code>id_token</code> value from the response. Decode its middle segment (base64url) to inspect the JWT payload claims. Use this shell command:</p>
-                <div class="code-container" style="margin-top: 10px;">
-                  <button class="copy-btn" onclick="copyCode('claims-decode-curl')">Copy</button>
-                  <code id="claims-decode-curl" class="code-block">echo 'PASTE_ID_TOKEN_HERE' | cut -d'.' -f2 | tr '_-' '/+' | base64 -d | python3 -m json.tool</code>
-                </div>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">4</div>
-              <div class="step-content">
-                <h4>Step 4 — Verify Assertions</h4>
-                <p>In the decoded payload, verify the following:</p>
-                <table class="data-table" style="margin-top: 10px;">
-                  <thead><tr><th>Check</th><th>Expected</th><th>Status</th></tr></thead>
-                  <tbody>
-                    <tr>
-                      <td><code>sub</code> field</td>
-                      <td>Starts with <code>TOK-</code> (pairwise pseudonym)</td>
-                      <td style="color: #10b981; font-weight: 700;">✅ Must NOT be raw UIN</td>
-                    </tr>
-                    <tr>
-                      <td><code>email</code> field</td>
-                      <td><code>moderator@eid.sm</code> (in approved raw releases)</td>
-                      <td style="color: #10b981; font-weight: 700;">✅ Allowed</td>
-                    </tr>
-                    <tr>
-                      <td><code>electronic_id</code> field</td>
-                      <td>Completely absent from payload</td>
-                      <td style="color: #10b981; font-weight: 700;">✅ Must be ABSENT</td>
-                    </tr>
-                    <tr>
-                      <td><code>uin</code> field</td>
-                      <td>Completely absent (raw UIN blocked)</td>
-                      <td style="color: #10b981; font-weight: 700;">✅ Must be ABSENT</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+    "event_id": "evt-birth-new-001",
+    "event_type": "BIRTH_PRE_PROVISION",
+    "full_name": "Baby Connor",
+    "dob": "2026-08-01",
+    "bsn_number": "999888",
+    "national_id_number": "NID-999888"
+  }' | python3 -m json.tool</code></div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <!-- SCENARIO 11: AUDIT TRAIL LOGS -->
-      <section id="sc-audit" class="scenario-section">
-        <div class="card">
-          <div class="card-title">
-            <span>Scenario 11: Authentication Audit Trail</span>
-            <span class="badge badge-primary">Module 2</span>
+
+  <!-- ██████ DEEP DIVE: EID CREDENTIAL STANDARDS ██████ -->
+  <section id="spec-eid" class="scenario-section">
+    <div class="module-band m3">
+      <div class="module-icon m3">💳</div>
+      <div class="info">
+        <h2>Electronic Identity (eID) Credential Architecture &amp; Standards</h2>
+        <p>Document-bound credential format, eIDAS High Assurance Level, NIST SP 800-63-3 (AAL3) &amp; lifecycle management</p>
+      </div>
+      <span class="badge badge-blue" style="margin-left:auto;">✓ High Assurance</span>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>1. Architectural Distinction: UIN vs. eID Credential</h3>
+          <p>Why GoSM separates permanent person identifiers from re-issuable credentials</p>
+        </div>
+        <span class="badge badge-blue">eIDAS Compliant</span>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Unique Identity Number (UIN)</th>
+            <th>eID Credential Identifier (EID)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Binding</strong></td>
+            <td>Bound to <strong>Natural Person</strong> (Legal Identity)</td>
+            <td>Bound to <strong>Physical/Digital Credential Document</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Format</strong></td>
+            <td><code>UN-SXM-26-219920-1</code></td>
+            <td><code>EID-SXM-26-849201-4</code></td>
+          </tr>
+          <tr>
+            <td><strong>Mutability</strong></td>
+            <td><strong style="color:#10b981;">Immutable (Lifetime)</strong> — Never changes</td>
+            <td><strong style="color:#f59e0b;">Dynamic / Re-issuable</strong> — Changes upon renewal or loss</td>
+          </tr>
+          <tr>
+            <td><strong>Public Exposure</strong></td>
+            <td>Hidden behind <code>TOK-xxxxxxxx</code> pairwise tokens for RPs</td>
+            <td>Present on smart card chip &amp; PSC credential registry</td>
+          </tr>
+          <tr>
+            <td><strong>Lifecycle States</strong></td>
+            <td><code>active</code>, <code>deceased</code></td>
+            <td><code>active</code>, <code>pre_provisioned</code>, <code>revoked</code>, <code>suspended</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>2. Generation Modes &amp; Operational Workflows</h3>
+          <p>Automatic online self-service vs. PSC-assisted operator workflow</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="builder-panel">
+          <h4 style="font-size:13px;color:#60a5fa;margin-bottom:8px;">⚡ Automatic Online Generation</h4>
+          <p style="font-size:11px;color:var(--text-secondary);line-height:1.6;">When a citizen completes remote self-service enrolment (<a href="http://localhost:3000/enrolment" target="_blank">/enrolment</a>) and their details match the Civil Registry database (BSN, NID, DOB), the system automatically provisions an eID credential identifier in <code>active</code> status.</p>
+        </div>
+        <div class="builder-panel">
+          <h4 style="font-size:13px;color:#a78bfa;margin-bottom:8px;">🏛️ PSC Assisted Operator Issuance</h4>
+          <p style="font-size:11px;color:var(--text-secondary);line-height:1.6;">For physical eID card issuance at a Public Service Center (PSC), the operator performs biometric baseline capture (face/fingerprint) and ePassport chip verification before issuing the physical smart card with the signed <code>EID-SXM-YY-XXXXXX-C</code> credential.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>3. International Security Framework Compliance</h3>
+          <p>eIDAS, NIST SP 800-63-3, and ISO/IEC 14443 standard alignments</p>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Framework</th>
+            <th>Assurance Level</th>
+            <th>GoSM Implementation Standard</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>eIDAS (EU 910/2014)</strong></td>
+            <td><span class="badge badge-green">High Assurance</span></td>
+            <td>Physical identity verification + cryptographic token binding + biometric baseline.</td>
+          </tr>
+          <tr>
+            <td><strong>NIST SP 800-63-3</strong></td>
+            <td><span class="badge badge-blue">IAL3 / AAL3 / FAL3</span></td>
+            <td>Authoritative Civil Registry verification (IAL3) and hardware/passkey MFA binding (AAL3).</td>
+          </tr>
+          <tr>
+            <td><strong>ISO/IEC 14443</strong></td>
+            <td><span class="badge badge-purple">Type A / B Smart Card</span></td>
+            <td>Contactless smart card protocol for eID card chip reading and BAC/PACE authentication.</td>
+          </tr>
+          <tr>
+            <td><strong>RFC 6749 / OIDC</strong></td>
+            <td><span class="badge badge-yellow">Pairwise Sub Token</span></td>
+            <td>HMAC-SHA256 pairwise pseudonymisation (<code>TOK-xxxxxxxx</code>) ensuring citizen privacy.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>4. Verification &amp; Testing cURL Commands</h3>
+          <p>Commands to test eID credential creation, state verification, and OIDC token exchange</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step-item success">
+          <div class="step-num green">1</div>
+          <div class="step-content">
+            <h4>Check Sandbox Identity eID Credential States</h4>
+            <p>Fetch sandbox test users to inspect active vs revoked eID credentials.</p>
+            <div class="expected ok">✅ Expected: Lists 4 sandbox identities showing active and revoked <code>EID-SXM-SB-XXXXXX</code> credentials.</div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s http://localhost:8082/api/v1/admin/sandbox/identities | python3 -m json.tool</code></div>
           </div>
-          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-            Every authentication event (login, MFA, recovery, token issuance) is logged to <code>authentication_audit_logs</code> with no raw credentials ever appearing in any log entry. Auditors can retrieve a subject's complete chronological history using the admin query API.
-          </p>
-
-          <div class="steps">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <h4>Get a Subject UUID</h4>
-                <p>First, login to obtain the moderator's UUID. Run this and copy the <code>uuid</code> from the <code>citizen</code> object in the response:</p>
-                <div class="code-container" style="margin-top: 10px;">
-                  <button class="copy-btn" onclick="copyCode('audit-login-curl')">Copy</button>
-                  <code id="audit-login-curl" class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
+        </div>
+        <div class="step-item success">
+          <div class="step-num green">2</div>
+          <div class="step-content">
+            <h4>Verify Revoked eID Blocks Authentication</h4>
+            <p>Attempt login with a revoked eID credential.</p>
+            <div class="expected fail">⛔ Expected: HTTP 403 · <code>{"error": "eid_revoked", "message": "Your eID has been permanently revoked..."}</code></div>
+            <div class="code-wrap"><button class="copy-btn" onclick="cp(this)">Copy</button>
+<code class="code-block">curl -s -X POST http://localhost:8082/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email": "moderator@eid.sm", "password": "Password123!"}'
-
-# → Copy the "uuid" and "access_token" values from the response</code>
-                </div>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <h4>Query Audit Logs by Subject UUID</h4>
-                <p>Replace <code>TOKEN</code> with the <code>access_token</code> and <code>UUID</code> with the <code>uuid</code> from Step 1:</p>
-                <div class="code-container" style="margin-top: 10px;">
-                  <button class="copy-btn" onclick="copyCode('audit-query-curl')">Copy</button>
-                  <code id="audit-query-curl" class="code-block">curl -s \
-  -H "Authorization: Bearer TOKEN" \
-  "http://localhost:8082/api/v1/admin/audit-logs?subject=UUID"</code>
-                </div>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <h4>Verify Expected Audit Events Are Present</h4>
-                <p>The JSON array response should contain at minimum the following action types logged in chronological order:</p>
-                <table class="data-table" style="margin-top: 10px;">
-                  <thead><tr><th>Action</th><th>Outcome</th><th>Trigger</th></tr></thead>
-                  <tbody>
-                    <tr><td><code>LOGIN</code></td><td><code>SUCCESS</code></td><td>Successful password verification</td></tr>
-                    <tr><td><code>LOGIN</code></td><td><code>FAILED_PASSWORD</code></td><td>Wrong password attempt</td></tr>
-                    <tr><td><code>MFA_SEND</code></td><td><code>SUCCESS</code></td><td>OTP challenge triggered</td></tr>
-                    <tr><td><code>MFA_VERIFY</code></td><td><code>SUCCESS / FAILED_OTP</code></td><td>OTP check result</td></tr>
-                    <tr><td><code>TOKEN_ISSUANCE</code></td><td><code>SUCCESS</code></td><td>OIDC code exchange</td></tr>
-                    <tr><td><code>RECOVERY_INIT</code></td><td><code>SUCCESS / FAILED_DEMOGRAPHIC_VERIFICATION</code></td><td>Recovery flow start</td></tr>
-                    <tr><td><code>RECOVERY_COMPLETE</code></td><td><code>SUCCESS</code></td><td>Password &amp; MFA reset</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">4</div>
-              <div class="step-content">
-                <h4>Verify No Raw Credentials Appear</h4>
-                <p>Inspect every log entry in the response. Confirm the <code>details</code> field contains <strong>only descriptive text</strong> — never a raw password hash, OTP code, or token value.</p>
-                <p style="margin-top: 6px; color: #10b981; font-weight: 700;">✅ Audit trail is clean and credential-safe.</p>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-number">5</div>
-              <div class="step-content">
-                <h4>View Logs in Admin Dashboard</h4>
-                <p>Login as admin and navigate to <a href="http://localhost:3000/admin/logs" target="_blank" style="color: var(--primary); font-weight: 700;">http://localhost:3000/admin/logs</a> to view the audit log table in the UI.</p>
-              </div>
-            </div>
+  -d '{"email": "sandbox.revoked@eid.sm", "password": "Sandbox123!"}'</code></div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
     </main>
   </div>
 
   <script>
-    function toggleTheme() {
-      document.body.classList.toggle('light');
+    function toggleTheme() { document.body.classList.toggle('light'); }
+
+    function show(id) {
+      // Hide all sections explicitly
+      document.querySelectorAll('.scenario-section').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+      });
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      // Show selected section explicitly
+      const section = document.getElementById(id);
+      if (section) {
+        section.classList.add('active');
+        section.style.display = 'flex';
+      }
+
+      // Highlight active nav item
+      document.querySelectorAll('.nav-item').forEach(n => {
+        const attr = n.getAttribute('onclick');
+        if (attr && attr.includes(`'${id}'`)) {
+          n.classList.add('active');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function showScenario(id) {
-      document.querySelectorAll('.scenario-section').forEach(sec => {
-        sec.classList.remove('active');
+    function cp(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.innerText = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.innerText = 'Copy'; btn.classList.remove('copied'); }, 2000);
       });
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
     }
 
     function handleEventTypeChange() {
-      const type = document.getElementById('in-evt-type').value;
-      const birthFields = document.getElementById('birth-fields');
+      const elType = document.getElementById('in-evt-type');
+      const elBf = document.getElementById('birth-fields');
+      if (!elType || !elBf) return;
+      const type = elType.value;
       if (type === 'BIRTH_PRE_PROVISION') {
-        birthFields.style.display = 'flex';
-        document.getElementById('in-evt-id').value = 'evt-birth-baby-9999';
-        document.getElementById('in-evt-uin').value = 'UN-SXM-26-999111-2';
+        elBf.style.display = 'block';
+        const elId = document.getElementById('in-evt-id');
+        const elUin = document.getElementById('in-evt-uin');
+        if (elId) elId.value = 'evt-birth-baby-' + Math.floor(Math.random()*9000+1000);
+        if (elUin) elUin.value = 'UN-SXM-26-' + Math.floor(Math.random()*900000+100000) + '-' + Math.floor(Math.random()*9);
       } else {
-        birthFields.style.display = 'none';
-        document.getElementById('in-evt-id').value = 'evt-death-john-001';
-        document.getElementById('in-evt-uin').value = 'UN-SXM-26-000001-9';
+        elBf.style.display = 'none';
+        const elId = document.getElementById('in-evt-id');
+        const elUin = document.getElementById('in-evt-uin');
+        if (elId) elId.value = 'evt-death-001';
+        if (elUin) elUin.value = 'UN-SXM-26-000001-9';
       }
       generateWebhookCurl();
     }
 
     function generateWebhookCurl() {
-      const id = document.getElementById('in-evt-id').value;
-      const type = document.getElementById('in-evt-type').value;
-      const uin = document.getElementById('in-evt-uin').value;
-
-      const payload = {
-        event_id: id,
-        event_type: type,
-        uin: uin
-      };
-
+      const elId = document.getElementById('in-evt-id');
+      const elType = document.getElementById('in-evt-type');
+      const elUin = document.getElementById('in-evt-uin');
+      const elBlock = document.getElementById('lifecycle-curl-block');
+      if (!elId || !elType || !elUin || !elBlock) return;
+      
+      const id = elId.value;
+      const type = elType.value;
+      const uin = elUin.value;
+      const payload = { event_id: id, event_type: type, uin };
       if (type === 'BIRTH_PRE_PROVISION') {
-        payload.full_name = document.getElementById('in-birth-name').value;
-        payload.dob = document.getElementById('in-birth-dob').value;
-        payload.bsn_number = document.getElementById('in-birth-bsn').value;
-        payload.national_id_number = document.getElementById('in-birth-nid').value;
+        const elName = document.getElementById('in-birth-name');
+        const elDob = document.getElementById('in-birth-dob');
+        const elBsn = document.getElementById('in-birth-bsn');
+        const elNid = document.getElementById('in-birth-nid');
+        if (elName) payload.full_name = elName.value;
+        if (elDob) payload.dob = elDob.value;
+        if (elBsn) payload.bsn_number = elBsn.value;
+        if (elNid) payload.national_id_number = elNid.value;
       }
+      const curl = `curl -s -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \\
+  -H "Content-Type: application/json" \
+  -H "X-Correlation-ID: test-${Math.floor(Math.random()*9000+1000)}" \\
+  -d '${JSON.stringify(payload, null, 2)}'
 
-      const curlStr = `curl -X POST http://localhost:8082/api/v1/civil-registry/lifecycle-event \\
-  -H "Content-Type: application/json" \\
-  -H "X-Correlation-ID: test-correlation-${Math.floor(Math.random() * 1000)}" \\
-  -d '${JSON.stringify(payload, null, 2)}'`;
-
-      document.getElementById('lifecycle-curl-block').innerText = curlStr;
+# Run twice with same event_id to test idempotency
+# First run: {"success":true,"message":"..."}
+# Second run: {"success":true,"duplicate":true,"message":"Event already processed."}`;
+      elBlock.innerText = curl;
     }
 
-    function copyCode(id) {
-      const code = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        alert('Copied to clipboard!');
-      });
-    }
-
-    // Initialize webhook cURL block
+    // Init: show initial section explicitly
+    show('sc-overview');
     generateWebhookCurl();
   </script>
 </body>
